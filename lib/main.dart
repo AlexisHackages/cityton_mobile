@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/routes.dart';
+import 'package:cityton_mobile/theme/style.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,9 +10,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cityton',
-      theme: new ThemeData(
-        primarySwatch: Colors.orange,
-      ),
+      theme: appTheme(),
+      initialRoute: '/',
       routes: routes,
     );
   }
