@@ -63,16 +63,17 @@ class LoginState extends State<Login> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: RaisedButton(
                   child: Text('Submit'),
-                  onPressed: () {
+                  onPressed: () async {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     if (_loginForm.currentState.validate()) {
+                      print("!!!!! UI !!!!!");
                       print(emailController.text);
                       print(passwordController.text);
-                      this.loginBloc.login(emailController.text, passwordController.text);
-                      // If the form is valid, display a Snackbar.
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Processing Data')));
+                      print("!!!!! END UI !!!!!");
+
+                      var jwt = await this.loginBloc.login(emailController.text, passwordController.text);
+                      print(jwt);
                     }
                   }
                 ),

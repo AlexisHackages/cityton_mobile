@@ -3,11 +3,17 @@ import 'package:http/http.dart' as http;
 class AuthService {
 
   Future<String> login(String email, String password) async {
-    var res = http.post("http://localhost:5000/api/authenticate/login",
+    print("!!!!! SERIVCE !!!!!");
+    print(email);
+    print(password);
+
+    var res = await http.post("http://10.0.2.2:5000/api/authenticate/login",
         body: {"email": email, "password": password});
+    print("!!!!! res !!!!!");
     print(res);
+    print("!!!!! END SERIVCE !!!!!");
     // if(res.StatusCode == 200) return res.body;
-    return null;
+    return res.body;
   }
   
 }
