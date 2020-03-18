@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cityton_mobile/form_validators/user.dart';
 import 'package:cityton_mobile/blocs/login_bloc.dart';
 
-// Create a Form widget.
 class Login extends StatefulWidget {
   @override
   LoginState createState() => LoginState();
@@ -22,7 +21,7 @@ class LoginState extends State<Login> {
     return new Scaffold(
 
         appBar: new AppBar(
-          title: new Text("IMATitle"),
+          title: new Text("Login"),
         ),
 
         body: Form(
@@ -67,13 +66,11 @@ class LoginState extends State<Login> {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     if (_loginForm.currentState.validate()) {
-                      print("!!!!! UI !!!!!");
-                      print(emailController.text);
-                      print(passwordController.text);
-                      print("!!!!! END UI !!!!!");
 
-                      var jwt = await this.loginBloc.login(emailController.text, passwordController.text);
-                      print(jwt);
+                      bool isLogged = await this.loginBloc.login(emailController.text, passwordController.text);
+                      if (isLogged) {
+                        Navigator.pushNamedAndRemoveUntil(context, '/chat', (Route<dynamic> route) => false);
+                      }
                     }
                   }
                 ),

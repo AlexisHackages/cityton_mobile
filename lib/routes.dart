@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cityton_mobile/screens/login/login.dart';
+import 'package:cityton_mobile/screens/login.dart';
+import 'package:cityton_mobile/screens/chat.dart';
 
-final routes = {
-  '/login':     (BuildContext context) => new Login(),
-  '/' :         (BuildContext context) => new Login(),
+final routes = <String, WidgetBuilder>{
+  '/login':     (BuildContext context) => Login(),
+  '/chat':     (BuildContext context) => Chat(),
+  '/' :         (BuildContext context) => Login(),
 };

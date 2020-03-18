@@ -1,19 +1,25 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class AuthService {
 
   Future<String> login(String email, String password) async {
-    print("!!!!! SERIVCE !!!!!");
-    print(email);
-    print(password);
 
+    // var res = await http.get("http://10.0.2.2:5000/api/user/existEmail/"+email);
     var res = await http.post("http://10.0.2.2:5000/api/authenticate/login",
-        body: {"email": email, "password": password});
-    print("!!!!! res !!!!!");
-    print(res);
-    print("!!!!! END SERIVCE !!!!!");
-    // if(res.StatusCode == 200) return res.body;
-    return res.body;
+      headers: {
+        "content-type" : "application/json",
+        "accept" : "application/json",
+      },
+      body: json.encode({"email": email, "password": password}));
+
+    if (res.statusCode == 200) {
+      return res.body;
+    } else {
+      throw Exception(res.statusCode);
+    }
+    
   }
   
 }
