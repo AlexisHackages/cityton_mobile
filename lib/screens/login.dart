@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/form_validators/user.dart';
-import 'package:cityton_mobile/blocs/login_bloc.dart';
+import 'package:cityton_mobile/blocs/auth_bloc.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> {
 
-  LoginBloc loginBloc = new LoginBloc();
+  AuthBloc authBloc = new AuthBloc();
 
   final _loginForm = GlobalKey<FormState>();
   TextEditingController emailController = new TextEditingController();
@@ -66,8 +66,7 @@ class LoginState extends State<Login> {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     if (_loginForm.currentState.validate()) {
-
-                      bool isLogged = await this.loginBloc.login(emailController.text, passwordController.text);
+                      bool isLogged = await this.authBloc.login(emailController.text, passwordController.text);
                       if (isLogged) {
                         Navigator.pushNamedAndRemoveUntil(context, '/chat', (Route<dynamic> route) => false);
                       }

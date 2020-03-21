@@ -1,21 +1,16 @@
-import 'dart:convert';
+import 'package:cityton_mobile/http/http.dart';
 
-import 'package:http/http.dart' as http;
+var http = Http();
 
 class AuthService {
 
   Future<String> login(String email, String password) async {
 
-    // var res = await http.get("http://10.0.2.2:5000/api/user/existEmail/"+email);
     var res = await http.post("http://10.0.2.2:5000/api/authenticate/login",
-      headers: {
-        "content-type" : "application/json",
-        "accept" : "application/json",
-      },
-      body: json.encode({"email": email, "password": password}));
+      {"email": email, "password": password});
 
     if (res.statusCode == 200) {
-      return res.body;
+      return res.data["token"];
     } else {
       throw Exception(res.statusCode);
     }
@@ -23,19 +18,3 @@ class AuthService {
   }
   
 }
-
-// login(email: string, password: string): Observable<string> {
-//     return this.http.post<string>(environment.apiUrl + 'authenticate/login', { email, password })
-//       .pipe(map((data: any) => {
-//         let token = data.token;
-
-//         if (token) {
-//           localStorage.setItem('currentToken', token);
-//           this.currentToken.next(token);
-//         }
-
-//         return token;
-//       })
-
-//       )
-//   }

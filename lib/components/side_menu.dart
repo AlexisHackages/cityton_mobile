@@ -1,41 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:cityton_mobile/blocs/auth_bloc.dart';
+import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({Key key}) : super(key: key);
+  SideMenu({Key key}) : super(key: key);
+
+  final AuthBloc authBloc = new AuthBloc();
+  final SideMenuBloc sideMenuBloc = new SideMenuBloc();
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            child: Text('Drawer Header'),
-            decoration: BoxDecoration(
-              color: Colors.blue,
+      child: ListView(children: [
+        DrawerHeader(
+          child: Text("DRAWER HEADER"),
+        ),
+        ExpansionTile(
+          title: Text(
+            "Messages",
+            style: TextStyle(),
+            textAlign: TextAlign.center,
+          ),
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                "Periodo 1",
+                textAlign: TextAlign.center,
+              ),
             ),
+            ListTile(
+              title: Text(
+                "Periodo 2",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+        ListTile(
+          title: Text(
+            "Logout",
+            textAlign: TextAlign.center,
           ),
-          ListTile(
-            title: Text('Item 1'),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
+          onTap: () => {
+            sideMenuBloc.getThreads(),
+            authBloc.logout(),
+            Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false)
+          },
+        ),
+        ListTile(
+          title: Text(
+            "Test",
+            textAlign: TextAlign.center,
           ),
-          ListTile(
-            title: Text('Item 2'),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
-          ),
-        ],
-      ),
+          onTap: () => {
+            sideMenuBloc.getThreads()
+          },
+        ),
+      ]),
     );
-    ;
   }
 }

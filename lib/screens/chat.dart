@@ -1,7 +1,8 @@
+import 'package:cityton_mobile/blocs/auth_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:cityton_mobile/blocs/chat_bloc.dart';
+import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
-import 'package:cityton_mobile/components/header_nav.dart';
+import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
 
 class Chat extends StatefulWidget {
@@ -11,13 +12,19 @@ class Chat extends StatefulWidget {
 
 class ChatState extends State<Chat> {
 
-  ChatBloc chatBloc = new ChatBloc();
+  SideMenuBloc chatBloc = SideMenuBloc();
+  AuthBloc authBloc = AuthBloc();
 
   @override
   Widget build(BuildContext context) {
 
+    
+    print("READ");
+    print(authBloc.getToken());
+    print("END READ");
+
     return FramePage (
-      headerNav: HeaderNav(title: "Chat"),
+      header: Header(title: "Chat"),
       sideMenu: SideMenu(),
       body: Center(
         child: Text('Hello World'),
