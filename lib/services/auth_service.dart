@@ -5,7 +5,7 @@ var http = Http();
 class AuthService {
 
   Future<String> login(String email, String password) async {
-
+    
     var res = await http.post("http://10.0.2.2:5000/api/authenticate/login",
       {"email": email, "password": password});
 

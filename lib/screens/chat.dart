@@ -4,6 +4,7 @@ import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
+import 'package:cityton_mobile/models/thread.dart';
 
 class Chat extends StatefulWidget {
   @override
@@ -11,24 +12,19 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-
-  SideMenuBloc chatBloc = SideMenuBloc();
-  AuthBloc authBloc = AuthBloc();
-
   @override
   Widget build(BuildContext context) {
+    final int args = ModalRoute.of(context).settings.arguments;
 
-    
-    print("READ");
-    print(authBloc.getToken());
-    print("END READ");
+    print("OOOOO");
+    print(args);
+    print("KKKKK");
 
-    return FramePage (
-      header: Header(title: "Chat"),
-      sideMenu: SideMenu(),
-      body: Center(
-        child: Text('Hello World'),
-      )
-    );
+    return FramePage(
+        header: Header(title: "Chat"),
+        sideMenu: SideMenu(),
+        body: Center(
+          child: Text("CHAT"),
+        ));
   }
 }

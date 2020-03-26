@@ -68,7 +68,7 @@ class LoginState extends State<Login> {
                     if (_loginForm.currentState.validate()) {
                       bool isLogged = await this.authBloc.login(emailController.text, passwordController.text);
                       if (isLogged) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/chat', (Route<dynamic> route) => false);
+                        Navigator.pushNamedAndRemoveUntil(context, '/threadsList', (Route<dynamic> route) => false);
                       }
                     }
                   }

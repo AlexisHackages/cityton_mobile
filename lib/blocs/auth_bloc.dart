@@ -1,13 +1,14 @@
-import 'dart:convert';
-
 import 'package:cityton_mobile/services/auth_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthBloc {
 
   final AuthService authService = AuthService();
   final FlutterSecureStorage storage = FlutterSecureStorage();
+
+  final _tokenFetcher = BehaviorSubject<String>.seeded(null);
+  Stream<String> get token => _tokenFetcher.stream;
 
   AuthBloc();
 
@@ -15,6 +16,8 @@ class AuthBloc {
     await storage.deleteAll();
     String token = await authService.login(email, password);
     await storage.write(key: "token", value: token);
+
+    _tokenFetcher.sink.add(token);
 
     return true;
   }
@@ -25,11 +28,10 @@ class AuthBloc {
 
   Future<String> getToken() async {
     return await storage.read(key: "token");
-    // String token = "";
-    // storage.read(key: "token").then(
-    //   (String value) => token = value
-    // );
-    // return token;
+  }
+
+  void closeTokenStream() {
+    _tokenFetcher.close();
   }
 
 }

@@ -1,40 +1,33 @@
+import 'package:cityton_mobile/models/thread.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/blocs/auth_bloc.dart';
 import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
 
-class SideMenu extends StatelessWidget {
-  SideMenu({Key key}) : super(key: key);
+class SideMenu extends StatefulWidget {
+  @override
+  SideMenuState createState() => SideMenuState();
+}
+
+class SideMenuState extends State<SideMenu> {
 
   final AuthBloc authBloc = new AuthBloc();
-  final SideMenuBloc sideMenuBloc = new SideMenuBloc();
 
   @override
   Widget build(BuildContext context) {
+
     return Drawer(
       child: ListView(children: [
         DrawerHeader(
           child: Text("DRAWER HEADER"),
         ),
-        ExpansionTile(
+        ListTile(
           title: Text(
-            "Messages",
-            style: TextStyle(),
+            "Threads",
             textAlign: TextAlign.center,
           ),
-          children: <Widget>[
-            ListTile(
-              title: Text(
-                "Periodo 1",
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                "Periodo 2",
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
+          onTap: () => {
+            Navigator.pushNamed(context, '/threadsList')
+          },
         ),
         ListTile(
           title: Text(
@@ -42,18 +35,8 @@ class SideMenu extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           onTap: () => {
-            sideMenuBloc.getThreads(),
             authBloc.logout(),
             Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false)
-          },
-        ),
-        ListTile(
-          title: Text(
-            "Test",
-            textAlign: TextAlign.center,
-          ),
-          onTap: () => {
-            sideMenuBloc.getThreads()
           },
         ),
       ]),
