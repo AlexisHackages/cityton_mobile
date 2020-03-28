@@ -1,6 +1,5 @@
-import 'package:cityton_mobile/blocs/auth_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
+import 'package:cityton_mobile/blocs/threads_list_bloc.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
@@ -12,31 +11,30 @@ class ThreadsList extends StatefulWidget {
 }
 
 class ThreadsListState extends State<ThreadsList> {
-  SideMenuBloc sideMenuBloc = SideMenuBloc();
+  ThreadsListBloc threadsListBloc = ThreadsListBloc();
 
   @override
   void dispose() {
-    sideMenuBloc.closeThreads();
+    threadsListBloc.closeThreads();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    sideMenuBloc.getThreads();
 
     return FramePage(
         header: Header(title: "ThreadList"),
         sideMenu: SideMenu(),
         body: Center(
-          child: _buildMessages(),
+          child: _buildThreadsList(),
         ));
   }
 
-  Widget _buildMessages() {
-    sideMenuBloc.getThreads();
+  Widget _buildThreadsList() {
+    threadsListBloc.getThreads();
 
     return StreamBuilder(
-      stream: sideMenuBloc.threads,
+      stream: threadsListBloc.threads,
       builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
         final results = snapshot.data;
 

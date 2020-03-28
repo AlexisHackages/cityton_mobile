@@ -1,7 +1,5 @@
-import 'package:cityton_mobile/models/thread.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/blocs/auth_bloc.dart';
-import 'package:cityton_mobile/blocs/side_menu_bloc.dart';
 
 class SideMenu extends StatefulWidget {
   @override
