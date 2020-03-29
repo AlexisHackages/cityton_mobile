@@ -13,40 +13,37 @@ class Chat extends StatefulWidget {
 class ChatState extends State<Chat> {
   ChatBloc chatBloc = ChatBloc();
 
+  TextEditingController _sendController;
+
+  void initState() {
+    super.initState();
+    _sendController = TextEditingController();
+  }
+
   @override
   void dispose() {
+    _sendController.dispose();
     chatBloc.closeMessages();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final int args = ModalRoute.of(context).settings.arguments;
-
+    final int threadId = ModalRoute.of(context).settings.arguments;
+    
     return FramePage(
-        header: Header(title: "Chat"),
-        sideMenu: SideMenu(),
-        body: _buildChat(args),
-        );
+      header: Header(title: "Chat"),
+      sideMenu: SideMenu(),
+      body: _buildChat(threadId),
+    );
   }
 
   Widget _buildChat(int threadId) {
-    print("!!!!! BUILDER !!!!!");
-    print(threadId);
-    print(_buildMessages(threadId));
-    print("!!!!! END BUILDER !!!!!");
-    return Container (
+    return Container(
       child: Column(
         children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: _buildMessages(threadId)
-          ),
-          Container(
-            height: 100,
-            child: TextField()
-          ),
-          // _buildInputText(),
+          Flexible(flex: 1, child: _buildMessages(threadId)),
+          Container(height: 100, child: _buildInputText()),
         ],
       ),
       color: Colors.blue,
@@ -81,19 +78,19 @@ class ChatState extends State<Chat> {
                 ),
               );
             });
-
-        // return ListView.builder(
-        //     shrinkWrap: true,
-        //     itemCount: results.length,
-        //     itemBuilder: (BuildContext context, int index) {
-        //       return ListTile(
-        //         title: Text(
-        //           results[index].content,
-        //           textAlign: TextAlign.center,
-        //         ),
-        //       );
-        //     });
       },
+    );
+  }
+
+  Widget _buildInputText() {
+    
+    return Center(
+      child: TextField(
+        controller: _sendController,
+        onSubmitted: (String value) async {
+          _sendController.clear();
+        },
+      ),
     );
   }
 }
