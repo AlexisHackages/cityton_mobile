@@ -24,6 +24,7 @@ class ChatState extends State<Chat> {
   void dispose() {
     _sendController.dispose();
     chatBloc.closeMessages();
+    chatBloc.closeChatConnection();
     super.dispose();
   }
 
@@ -43,7 +44,7 @@ class ChatState extends State<Chat> {
       child: Column(
         children: <Widget>[
           Flexible(flex: 1, child: _buildMessages(threadId)),
-          Container(height: 100, child: _buildInputText()),
+          Container(height: 100, child: _buildInputText(threadId)),
         ],
       ),
       color: Colors.blue,
@@ -82,12 +83,13 @@ class ChatState extends State<Chat> {
     );
   }
 
-  Widget _buildInputText() {
-    
+  Widget _buildInputText(int threadId) {
+
     return Center(
       child: TextField(
         controller: _sendController,
         onSubmitted: (String value) async {
+          chatBloc.sendChatMessage(value, threadId, null);
           _sendController.clear();
         },
       ),
