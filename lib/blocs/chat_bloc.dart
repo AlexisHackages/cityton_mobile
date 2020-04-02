@@ -68,7 +68,7 @@ class ChatBloc {
         => {
           _hubConnection.invoke("AddToGroup")
             .then((onValue) => {
-              _hubConnection.on("messageReceived", (message) { print(message); })
+              _hubConnection.on("messageReceived", _handleIncommingChatMessage)
             })
         });
     
@@ -91,37 +91,14 @@ class ChatBloc {
     
   }
 
-  void _handleIncommingChatMessage(List<Object> args) {
-    print("!!!!! _handleIncommingChatMessage !!!!!");
-    print(args);
-    print("!!!!! END _handleIncommingChatMessage !!!!!");
-    // List<Message> messages = _messagesFetcher.value;
-    // messages.add(newMessage);
-    // _messagesFetcher.sink.add(messages);
+  void _handleIncommingChatMessage(List<Object> newMessage) {
+    List<Message> messages = _messagesFetcher.value;
+    messages.add(Message.fromJson(newMessage[0]));
+    _messagesFetcher.sink.add(messages);
   }
 
   Future<void> sendChatMessage(String newMessage, int discussionId, String imageUrl) async {
-    // if( chatMessage == null || chatMessage.length == 0){
-    //   return;
-    // }
-    print("!!!!! SEND CHAT MESSAGE !!!!!");
-    print(newMessage);
-    print(discussionId);
-    print(imageUrl);
-    _hubConnection.invoke("newMessage", args: <Object>[newMessage, discussionId, imageUrl] )
-      .catchError((onError) => {print("!!!!! ERREUR ICI !!!!!")});
-    print("!!!!! END SEND CHAT MESSAGE !!!!!");
-    // await openChatConnection();
-  }
-
-  void messageReceived() {
-    _hubConnection.on("messageReceived", (newMessage) {
-      print("MESSAGE RECEIVED");
-      print(newMessage);
-      print("END MESSAGE RECEIVED");
-      _messagesFetcher.sink.add(newMessage);
-      // this.messageReceived.emit(newMessage);
-    });
+    _hubConnection.invoke("newMessage", args: <Object>[newMessage, discussionId, imageUrl] );
   }
 
   void closeChatConnection() {

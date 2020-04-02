@@ -53,6 +53,15 @@ class ChatState extends State<Chat> {
   }
 
   Widget _buildMessages(int threadId) {
+    ScrollController _scrollController = ScrollController();
+
+    _scrollToBottom(int nb){ 
+      _scrollController.jumpTo(_scrollController.offset + nb);
+      // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+      //   duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+    }
+
     chatBloc.getMessages(threadId);
 
     return StreamBuilder(
@@ -69,9 +78,11 @@ class ChatState extends State<Chat> {
         }
 
         return ListView.builder(
+          controller: _scrollController,
             shrinkWrap: true,
             itemCount: results.length,
             itemBuilder: (BuildContext context, int index) {
+              _scrollToBottom(results.length);
               return ListTile(
                 title: Text(
                   results[index].content,
