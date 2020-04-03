@@ -13,8 +13,11 @@ class AuthBloc {
   AuthBloc();
 
   Future<bool> login(String email, String password) async {
-    await storage.deleteAll();
-    String token = await authService.login(email, password);
+    // await storage.deleteAll();
+    String sanitizedEmail = email.trim();
+    String sanitizedPassword = password.trim();
+
+    String token = await authService.login(sanitizedEmail, sanitizedPassword);
     await storage.write(key: "token", value: token);
 
     _tokenFetcher.sink.add(token);

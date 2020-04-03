@@ -4,6 +4,7 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
 import 'package:cityton_mobile/blocs/chat_bloc.dart';
 import 'package:cityton_mobile/models/message.dart';
+import 'package:flutter/scheduler.dart';
 
 class Chat extends StatefulWidget {
   @override
@@ -11,12 +12,13 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-  ChatBloc chatBloc = ChatBloc();
+  ChatBloc chatBloc;
 
   TextEditingController _sendController;
 
   void initState() {
     super.initState();
+    chatBloc = new ChatBloc();
     _sendController = TextEditingController();
   }
 
@@ -31,7 +33,7 @@ class ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     final int threadId = ModalRoute.of(context).settings.arguments;
-    
+
     return FramePage(
       header: Header(title: "Chat"),
       sideMenu: SideMenu(),
@@ -55,11 +57,14 @@ class ChatState extends State<Chat> {
   Widget _buildMessages(int threadId) {
     ScrollController _scrollController = ScrollController();
 
-    _scrollToBottom(int nb){ 
-      _scrollController.jumpTo(_scrollController.offset + nb);
-      // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-      //   duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+    _scrollToBottom() {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 10),
+          curve: Curves.easeOut,
+        );
+      });
     }
 
     chatBloc.getMessages(threadId);
@@ -78,11 +83,11 @@ class ChatState extends State<Chat> {
         }
 
         return ListView.builder(
-          controller: _scrollController,
+            controller: _scrollController,
             shrinkWrap: true,
             itemCount: results.length,
             itemBuilder: (BuildContext context, int index) {
-              _scrollToBottom(results.length);
+              _scrollToBottom();
               return ListTile(
                 title: Text(
                   results[index].content,
@@ -95,7 +100,6 @@ class ChatState extends State<Chat> {
   }
 
   Widget _buildInputText(int threadId) {
-
     return Center(
       child: TextField(
         controller: _sendController,
