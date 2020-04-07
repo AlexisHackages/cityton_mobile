@@ -31,7 +31,7 @@ class SideMenuState extends State<SideMenu> {
             "Threads",
             textAlign: TextAlign.center,
           ),
-          onTap: () => {Navigator.pushNamed(context, '/threadsList')},
+          onTap: () => Navigator.pushNamed(context, '/threadsList'),
         ),
         ListTile(
           title: Text(
@@ -54,7 +54,28 @@ class SideMenuState extends State<SideMenu> {
             future: authBloc.getCurrentUser(),
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.username);
+                return Padding(
+                  padding: EdgeInsets.all(25.0),
+                  child: InkWell(
+                    onTap: () => Navigator.pushNamed(context, '/profile'),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(snapshot.data.picture),
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          Text(snapshot.data.username),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               } else {
                 return CircularProgressIndicator();
               }
