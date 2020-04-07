@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/blocs/auth_bloc.dart';
+import 'package:cityton_mobile/models/user.dart';
 
 class SideMenu extends StatefulWidget {
   @override
@@ -7,25 +8,30 @@ class SideMenu extends StatefulWidget {
 }
 
 class SideMenuState extends State<SideMenu> {
+  AuthBloc authBloc;
 
-  final AuthBloc authBloc = new AuthBloc();
+  @override
+  void initState() {
+    super.initState();
+    authBloc = AuthBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
       child: ListView(children: [
-        DrawerHeader(
-          child: Text("DRAWER HEADER"),
-        ),
+        _buildDrawHeader(authBloc),
         ListTile(
           title: Text(
             "Threads",
             textAlign: TextAlign.center,
           ),
-          onTap: () => {
-            Navigator.pushNamed(context, '/threadsList')
-          },
+          onTap: () => {Navigator.pushNamed(context, '/threadsList')},
         ),
         ListTile(
           title: Text(
@@ -34,10 +40,24 @@ class SideMenuState extends State<SideMenu> {
           ),
           onTap: () => {
             authBloc.logout(),
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false)
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login', (Route<dynamic> route) => false)
           },
         ),
       ]),
     );
+  }
+
+  Widget _buildDrawHeader(AuthBloc authBloc) {
+    return DrawerHeader(
+        child: FutureBuilder<User>(
+            future: authBloc.getCurrentUser(),
+            builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data.username);
+              } else {
+                return CircularProgressIndicator();
+              }
+            }));
   }
 }

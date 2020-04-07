@@ -36,58 +36,16 @@ class ChatBloc {
   }
 
   Future<void> openChatConnection() async {
-      // _hubConnection.start();
-      // _hubConnection.onclose((error) => print("IS CLOSED"));
-      // _hubConnection.on("ReceiveMessage", _handleIncommingChatMessage);
-
-      // await _hubConnection.invoke("AddToGroup");
-
-    // print("_hubConnection = ");
-    // print(_hubConnection);
-
-    // if (_hubConnection == null) {
-    //   _hubConnection = HubConnectionBuilder().withUrl("http://10.0.2.2:5000/hub/chathub").build();
-    //   print("VVVVV");
-    //     // _hubConnection.invoke("AddToGroup"),
-    //   _hubConnection.on("messageReceived", (message) { print(message); });
-    //   print("WWWWW");
-    // }
-
-    // if (_hubConnection.state != HubConnectionState.Connected) {
-    //   _hubConnection.start();
-    // }
-    
-    // _hubConnection = HubConnectionBuilder()
-    //     .withUrl("http://10.0.2.2:5000/hub/chathub")
-    //     .build();
-    
-    // print("JOJO");
 
     _hubConnection.start()
       .then((onValue)
         => {
           _hubConnection.invoke("AddToGroup")
             .then((onValue) => {
-              _hubConnection.on("messageReceived", _handleIncommingChatMessage)
+              _hubConnection.on("messageReceived", _handleIncommingChatMessage),
+              _hubConnection.on("messageRemoved", _handleRemovedChatMessage),
             })
         });
-    
-
-    
-    
-    // _hubConnection.start()
-    //   .then((value) async => {
-    //     print("TOTO"),
-    //     await _hubConnection.invoke("AddToGroup")
-    //       .then((onValue) async => {
-    //         _hubConnection.on("messageReceived", (message) { print(message); }),
-    //         print("DODO"),
-    //       })
-    //       .catchError((Error error) {print("XAXA"); print(error);}),
-    //     }
-    //   )
-    //   .catchError((Error problem) {print("WAWA"); print(problem);});
-    // print("LOL");
     
   }
 
@@ -97,12 +55,28 @@ class ChatBloc {
     _messagesFetcher.sink.add(messages);
   }
 
+  void _handleRemovedChatMessage(List<Object> removedMessages) {
+    List<Message> messages = _messagesFetcher.value;
+    Message removedMessage = Message.fromJson(removedMessages[0]);
+    
+    
+    int index = messages.indexWhere((Message message) => message.id == removedMessage.id);
+    messages.replaceRange(index, index + 1, [removedMessage]);
+    
+    _messagesFetcher.sink.add(messages);
+  }
+
   Future<void> sendChatMessage(String newMessage, int discussionId, String imageUrl) async {
-    _hubConnection.invoke("newMessage", args: <Object>[newMessage, discussionId, imageUrl] );
+    await _hubConnection.invoke("newMessage", args: <Object>[newMessage, discussionId, imageUrl] );
+  }
+
+  Future<void> removeMessage(int messageId) async {
+    await _hubConnection.invoke("RemoveMessage", args: <Object>[messageId]);
   }
 
   void closeChatConnection() {
     print("CLOSE");
     _hubConnection.stop();
   }
+
 }

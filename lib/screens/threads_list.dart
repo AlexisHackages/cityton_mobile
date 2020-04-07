@@ -1,3 +1,5 @@
+import 'package:cityton_mobile/blocs/auth_bloc.dart';
+import 'package:cityton_mobile/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/blocs/threads_list_bloc.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
@@ -12,6 +14,7 @@ class ThreadsList extends StatefulWidget {
 
 class ThreadsListState extends State<ThreadsList> {
   ThreadsListBloc threadsListBloc = ThreadsListBloc();
+  AuthBloc authBloc = AuthBloc();
 
   @override
   void dispose() {
@@ -21,13 +24,28 @@ class ThreadsListState extends State<ThreadsList> {
 
   @override
   Widget build(BuildContext context) {
-
-    return FramePage(
-        header: Header(title: "ThreadList"),
-        sideMenu: SideMenu(),
-        body: Center(
-          child: _buildThreadsList(),
-        ));
+    return FutureBuilder<User>(
+        future: authBloc.getCurrentUser(),
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          
+          if (snapshot.hasData) {
+            
+            return FramePage(
+                header: Header(title: "ThreadList"),
+                sideMenu: SideMenu(),
+                body: Center(
+                  child: _buildThreadsList(),
+                ));
+          } else {
+            return FramePage(
+                header: Header(title: "ThreadList"),
+                sideMenu: SideMenu(),
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ));
+          }
+        });
+        
   }
 
   Widget _buildThreadsList() {
@@ -51,15 +69,14 @@ class ThreadsListState extends State<ThreadsList> {
             itemCount: results.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                title: Text(
-                  results[index].name,
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () => {
-                  Navigator.pushNamed(context, "/chat",
-                    arguments: results[index].discussionId),
-                }
-              );
+                  title: Text(
+                    results[index].name,
+                    textAlign: TextAlign.center,
+                  ),
+                  onTap: () => {
+                        Navigator.pushNamed(context, "/chat",
+                            arguments: results[index].discussionId),
+                      });
             });
       },
     );

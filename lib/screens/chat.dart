@@ -5,6 +5,7 @@ import 'package:cityton_mobile/components/side_menu.dart';
 import 'package:cityton_mobile/blocs/chat_bloc.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 
 class Chat extends StatefulWidget {
   @override
@@ -72,15 +73,11 @@ class ChatState extends State<Chat> {
     return StreamBuilder(
       stream: chatBloc.messages,
       builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+
         final results = snapshot.data;
-
-        if (results == null) {
-          return Center(child: Text('WAITING...'));
-        }
-
-        if (results.isEmpty) {
-          return Center(child: Text('PRINT VOID...'));
-        }
 
         return ListView.builder(
             controller: _scrollController,
@@ -89,6 +86,7 @@ class ChatState extends State<Chat> {
             itemBuilder: (BuildContext context, int index) {
               _scrollToBottom();
               return ListTile(
+                onLongPress: () => _buildModalBottomSheet(results[index].content, results[index].id),
                 title: Text(
                   results[index].content,
                   textAlign: TextAlign.center,
@@ -109,5 +107,22 @@ class ChatState extends State<Chat> {
         },
       ),
     );
+  }
+
+  Future<Widget> _buildModalBottomSheet(String content, int messageId) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) => ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text("Copy"),
+              onTap: () => Clipboard.setData(ClipboardData(text: content)),
+            ),
+            ListTile(
+              title: Text("Remove"),
+              onTap: () => chatBloc.removeMessage(messageId),
+            ),
+          ],
+            ));
   }
 }
