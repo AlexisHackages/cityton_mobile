@@ -1,8 +1,8 @@
+import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 import 'package:cityton_mobile/services/chat_service.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:signalr_client/signalr_client.dart';
-import 'package:cityton_mobile/blocs/auth_bloc.dart';
 
 class ChatBloc {
   final ChatService chatService = ChatService();

@@ -1,5 +1,5 @@
+import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:cityton_mobile/blocs/auth_bloc.dart';
 
 class Http {
   static final Http _instance = Http._internal();

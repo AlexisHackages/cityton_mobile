@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cityton_mobile/form_validators/user.dart';
-import 'package:cityton_mobile/blocs/auth_bloc.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,22 +10,31 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> {
 
-  AuthBloc authBloc = new AuthBloc();
+  AuthBloc authBloc;
 
   final _loginForm = GlobalKey<FormState>();
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController;
+  TextEditingController passwordController;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    authBloc = AuthBloc();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+  }
 
-    return new Scaffold(
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-        appBar: new AppBar(
-          title: new Text("Login"),
-        ),
+Widget build(BuildContext context) {
+      print("!!!!! WIDGET !!!!!");
+      print("!!!!! END WIDGET !!!!!");
 
-        body: Form(
+  return Column(children: <Widget>[
+  Form(
           key: _loginForm,
           autovalidate: true,
 
@@ -77,6 +87,20 @@ class LoginState extends State<Login> {
 
             ],
           ),
-        ));
-  }
+        ),
+        RichText(
+      text: TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+              text: 'to signup',
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.popAndPushNamed(context, '/signup');
+                }),
+        ]
+      )
+        ),
+  ]
+  );
+}
 }

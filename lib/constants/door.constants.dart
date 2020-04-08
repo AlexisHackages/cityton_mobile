@@ -1,0 +1,4 @@
+enum ShowBody {
+  LOGIN,
+  SIGNUP,
+}

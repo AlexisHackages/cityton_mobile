@@ -1,5 +1,5 @@
+import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:cityton_mobile/blocs/auth_bloc.dart';
 import 'package:cityton_mobile/models/user.dart';
 
 class SideMenu extends StatefulWidget {
@@ -57,7 +57,7 @@ class SideMenuState extends State<SideMenu> {
                 return Padding(
                   padding: EdgeInsets.all(25.0),
                   child: InkWell(
-                    onTap: () => Navigator.pushNamed(context, '/profile'),
+                    onTap: () => Navigator.popAndPushNamed(context, '/profile'),
                     child: Container(
                       height: MediaQuery.of(context).size.height / 4,
                       child: Row(

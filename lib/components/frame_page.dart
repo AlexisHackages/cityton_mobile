@@ -10,7 +10,7 @@ class FramePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    
     return Scaffold(
       appBar: header,
       drawer: sideMenu,
