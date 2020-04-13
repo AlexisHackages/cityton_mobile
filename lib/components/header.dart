@@ -6,7 +6,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget> actions;
 
-  const Header({Key key, this.leadingState, this.title, this.actions})
+  const Header({Key key, @required this.leadingState, @required this.title, this.actions})
       : super(key: key);
 
   @override

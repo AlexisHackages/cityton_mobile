@@ -1,11 +1,11 @@
 import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Http {
   static final Http _instance = Http._internal();
   Dio _dio;
   BaseOptions _options;
-  final String baseUrl = "http://10.0.2.2:5000/api";
 
   static final authBloc = AuthBloc();
 
@@ -14,7 +14,7 @@ class Http {
   }
 
   Http._internal() {
-    _options = BaseOptions(baseUrl: baseUrl, headers: {
+    _options = BaseOptions(baseUrl: DotEnv().env['API_URL'], headers: {
       'content-type': 'application/json',
       'accept': "application/json",
     });

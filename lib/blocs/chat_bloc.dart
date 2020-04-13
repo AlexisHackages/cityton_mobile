@@ -1,6 +1,7 @@
 import 'package:cityton_mobile/screens/door/auth.bloc.dart';
 import 'package:cityton_mobile/services/chat_service.dart';
 import 'package:cityton_mobile/models/message.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:signalr_client/signalr_client.dart';
 
@@ -31,7 +32,7 @@ class ChatBloc {
 
   buildConnection() {
     _hubConnection = HubConnectionBuilder()
-      .withUrl('http://10.0.2.2:5000/hub/chathub', options: httpOptions)
+      .withUrl(DotEnv().env['API_URL'] + 'hub/chathub', options: httpOptions)
       .build();
   }
 

@@ -30,8 +30,6 @@ class DoorState extends State<Door> {
   @override
   Widget build(BuildContext context) {
     if (ShowBody.LOGIN == widget.showBody) {
-      print("!!!!! LOGIN !!!!!");
-      print("!!!!! END LOGIN !!!!!");
       return FramePage(
         header: Header(
           title: "Door",
@@ -41,8 +39,6 @@ class DoorState extends State<Door> {
         body: Login(),
       );
     } else if (ShowBody.SIGNUP == widget.showBody) {
-      print("!!!!! SIGNUP !!!!!");
-      print("!!!!! END SIGNUP !!!!!");
       return FramePage(
         header: Header(
           title: "Door",

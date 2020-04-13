@@ -28,6 +28,13 @@ class SideMenuState extends State<SideMenu> {
         _buildDrawHeader(authBloc),
         ListTile(
           title: Text(
+            "Home",
+            textAlign: TextAlign.center,
+          ),
+          onTap: () => Navigator.pushNamed(context, '/home'),
+        ),
+        ListTile(
+          title: Text(
             "Threads",
             textAlign: TextAlign.center,
           ),

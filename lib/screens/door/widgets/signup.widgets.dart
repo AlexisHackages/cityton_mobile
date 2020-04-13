@@ -34,10 +34,23 @@ class SignupState extends State<Signup> {
         key: _loginForm,
         autovalidate: true,
         child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             TextFormField(
               controller: emailController,
-              decoration: InputDecoration(labelText: "LOOOOOOL"),
+              decoration: InputDecoration(labelText: "Username *"),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter some text';
+                } else if (!isValidFormatEmail(value)) {
+                  return 'Incorrect email format !';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(labelText: "Email *"),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';
@@ -49,7 +62,27 @@ class SignupState extends State<Signup> {
             ),
             TextFormField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: "Password"),
+              decoration: InputDecoration(labelText: "Password *"),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: passwordController,
+              decoration: InputDecoration(labelText: "Verify password *"),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: pictureController,
+              decoration: InputDecoration(labelText: "Picture"),
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';
@@ -62,15 +95,13 @@ class SignupState extends State<Signup> {
               child: RaisedButton(
                   child: Text('Submit'),
                   onPressed: () async {
-                    // Validate returns true if the form is valid, or false
-                    // otherwise.
                     if (_loginForm.currentState.validate()) {
                       bool isLogged = await this
                           .authBloc
                           .login(emailController.text, passwordController.text);
                       if (isLogged) {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            '/threadsList', (Route<dynamic> route) => false);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (Route<dynamic> route) => false);
                       }
                     }
                   }),
@@ -78,15 +109,12 @@ class SignupState extends State<Signup> {
           ],
         ),
       ),
-      RichText(
-          text: TextSpan(children: <TextSpan>[
-        TextSpan(
-            text: 'to signup',
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Navigator.popAndPushNamed(context, '/login');
-              }),
-      ])),
+      InkWell(
+        child: Text("To login"),
+        onTap: () {
+          Navigator.popAndPushNamed(context, '/login');
+        },
+      ),
     ]);
   }
 }
