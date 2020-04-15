@@ -1,12 +1,11 @@
 import 'package:cityton_mobile/models/user.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/blocs/threads_list_bloc.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
 import 'package:cityton_mobile/models/thread.dart';
-
-import 'door/auth.bloc.dart';
 
 class ThreadsList extends StatefulWidget {
   @override

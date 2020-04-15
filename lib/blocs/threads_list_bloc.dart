@@ -1,5 +1,4 @@
-import 'package:cityton_mobile/services/chat_service.dart';
-import 'package:cityton_mobile/models/message.dart';
+import 'package:cityton_mobile/screens/chat/chat_service.dart';
 import 'package:cityton_mobile/models/thread.dart';
 import 'package:rxdart/rxdart.dart';
 

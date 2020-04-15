@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
-import 'package:cityton_mobile/blocs/chat_bloc.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+
+import 'chat_bloc.dart';
 
 class Chat extends StatefulWidget {
   @override

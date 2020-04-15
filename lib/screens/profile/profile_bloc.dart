@@ -1,5 +1,4 @@
-import 'package:cityton_mobile/services/user_service.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:cityton_mobile/shared/services/user_service.dart';
 
 class ProfileBloc {
 

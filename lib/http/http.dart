@@ -1,4 +1,4 @@
-import 'package:cityton_mobile/screens/door/auth.bloc.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -14,10 +14,15 @@ class Http {
   }
 
   Http._internal() {
-    _options = BaseOptions(baseUrl: DotEnv().env['API_URL'], headers: {
-      'content-type': 'application/json',
-      'accept': "application/json",
-    });
+    _options = BaseOptions(
+      baseUrl: DotEnv().env['API_URL'],
+      headers: {
+        'content-type': 'application/json',
+        'accept': "application/json",
+      },
+      followRedirects: false,
+      validateStatus: (status) { return status < 500; },
+    );
     
     _dio = Dio(_options);
     

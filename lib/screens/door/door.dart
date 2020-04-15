@@ -1,22 +1,19 @@
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
-import 'package:cityton_mobile/constants/door.constants.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
-import 'package:cityton_mobile/screens/door/widgets/signup.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:cityton_mobile/screens/door/widgets/login.widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Door extends StatefulWidget {
-  final ShowBody showBody;
-
-  Door({@required this.showBody});
-
   @override
   DoorState createState() => DoorState();
 }
 
 class DoorState extends State<Door> {
+
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -29,33 +26,33 @@ class DoorState extends State<Door> {
 
   @override
   Widget build(BuildContext context) {
-    if (ShowBody.LOGIN == widget.showBody) {
-      return FramePage(
-        header: Header(
-          title: "Door",
-          leadingState: HeaderLeading.NO_LEADING,
-        ),
-        sideMenu: SideMenu(),
-        body: Login(),
-      );
-    } else if (ShowBody.SIGNUP == widget.showBody) {
-      return FramePage(
-        header: Header(
-          title: "Door",
-          leadingState: HeaderLeading.NO_LEADING,
-        ),
-        sideMenu: SideMenu(),
-        body: Signup(),
-      );
-    }
 
+    storage.deleteAll();
+    
     return FramePage(
       header: Header(
-        title: "Door",
+        title: "",
         leadingState: HeaderLeading.NO_LEADING,
       ),
       sideMenu: SideMenu(),
-      body: Login(),
-    );
+      body: Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text("Cityton"),
+          RaisedButton(
+            onPressed: () => Navigator.pushNamed(context, '/login'),
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),),
+            child: Text("Login"),
+          ),
+          RaisedButton(
+            onPressed: () => Navigator.pushNamed(context, '/signup'),
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),),
+            child: Text("Signup"),
+          ),
+        ],
+      ),
+    ));
   }
 }

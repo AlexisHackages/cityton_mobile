@@ -1,4 +1,4 @@
-import 'package:cityton_mobile/screens/door/auth.bloc.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/models/user.dart';
 
