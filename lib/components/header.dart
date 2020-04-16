@@ -6,7 +6,11 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget> actions;
 
-  const Header({Key key, @required this.leadingState, @required this.title, this.actions})
+  const Header(
+      {Key key,
+      @required this.leadingState,
+      @required this.title,
+      this.actions})
       : super(key: key);
 
   @override
@@ -14,8 +18,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     if (HeaderLeading.NO_LEADING == leadingState) {
-      return AppBar(leading: null, title: Text(title), actions: actions);
+      return AppBar(title: Text(title), actions: actions);
     } else if (HeaderLeading.MENU == leadingState) {
       return AppBar(
           leading: _buildMenu(context), title: Text(title), actions: actions);
@@ -27,6 +32,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildMenu(BuildContext context) {
+    
     return IconButton(
         icon: Icon(Icons.menu),
         onPressed: () => Scaffold.of(context).openDrawer());

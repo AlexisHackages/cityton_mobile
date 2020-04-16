@@ -34,7 +34,7 @@ class DoorState extends State<Door> {
         title: "",
         leadingState: HeaderLeading.NO_LEADING,
       ),
-      sideMenu: SideMenu(),
+      sideMenu: null,
       body: Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
