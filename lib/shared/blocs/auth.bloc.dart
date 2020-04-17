@@ -1,3 +1,4 @@
+import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/services/auth_service.dart';
 import 'package:cityton_mobile/shared/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -6,7 +7,6 @@ import 'package:cityton_mobile/models/user.dart';
 import 'dart:convert';
 
 class AuthBloc {
-
   final AuthService authService = AuthService();
   final UserService userService = UserService();
   final FlutterSecureStorage storage = FlutterSecureStorage();
@@ -21,35 +21,47 @@ class AuthBloc {
     return User.fromJson(jsonDecode(encodedCurrentUser));
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<ApiResponse> login(String email, String password) async {
     // await storage.deleteAll();
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 
-    User currentUser = await authService.login(sanitizedEmail, sanitizedPassword);
-    await storage.write(key: "token", value: currentUser.token);
+    var response = await authService.login(sanitizedEmail, sanitizedPassword);
 
-    _tokenFetcher.sink.add(currentUser.token);
+    if (response.status == 200) {
+      User currentUser = User.fromJson(response.value);
 
-    await storage.write(key: "currentUser", value: jsonEncode(currentUser.toJson()));
+      await storage.write(key: "token", value: currentUser.token);
 
-    return true;
+      _tokenFetcher.sink.add(currentUser.token);
+
+      await storage.write(
+          key: "currentUser", value: jsonEncode(currentUser.toJson()));
+    }
+
+    return response;
   }
 
-  Future<bool> signup(String username, String email, String password, String picture) async {
-
+  Future<ApiResponse> signup(
+      String username, String email, String password, String picture) async {
     String sanitizedUsername = username.trim();
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 
-    User currentUser = await authService.signup(sanitizedUsername, sanitizedEmail, sanitizedPassword, picture);
-    await storage.write(key: "token", value: currentUser.token);
+    var response = await authService.signup(
+        sanitizedUsername, sanitizedEmail, sanitizedPassword, picture);
 
-    _tokenFetcher.sink.add(currentUser.token);
+    if (response.status == 200) {
+      User currentUser = User.fromJson(response.value);
+      await storage.write(key: "token", value: currentUser.token);
 
-    await storage.write(key: "currentUser", value: jsonEncode(currentUser.toJson()));
+      _tokenFetcher.sink.add(currentUser.token);
 
-    return true;
+      await storage.write(
+          key: "currentUser", value: jsonEncode(currentUser.toJson()));
+    }
+
+    return response;
   }
 
   void logout() {
@@ -63,5 +75,4 @@ class AuthBloc {
   void closeTokenStream() {
     _tokenFetcher.close();
   }
-
 }

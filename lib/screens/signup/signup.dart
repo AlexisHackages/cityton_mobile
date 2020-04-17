@@ -1,3 +1,4 @@
+import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/side_menu.dart';
@@ -42,7 +43,7 @@ class SignupState extends State<Signup> {
           title: "Signup",
           leadingState: HeaderLeading.DEAD_END,
         ),
-        sideMenu: SideMenu(),
+        sideMenu: null,
         body: Column(
           children: <Widget>[
             FormBuilder(
@@ -106,14 +107,16 @@ class SignupState extends State<Signup> {
                       child: Text('Submit'),
                       onPressed: () async {
                         if (_signupFormKey.currentState.saveAndValidate()) {
-                          bool isLogged = await this.authBloc.signup(
+                          var response = await this.authBloc.signup(
                               usernameController.text,
                               emailController.text,
                               passwordController.text,
                               null);
-                          if (isLogged) {
+                          if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);
+                          } else {
+                            DisplaySnackbar.createError(message: response.value)..show(context);
                           }
                         }
                       }),

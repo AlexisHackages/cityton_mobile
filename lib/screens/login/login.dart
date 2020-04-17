@@ -1,8 +1,10 @@
+import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/components/side_menu.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -38,7 +40,7 @@ class LoginState extends State<Login> {
           title: "Login",
           leadingState: HeaderLeading.DEAD_END,
         ),
-        sideMenu: SideMenu(),
+        sideMenu: null,
         body: Column(
           children: <Widget>[
             FormBuilder(
@@ -69,12 +71,20 @@ class LoginState extends State<Login> {
                   child: RaisedButton(
                       child: Text('Submit'),
                       onPressed: () async {
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+
+                        if (!currentFocus.hasPrimaryFocus) {
+                          currentFocus.unfocus();
+                        }
+
                         if (_loginFormKey.currentState.saveAndValidate()) {
-                          bool isLogged = await this.authBloc.login(
+                          var response = await this.authBloc.login(
                               emailController.text, passwordController.text);
-                          if (isLogged) {
+                          if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);
+                          } else {
+                            DisplaySnackbar.createError(message: response.value)..show(context);
                           }
                         }
                       }),

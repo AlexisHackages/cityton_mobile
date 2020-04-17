@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:cityton_mobile/http/ApiResponse.dart';
+import 'package:cityton_mobile/http/AppException.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,33 +25,47 @@ class Http {
         'accept': "application/json",
       },
       followRedirects: false,
-      validateStatus: (status) { return status < 500; },
+      validateStatus: (status) {
+        return status < 500;
+      },
     );
-    
+
     _dio = Dio(_options);
-    
+
     _dio.interceptors
-        .add(InterceptorsWrapper(
-          onRequest: (RequestOptions options) async {
-            
-            _dio.interceptors.requestLock.lock();
-            String token = await authBloc.getToken();
-            
-            if (token != null) {
-              options.headers["Authorization"] = "Bearer " + token;
-            }
-            
-            _dio.interceptors.requestLock.unlock();
-            return options;
-          }
-        ));
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+      _dio.interceptors.requestLock.lock();
+      String token = await authBloc.getToken();
+
+      if (token != null) {
+        options.headers["Authorization"] = "Bearer " + token;
+      }
+
+      _dio.interceptors.requestLock.unlock();
+      return options;
+    }));
   }
 
-  Future get(String url, [Map<String, dynamic> params]) {
-    return _dio.get(url, queryParameters: params == null ? {} : params);
+  Future<ApiResponse> get(String url, [Map<String, dynamic> params]) async {
+    final requestResponse = await _dio.get(url, queryParameters: params == null ? {} : params);
+    return _returnResponse(requestResponse);
   }
 
-  Future post(String url, [Map<String, dynamic> params]) {
-    return _dio.post(url, data: params == null ? {} : params);
+  Future<ApiResponse> post(String url, [Map<String, dynamic> params]) async {
+    final requestResponse = await _dio.post(url, data: params == null ? {} : params);
+    return _returnResponse(requestResponse);
+  }
+
+  ApiResponse _returnResponse(Response response) {
+    switch (response.statusCode) {
+      case 200:
+        return ApiResponse(response.statusCode, response.data);
+      case 400:
+        return ApiResponse(response.statusCode, response.data);
+      case 500:
+      default:
+        return ApiResponse(response.statusCode, 
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }
   }
 }

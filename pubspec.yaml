@@ -27,6 +27,7 @@ dependencies:
   signalr_client: ^0.1.6
   flutter_dotenv: ^2.1.0
   flutter_form_builder: ^3.8.2
+  flushbar: <1.10.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -74,3 +75,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flushbar:
+  git:
+    url: https://github.com/AndreHaueisen/flushbar.git
+    ref: 13c55a8

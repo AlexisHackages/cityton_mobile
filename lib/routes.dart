@@ -1,5 +1,6 @@
 import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/screens/login/login.dart';
+import 'package:cityton_mobile/screens/profile/subScreens/change_password.dart';
 import 'package:cityton_mobile/screens/signup/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/screens/door/door.dart';
@@ -14,5 +15,6 @@ final routes = <String, WidgetBuilder>{
   '/threadsList':     (BuildContext context) => ThreadsList(),
   '/chat':             (BuildContext context) => Chat(),
   '/profile':          (BuildContext context) => Profile(),
+  '/changePassword':  (BuildContext context) => ChangePassword(),
   '/' :               (BuildContext context) => Door(),
 };
