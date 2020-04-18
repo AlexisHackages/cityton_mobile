@@ -12,12 +12,18 @@ class UserService {
     return res;
   }
 
-  Future<ApiResponse> changePassword(oldPassword, newPassword) async {
+  Future<ApiResponse> changePassword(String oldPassword, String newPassword) async {
     var res = await http.post("user/changePassword",
     {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
     });
+
+    return res;
+  }
+
+  Future<ApiResponse> getProfile(int userId) async {
+    var res = await http.get("user/getProfile/" + userId.toString());
 
     return res;
   }

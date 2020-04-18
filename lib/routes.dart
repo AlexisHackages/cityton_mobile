@@ -14,7 +14,7 @@ final routes = <String, WidgetBuilder>{
   '/home':           (BuildContext context) => Home(),
   '/threadsList':     (BuildContext context) => ThreadsList(),
   '/chat':             (BuildContext context) => Chat(),
-  '/profile':          (BuildContext context) => Profile(),
+  '/profile':          (BuildContext context) => Profile(arguments: ModalRoute.of(context).settings.arguments),
   '/changePassword':  (BuildContext context) => ChangePassword(),
   '/' :               (BuildContext context) => Door(),
 };

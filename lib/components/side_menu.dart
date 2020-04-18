@@ -64,7 +64,8 @@ class SideMenuState extends State<SideMenu> {
                 return Padding(
                   padding: EdgeInsets.all(25.0),
                   child: InkWell(
-                    onTap: () => Navigator.popAndPushNamed(context, '/profile'),
+                    onTap: () => Navigator.popAndPushNamed(context, '/profile',
+                        arguments: {"userId": snapshot.data.id}),
                     child: Container(
                       height: MediaQuery.of(context).size.height / 4,
                       child: Row(
