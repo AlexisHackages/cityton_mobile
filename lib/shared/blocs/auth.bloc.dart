@@ -1,4 +1,5 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
+import 'package:cityton_mobile/models/enums.dart';
 import 'package:cityton_mobile/shared/services/auth_service.dart';
 import 'package:cityton_mobile/shared/services/user_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -36,7 +37,7 @@ class AuthBloc {
       _tokenFetcher.sink.add(currentUser.token);
 
       await storage.write(
-          key: "currentUser", value: jsonEncode(currentUser.toJson()));
+          key: "currentUser", value: jsonEncode(currentUser));
     }
 
     return response;
@@ -58,7 +59,7 @@ class AuthBloc {
       _tokenFetcher.sink.add(currentUser.token);
 
       await storage.write(
-          key: "currentUser", value: jsonEncode(currentUser.toJson()));
+          key: "currentUser", value: jsonEncode(currentUser));
     }
 
     return response;

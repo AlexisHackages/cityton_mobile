@@ -1,3 +1,5 @@
+import 'package:cityton_mobile/screens/admin/challenge/add/addChallenge.dart';
+import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.dart';
 import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/screens/login/login.dart';
 import 'package:cityton_mobile/screens/profile/subScreens/change_password.dart';
@@ -16,5 +18,7 @@ final routes = <String, WidgetBuilder>{
   '/chat':             (BuildContext context) => Chat(),
   '/profile':          (BuildContext context) => Profile(arguments: ModalRoute.of(context).settings.arguments),
   '/changePassword':  (BuildContext context) => ChangePassword(),
+  '/admin/challenge': (BuildContext context) => AdminChallenge(),
+  '/admin/challenge/add': (BuildContext context) => AddChallenge(),
   '/' :               (BuildContext context) => Door(),
 };

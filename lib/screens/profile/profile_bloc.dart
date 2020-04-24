@@ -8,8 +8,6 @@ class ProfileBloc {
   final UserService userService = UserService();
   final FlutterSecureStorage storage = FlutterSecureStorage();
 
-  closeThreads() {}
-
   Future<User> getCurrentUser() async {
     String encodedCurrentUser = await storage.read(key: "currentUser");
     return User.fromJson(jsonDecode(encodedCurrentUser));

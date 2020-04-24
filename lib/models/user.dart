@@ -5,22 +5,24 @@ class User {
   final String username;
   final String email;
   final String picture;
-  final Role role;
+  final String role;
   final String token;
   final int groupId;
 
   User({this.id, this.username, this.email, this.picture, this.role, this.token, this.groupId});
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+    User user = User(
       id: json['id'] as int,
       username: json['username'] as String,
       email: json['email'] as String,
       picture: json['picture'] as String,
-      role: json['role'].runtimeType == int ? Role.values[json['role']] : Role.values.firstWhere((role) => role.toString() == json['role'].split(".").last, orElse: () => null),
+      role: json['role'].toString(),
       token: json['token'] as String,
       groupId: json['groupId'] as int,
     );
+
+    return user;
   }
 
   Map<String, dynamic> toJson() => 
