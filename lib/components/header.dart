@@ -18,12 +18,6 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("!!!!! HEADER !!!!!");
-    // print(iconsAction);
-    // print(iconsAction == null);
-    // print(iconsAction.length);
-    // print("!!!!! END HEADER !!!!!");
-
     if (HeaderLeading.NO_LEADING == leadingState) {
       return AppBar(title: Text(title), actions: _buildActions());
     } else if (HeaderLeading.MENU == leadingState) {

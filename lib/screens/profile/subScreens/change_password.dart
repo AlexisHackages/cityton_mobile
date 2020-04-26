@@ -41,7 +41,6 @@ class ChangePasswordState extends State<ChangePassword> {
           children: <Widget>[
             FormBuilder(
               key: _changePasswordFormKey,
-              // autovalidate: true,
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(

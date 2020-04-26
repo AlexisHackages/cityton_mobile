@@ -45,7 +45,6 @@ class LoginState extends State<Login> {
           children: <Widget>[
             FormBuilder(
               key: _loginFormKey,
-              // autovalidate: true,
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(

@@ -122,8 +122,10 @@ class AdminChallengeState extends State<AdminChallenge> {
         final item = challenges[index];
 
         return ListTile(
-          title: Text(item.name),
+          title: Text(item.title),
           subtitle: Text(item.statement),
+          onTap: () => Navigator.popAndPushNamed(context, '/admin/challenge/edit',
+              arguments: {"id": item.id, "title": item.title, "statement": item.statement}),
         );
       },
     );
@@ -132,7 +134,7 @@ class AdminChallengeState extends State<AdminChallenge> {
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
     return <IconButton>[
       IconButton(
-          icon: Icon(Icons.add_circle_outline), onPressed: () => Navigator.of(context).popAndPushNamed("/admin/challenge/add")),
+          icon: Icon(Icons.add_circle_outline), onPressed: () => Navigator.pushNamed(context, '/admin/challenge/add')),
     ];
   }
 }

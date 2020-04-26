@@ -16,8 +16,6 @@ class InputIconState extends State<InputIcon> {
   @override
   Widget build(BuildContext context) {
     return Row(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           InkWell(
             onTap: () => widget.actionOnPressed(inputController.text),

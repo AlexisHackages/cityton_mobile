@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:cityton_mobile/http/ApiResponse.dart';
-import 'package:cityton_mobile/http/AppException.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -53,6 +50,11 @@ class Http {
 
   Future<ApiResponse> post(String url, [Map<String, dynamic> params]) async {
     final requestResponse = await _dio.post(url, data: params == null ? {} : params);
+    return _returnResponse(requestResponse);
+  }
+
+  Future<ApiResponse> delete(String url, [Map<String, dynamic> params]) async {
+    final requestResponse = await _dio.delete(url, queryParameters: params == null ? {} : params);
     return _returnResponse(requestResponse);
   }
 

@@ -6,22 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class AddChallenge extends StatefulWidget {
+class EditChallenge extends StatefulWidget {
+  final Map arguments;
+
+  EditChallenge({@required this.arguments});
+
   @override
-  AddChallengeState createState() => AddChallengeState();
+  EditChallengeState createState() => EditChallengeState();
 }
 
-class AddChallengeState extends State<AddChallenge> {
+class EditChallengeState extends State<EditChallenge> {
   AdminChallengeBloc adminChallengeBloc = AdminChallengeBloc();
 
-  final GlobalKey<FormBuilderState> _addFormKey =
+  final GlobalKey<FormBuilderState> _editFormKey =
       GlobalKey<FormBuilderState>();
   TextEditingController titleController = TextEditingController();
   TextEditingController statementController = TextEditingController();
 
+  Map datas;
+
   @override
   void initState() {
     super.initState();
+    datas = widget.arguments;
+    titleController.text = datas["title"];
+    statementController.text = datas["statement"];
   }
 
   @override
@@ -31,16 +40,18 @@ class AddChallengeState extends State<AddChallenge> {
 
   @override
   Widget build(BuildContext context) {
+    Map datas = widget.arguments;
     return FramePage(
         header: Header(
-          title: "Add a challenge",
+          title: "Edit a challenge",
           leadingState: HeaderLeading.DEAD_END,
+          iconsAction: _buildHeaderIconsAction(context, datas["id"]),
         ),
         sideMenu: null,
         body: Column(
           children: <Widget>[
             FormBuilder(
-              key: _addFormKey,
+              key: _editFormKey,
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
@@ -80,9 +91,15 @@ class AddChallengeState extends State<AddChallenge> {
                           currentFocus.unfocus();
                         }
 
-                        if (_addFormKey.currentState.saveAndValidate()) {
-                          var response = await this.adminChallengeBloc.add(
-                              titleController.text, statementController.text);
+                        if (_editFormKey.currentState.saveAndValidate()) {
+                          if (titleController.text != datas["title"] && statementController.text != datas["statement"]) {
+                            Navigator.pop(context);
+                          }
+
+                          var response = await this.adminChallengeBloc.edit(
+                              datas["id"],
+                              titleController.text,
+                              statementController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
@@ -96,5 +113,22 @@ class AddChallengeState extends State<AddChallenge> {
             ),
           ],
         ));
+  }
+
+  List<IconButton> _buildHeaderIconsAction(BuildContext context, int id) {
+    return <IconButton>[
+      IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () async {
+            var response = await this.adminChallengeBloc.delete(id);
+
+            if (response.status == 200) {
+              Navigator.pop(context);
+            } else {
+              DisplaySnackbar.createError(message: response.value)
+                ..show(context);
+            }
+          }),
+    ];
   }
 }
