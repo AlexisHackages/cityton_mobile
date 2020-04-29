@@ -8,7 +8,13 @@ class UserProfile {
   final Role role;
   final String groupName;
 
-  UserProfile({this.id, this.username, this.email, this.picture, this.role, this.groupName});
+  UserProfile(
+      {this.id,
+      this.username,
+      this.email,
+      this.picture,
+      this.role,
+      this.groupName});
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
@@ -16,18 +22,32 @@ class UserProfile {
       username: json['username'] as String,
       email: json['email'] as String,
       picture: json['picture'] as String,
-      role: json['role'].runtimeType == int ? Role.values[json['role']] : Role.values.firstWhere((role) => role.toString() == json['role'].split(".").last, orElse: () => null),
+      role: Role.values[json['role']],
       groupName: json['groupName'] as String,
     );
   }
 
-  Map<String, dynamic> toJson() => 
-  {
-    'id': this.id,
-    'username': this.username,
-    'email': this.email,
-    'picture': this.picture,
-    'role': this.role.toString(),
-    'groupName': this.groupName,
-  };
+  Map<String, dynamic> toJson() => {
+        'id': this.id,
+        'username': this.username,
+        'email': this.email,
+        'picture': this.picture,
+        'role': this.role.toString(),
+        'groupName': this.groupName,
+      };
+}
+
+class UserProfileList {
+  final List<UserProfile> userProfiles;
+
+  UserProfileList({this.userProfiles});
+
+  factory UserProfileList.fromJson(List<dynamic> parsedJson) {
+    List<UserProfile> userProfileList = List<UserProfile>();
+    userProfileList = parsedJson.map((i) => UserProfile.fromJson(i)).toList();
+
+    return UserProfileList(
+      userProfiles: userProfileList,
+    );
+  }
 }

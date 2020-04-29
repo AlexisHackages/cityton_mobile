@@ -1,6 +1,5 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
-import 'package:cityton_mobile/models/user.dart';
 
 var http = Http();
 
@@ -24,6 +23,21 @@ class UserService {
 
   Future<ApiResponse> getProfile(int userId) async {
     var res = await http.get("user/getProfile/" + userId.toString());
+
+    return res;
+  }
+
+  Future<ApiResponse> search(String search, int selectedRole) async {
+    var res = await http.get("user/search", {
+      "searchText": search,
+      "selectedRole": selectedRole,
+    });
+
+    return res;
+  }
+
+  Future<ApiResponse> delete(int id) async {
+    var res = await http.delete("user/delete/" + id.toString());
 
     return res;
   }

@@ -2,6 +2,7 @@ import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/icon_text.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
+import 'package:cityton_mobile/components/side_menu.dart';
 import 'package:cityton_mobile/models/challengeAdmin.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class AdminChallengeState extends State<AdminChallenge> {
           leadingState: HeaderLeading.MENU,
           iconsAction: _buildHeaderIconsAction(context),
         ),
-        sideMenu: null,
+        sideMenu: SideMenu(),
         body: StreamBuilder(
             stream: adminChallengeBloc.challenges,
             builder: (BuildContext context,
@@ -77,7 +78,7 @@ class AdminChallengeState extends State<AdminChallenge> {
                         flex: 0,
                         child: _buildSearchAndFilter(),
                       ),
-                      Flexible(flex: 1, child: _buildChallenge(snapshot.data)),
+                      Flexible(flex: 1, child: _buildChallengeList(snapshot.data)),
                     ],
                   ),
                 );
@@ -113,7 +114,7 @@ class AdminChallengeState extends State<AdminChallenge> {
     );
   }
 
-  Widget _buildChallenge(List<ChallengeAdmin> challenges) {
+  Widget _buildChallengeList(List<ChallengeAdmin> challenges) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
