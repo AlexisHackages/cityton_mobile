@@ -1,19 +1,29 @@
-import 'package:cityton_mobile/models/user_minimal.dart';
-
 class Thread {
   final int discussionId;
   final String name;
-  final List<UserMinimal> participants;
 
-  Thread({this.discussionId, this.name, this.participants});
+  Thread({this.discussionId, this.name});
 
   factory Thread.fromJson(Map<String, dynamic> json) {
-    var list = json['participants'] as List;
-    List<UserMinimal> users = list.map((i) => UserMinimal.fromJson(i)).toList();
     return Thread(
       discussionId: json['discussionId'] as int,
       name: json['name'] as String,
-      participants: users
+    );
+  }
+}
+
+class ThreadList {
+  final List<Thread> threads;
+
+  ThreadList({this.threads});
+
+  factory ThreadList.fromJson(List<dynamic> parsedJson) {
+
+    List<Thread> threads = new List<Thread>();
+    threads = parsedJson.map((i) => Thread.fromJson(i)).toList();
+
+    return new ThreadList(
+       threads: threads,
     );
   }
 }

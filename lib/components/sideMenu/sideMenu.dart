@@ -1,4 +1,6 @@
+import 'package:cityton_mobile/components/sideMenu/sideMenu.bloc.dart';
 import 'package:cityton_mobile/models/enums.dart';
+import 'package:cityton_mobile/models/thread.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/models/user.dart';
@@ -10,12 +12,12 @@ class SideMenu extends StatefulWidget {
 }
 
 class SideMenuState extends State<SideMenu> {
-  AuthBloc authBloc;
+  AuthBloc authBloc = AuthBloc();
+  SideMenuBloc sideMenuBloc = SideMenuBloc();
 
   @override
   void initState() {
     super.initState();
-    authBloc = AuthBloc();
   }
 
   @override
@@ -79,13 +81,7 @@ class SideMenuState extends State<SideMenu> {
           ),
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
-        ListTile(
-          title: Text(
-            "Threads",
-            textAlign: TextAlign.center,
-          ),
-          onTap: () => Navigator.pushNamed(context, '/threadsList'),
-        ),
+        _buildThreadList(currentUser.id),
         admin,
         ListTile(
           title: Text(
@@ -102,6 +98,45 @@ class SideMenuState extends State<SideMenu> {
     } else {
       return <Widget>[CircularProgressIndicator()];
     }
+  }
+
+  Widget _buildThreadList(int userId) {
+    sideMenuBloc.getThreads(userId);
+
+    return ExpansionTile(title: Text("Threads"), children: <Widget>[
+      StreamBuilder(
+        stream: sideMenuBloc.threads,
+        builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
+          final threads = snapshot.data;
+          print("!!!!! THREADLIST !!!!!");
+          print(threads);
+          print(threads.length);
+          print("!!!!! END THREADLIST !!!!!");
+          if (threads == null) {
+            return Center(child: Text('WAITING...'));
+          }
+
+          if (threads.isEmpty) {
+            return Center(child: Text('PRINT VOID...'));
+          }
+
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: threads.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                    title: Text(
+                      threads[index].name,
+                      textAlign: TextAlign.center,
+                    ),
+                    onTap: () => {
+                          Navigator.pushNamed(context, "/chat",
+                              arguments: threads[index].discussionId),
+                        });
+              });
+        },
+      )
+    ]);
   }
 
   Widget _buildAdminMenu() {

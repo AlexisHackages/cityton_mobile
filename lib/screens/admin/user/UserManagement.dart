@@ -1,9 +1,8 @@
 import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
-import 'package:cityton_mobile/components/side_menu.dart';
+import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
 import 'package:cityton_mobile/models/enums.dart';
-import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
 import 'package:flutter/material.dart';

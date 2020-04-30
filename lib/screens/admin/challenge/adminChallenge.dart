@@ -2,7 +2,7 @@ import 'package:cityton_mobile/components/frame_page.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/icon_text.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
-import 'package:cityton_mobile/components/side_menu.dart';
+import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
 import 'package:cityton_mobile/models/challengeAdmin.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
 import 'package:flutter/material.dart';
