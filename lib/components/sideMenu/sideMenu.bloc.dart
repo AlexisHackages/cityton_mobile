@@ -1,6 +1,6 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
-import 'package:cityton_mobile/screens/chat/chat_service.dart';
 import 'package:cityton_mobile/models/thread.dart';
+import 'package:cityton_mobile/shared/services/chat.service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SideMenuBloc {

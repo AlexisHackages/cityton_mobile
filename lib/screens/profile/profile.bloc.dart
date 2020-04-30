@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/user.dart';
-import 'package:cityton_mobile/shared/services/user_service.dart';
+import 'package:cityton_mobile/shared/services/user.service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ProfileBloc {

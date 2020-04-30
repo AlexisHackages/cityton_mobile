@@ -5,7 +5,7 @@ import 'package:cityton_mobile/screens/admin/user/UserManagement.dart';
 import 'package:cityton_mobile/screens/admin/user/userInfo/UserInfo.dart';
 import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/screens/login/login.dart';
-import 'package:cityton_mobile/screens/profile/subScreens/change_password.dart';
+import 'package:cityton_mobile/screens/profile/subScreens/changePassword.dart';
 import 'package:cityton_mobile/screens/signup/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/screens/door/door.dart';

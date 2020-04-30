@@ -1,10 +1,8 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
-import 'package:cityton_mobile/components/frame_page.dart';
+import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
-import 'package:flushbar/flushbar.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

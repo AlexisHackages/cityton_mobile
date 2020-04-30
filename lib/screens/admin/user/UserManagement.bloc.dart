@@ -1,6 +1,6 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
-import 'package:cityton_mobile/shared/services/user_service.dart';
+import 'package:cityton_mobile/shared/services/user.service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserManagementBloc {

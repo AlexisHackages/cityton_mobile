@@ -1,5 +1,5 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
-import 'package:cityton_mobile/components/frame_page.dart';
+import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
 import 'package:flutter/material.dart';

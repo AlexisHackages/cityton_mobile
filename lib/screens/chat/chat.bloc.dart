@@ -1,6 +1,6 @@
-import 'package:cityton_mobile/screens/chat/chat_service.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
+import 'package:cityton_mobile/shared/services/chat.service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:signalr_client/signalr_client.dart';

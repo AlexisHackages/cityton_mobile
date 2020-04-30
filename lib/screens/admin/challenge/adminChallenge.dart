@@ -1,6 +1,6 @@
-import 'package:cityton_mobile/components/frame_page.dart';
+import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/components/icon_text.dart';
+import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
 import 'package:cityton_mobile/models/challengeAdmin.dart';

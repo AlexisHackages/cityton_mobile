@@ -1,7 +1,7 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
-import 'package:cityton_mobile/components/frame_page.dart';
+import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/components/icon_text.dart';
+import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
 import 'package:flutter/material.dart';
