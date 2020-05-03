@@ -1,7 +1,8 @@
+import 'package:cityton_mobile/http/ApiResponse.dart';
+import 'package:cityton_mobile/models/SendMessage.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:cityton_mobile/shared/services/chat.service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:signalr_client/signalr_client.dart';
 
@@ -22,8 +23,12 @@ class ChatBloc {
   }
 
   getMessages(int discussionId) async {
-    List<Message> messages = await chatService.getMessages(discussionId);
-    _messagesFetcher.sink.add(messages);
+    ApiResponse response = await chatService.getMessages(discussionId);
+
+    if (response.status == 200) {
+      MessageList messageList = MessageList.fromJson(response.value);
+      _messagesFetcher.sink.add(messageList.messages);
+    }
   }
 
   closeMessages() {
@@ -32,13 +37,14 @@ class ChatBloc {
 
   buildConnection() {
     _hubConnection = HubConnectionBuilder()
-      .withUrl(DotEnv().env['API_URL'] + 'hub/chathub', options: httpOptions)
+      .withUrl('http://10.0.2.2:5000/hub/chatHub', options: httpOptions)
       .build();
   }
 
   Future<void> openChatConnection() async {
 
     _hubConnection.start()
+      .catchError((onError) => {print(onError)})
       .then((onValue)
         => {
           _hubConnection.invoke("AddToGroup")
@@ -68,7 +74,8 @@ class ChatBloc {
   }
 
   Future<void> sendChatMessage(String newMessage, int discussionId, String imageUrl) async {
-    await _hubConnection.invoke("newMessage", args: <Object>[newMessage, discussionId, imageUrl] );
+    SendMessage messageToSend = SendMessage(newMessage, discussionId, imageUrl);
+    await _hubConnection.invoke("newMessage", args: <SendMessage>[messageToSend] );
   }
 
   Future<void> removeMessage(int messageId) async {
@@ -76,7 +83,6 @@ class ChatBloc {
   }
 
   void closeChatConnection() {
-    print("CLOSE");
     _hubConnection.stop();
   }
 

@@ -1,7 +1,7 @@
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
-import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
+import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/models/enums.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
@@ -41,7 +41,7 @@ class UserManagementState extends State<UserManagement> {
           title: "Challenge",
           leadingState: HeaderLeading.MENU,
         ),
-        sideMenu: SideMenu(),
+        sideMenu: MainSideMenu(),
         body: StreamBuilder(
             stream: userManagementBloc.userProfiles,
             builder: (BuildContext context,

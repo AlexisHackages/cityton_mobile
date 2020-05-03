@@ -40,7 +40,6 @@ class EditChallengeState extends State<EditChallenge> {
 
   @override
   Widget build(BuildContext context) {
-    Map datas = widget.arguments;
     return FramePage(
         header: Header(
           title: "Edit a challenge",

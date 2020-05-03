@@ -22,3 +22,20 @@ class Message {
     );
   }
 }
+
+class MessageList {
+  final List<Message> messages;
+
+  MessageList({this.messages});
+
+  factory MessageList.fromJson(List<dynamic> parsedJson) {
+
+    List<Message> messages = new List<Message>();
+    messages = parsedJson.map((i) => Message.fromJson(i)).toList();
+
+    return MessageList(
+       messages: messages,
+    );
+  }
+}
+

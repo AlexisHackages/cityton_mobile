@@ -1,19 +1,18 @@
-import 'package:cityton_mobile/components/sideMenu/sideMenu.bloc.dart';
-import 'package:cityton_mobile/models/enums.dart';
+import 'package:cityton_mobile/components/mainSideMenu/mainsideMenu.bloc.dart';
 import 'package:cityton_mobile/models/thread.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:flutter/widgets.dart';
 
-class SideMenu extends StatefulWidget {
+class MainSideMenu extends StatefulWidget {
   @override
-  SideMenuState createState() => SideMenuState();
+  MainSideMenuState createState() => MainSideMenuState();
 }
 
-class SideMenuState extends State<SideMenu> {
+class MainSideMenuState extends State<MainSideMenu> {
   AuthBloc authBloc = AuthBloc();
-  SideMenuBloc sideMenuBloc = SideMenuBloc();
+  MainSideMenuBloc mainSideMenuBloc = MainSideMenuBloc();
 
   @override
   void initState() {
@@ -101,17 +100,13 @@ class SideMenuState extends State<SideMenu> {
   }
 
   Widget _buildThreadList(int userId) {
-    sideMenuBloc.getThreads(userId);
+    mainSideMenuBloc.getThreads(userId);
 
     return ExpansionTile(title: Text("Threads"), children: <Widget>[
       StreamBuilder(
-        stream: sideMenuBloc.threads,
+        stream: mainSideMenuBloc.threads,
         builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
           final threads = snapshot.data;
-          print("!!!!! THREADLIST !!!!!");
-          print(threads);
-          print(threads.length);
-          print("!!!!! END THREADLIST !!!!!");
           if (threads == null) {
             return Center(child: Text('WAITING...'));
           }
@@ -131,7 +126,7 @@ class SideMenuState extends State<SideMenu> {
                     ),
                     onTap: () => {
                           Navigator.pushNamed(context, "/chat",
-                              arguments: threads[index].discussionId),
+                              arguments: {"thread": threads[index]}),
                         });
               });
         },

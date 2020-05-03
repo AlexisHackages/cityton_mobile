@@ -2,8 +2,8 @@ import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
-import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
-import 'package:cityton_mobile/models/challengeAdmin.dart';
+import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
+import 'package:cityton_mobile/models/challenge.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
@@ -65,11 +65,11 @@ class AdminChallengeState extends State<AdminChallenge> {
           leadingState: HeaderLeading.MENU,
           iconsAction: _buildHeaderIconsAction(context),
         ),
-        sideMenu: SideMenu(),
+        sideMenu: MainSideMenu(),
         body: StreamBuilder(
             stream: adminChallengeBloc.challenges,
             builder: (BuildContext context,
-                AsyncSnapshot<List<ChallengeAdmin>> snapshot) {
+                AsyncSnapshot<List<Challenge>> snapshot) {
               if (snapshot.hasData) {
                 return Container(
                   child: Column(
@@ -114,7 +114,7 @@ class AdminChallengeState extends State<AdminChallenge> {
     );
   }
 
-  Widget _buildChallengeList(List<ChallengeAdmin> challenges) {
+  Widget _buildChallengeList(List<Challenge> challenges) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,

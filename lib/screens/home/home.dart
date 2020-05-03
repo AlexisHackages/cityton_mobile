@@ -1,6 +1,6 @@
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
+import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return FramePage(
       header: Header(leadingState: HeaderLeading.MENU, title: "Home",),
-      sideMenu: SideMenu(),
+      sideMenu: MainSideMenu(),
       body: _buildBody(),
     );
   }

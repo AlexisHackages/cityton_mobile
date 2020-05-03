@@ -1,4 +1,8 @@
-import 'package:cityton_mobile/components/sideMenu/sideMenu.dart';
+import 'package:cityton_mobile/components/DisplaySnackbar.dart';
+import 'package:cityton_mobile/components/inputIcon.dart';
+import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
+import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:cityton_mobile/models/thread.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
@@ -9,37 +13,44 @@ import 'package:flutter/services.dart';
 import 'chat.bloc.dart';
 
 class Chat extends StatefulWidget {
+  final Map arguments;
+
+  Chat({@required this.arguments});
+
   @override
   ChatState createState() => ChatState();
 }
 
 class ChatState extends State<Chat> {
-  ChatBloc chatBloc;
+  ChatBloc chatBloc = ChatBloc();
 
-  TextEditingController _sendController;
+  TextEditingController _sendController = TextEditingController();
 
   void initState() {
     super.initState();
-    chatBloc = new ChatBloc();
-    _sendController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _sendController.dispose();
-    chatBloc.closeMessages();
-    chatBloc.closeChatConnection();
+    // _sendController.dispose();
+    // chatBloc.closeMessages();
+    // chatBloc.closeChatConnection();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final int threadId = ModalRoute.of(context).settings.arguments;
+    Map datas = widget.arguments;
+    Thread thread = datas["thread"];
 
     return FramePage(
-      header: Header(title: "Chat"),
-      sideMenu: SideMenu(),
-      body: _buildChat(threadId),
+      header: Header(
+        title: thread.name,
+        leadingState: HeaderLeading.MENU,
+        iconsAction: _buildHeaderIconsAction(context, thread.discussionId),
+      ),
+      sideMenu: MainSideMenu(),
+      body: _buildChat(thread.discussionId),
     );
   }
 
@@ -51,7 +62,6 @@ class ChatState extends State<Chat> {
           Container(height: 100, child: _buildInputText(threadId)),
         ],
       ),
-      color: Colors.blue,
       alignment: Alignment.center,
     );
   }
@@ -87,7 +97,8 @@ class ChatState extends State<Chat> {
             itemBuilder: (BuildContext context, int index) {
               _scrollToBottom();
               return ListTile(
-                onLongPress: () => _buildModalBottomSheet(results[index].content, results[index].id),
+                onLongPress: () => _buildModalBottomSheet(
+                    results[index].content, results[index].id),
                 title: Text(
                   results[index].content,
                   textAlign: TextAlign.center,
@@ -100,13 +111,15 @@ class ChatState extends State<Chat> {
 
   Widget _buildInputText(int threadId) {
     return Center(
-      child: TextField(
+      child: InputIcon(
+        icon: Icons.send,
         controller: _sendController,
-        onSubmitted: (String value) async {
+        labelText: "Write a message",
+        actionOnPressed: (String value) async {
           chatBloc.sendChatMessage(value, threadId, null);
           _sendController.clear();
         },
-      ),
+        )
     );
   }
 
@@ -114,16 +127,32 @@ class ChatState extends State<Chat> {
     return showModalBottomSheet(
         context: context,
         builder: (context) => ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text("Copy"),
-              onTap: () => Clipboard.setData(ClipboardData(text: content)),
-            ),
-            ListTile(
-              title: Text("Remove"),
-              onTap: () => chatBloc.removeMessage(messageId),
-            ),
-          ],
+              children: <Widget>[
+                ListTile(
+                  title: Text("Copy"),
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: content));
+                    Navigator.pop(context);
+                    DisplaySnackbar.createConfirmation(message: "Copied in clipboard")..show(context);
+                  }
+                ),
+                ListTile(
+                  title: Text("Remove"),
+                  onTap: () {
+                    chatBloc.removeMessage(messageId);
+                    Navigator.pop(context);
+                    DisplaySnackbar.createConfirmation(message: "Message succesfully Removed")..show(context);
+                  } 
+                ),
+              ],
             ));
+  }
+
+  List<IconButton> _buildHeaderIconsAction(BuildContext context, int threadId) {
+    return <IconButton>[
+      IconButton(
+        icon: Icon(Icons.flag), onPressed: () => Navigator.popAndPushNamed(context, '/chat/progression', arguments: {"threadId": threadId}),
+      )
+    ];
   }
 }

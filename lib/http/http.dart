@@ -64,6 +64,8 @@ class Http {
         return ApiResponse(response.statusCode, response.data);
       case 400:
         return ApiResponse(response.statusCode, response.data);
+      case 404:
+        return ApiResponse(response.statusCode, response.data);
       case 500:
       default:
         return ApiResponse(response.statusCode, 

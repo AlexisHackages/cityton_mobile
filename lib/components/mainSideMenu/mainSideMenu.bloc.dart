@@ -3,7 +3,7 @@ import 'package:cityton_mobile/models/thread.dart';
 import 'package:cityton_mobile/shared/services/chat.service.dart';
 import 'package:rxdart/rxdart.dart';
 
-class SideMenuBloc {
+class MainSideMenuBloc {
 
   final ChatService chatService = ChatService();
 

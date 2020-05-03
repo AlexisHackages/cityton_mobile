@@ -19,4 +19,21 @@ class DisplaySnackbar {
       duration: duration,
     );
   }
+
+  static Flushbar createConfirmation(
+      {@required String message,
+      String title,
+      Duration duration = const Duration(seconds: 10)}) {
+    return Flushbar(
+      title: title,
+      message: message,
+      icon: Icon(
+        Icons.warning,
+        size: 28.0,
+        color: Colors.green[300],
+      ),
+      leftBarIndicatorColor: Colors.green[300],
+      duration: duration,
+    );
+  }
 }
