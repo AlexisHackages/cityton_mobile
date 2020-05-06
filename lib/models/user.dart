@@ -1,11 +1,9 @@
-import 'package:cityton_mobile/models/enums.dart';
-
 class User {
   final int id;
   final String username;
   final String email;
   final String picture;
-  final String role;
+  final int role;
   final String token;
   final int groupId;
 
@@ -17,7 +15,7 @@ class User {
       username: json['username'] as String,
       email: json['email'] as String,
       picture: json['picture'] as String,
-      role: json['role'].toString(),
+      role: json['role'] as int,
       token: json['token'] as String,
       groupId: json['groupId'] as int,
     );
@@ -31,7 +29,7 @@ class User {
     'username': this.username,
     'email': this.email,
     'picture': this.picture,
-    'role': this.role.toString(),
+    'role': this.role,
     'token': this.token,
     'groupId': this.groupId,
   };

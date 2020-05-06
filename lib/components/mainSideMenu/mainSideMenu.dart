@@ -1,4 +1,5 @@
 import 'package:cityton_mobile/components/mainSideMenu/mainsideMenu.bloc.dart';
+import 'package:cityton_mobile/models/enums.dart';
 import 'package:cityton_mobile/models/thread.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,18 @@ class MainSideMenuState extends State<MainSideMenu> {
   AuthBloc authBloc = AuthBloc();
   MainSideMenuBloc mainSideMenuBloc = MainSideMenuBloc();
 
+
+  Future<User> currentUser;
+
   @override
   void initState() {
     super.initState();
+
+    currentUser = _initCurrentUser();
+  }
+
+  Future<User> _initCurrentUser() async {
+    return await authBloc.getCurrentUser();
   }
 
   @override
@@ -28,7 +38,7 @@ class MainSideMenuState extends State<MainSideMenu> {
   Widget build(BuildContext context) {
     return Drawer(
         child: FutureBuilder<User>(
-            future: authBloc.getCurrentUser(),
+            future: currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
               return ListView(children: [
                 _buildDrawHeader(snapshot),
@@ -70,7 +80,7 @@ class MainSideMenuState extends State<MainSideMenu> {
   List<Widget> _buildDrawBody(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
       User currentUser = snapshot.data;
-      Widget admin = currentUser.role != "0" ? _buildAdminMenu() : Container();
+      Widget admin = Role.values[currentUser.role] == Role.Admin ? _buildAdminMenu() : Container();
 
       return <Widget>[
         ListTile(

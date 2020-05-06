@@ -58,6 +58,11 @@ class Http {
     return _returnResponse(requestResponse);
   }
 
+  Future<ApiResponse> put(String url, [Map<String, dynamic> params]) async {
+    final requestResponse = await _dio.put(url, queryParameters: params == null ? {} : params);
+    return _returnResponse(requestResponse);
+  }
+
   ApiResponse _returnResponse(Response response) {
     switch (response.statusCode) {
       case 200:

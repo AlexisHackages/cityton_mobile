@@ -1,6 +1,14 @@
+import 'package:cityton_mobile/components/DisplaySnackbar.dart';
+import 'package:cityton_mobile/components/framePage.dart';
+import 'package:cityton_mobile/components/header.dart';
+import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/challengeMinimal.dart';
+import 'package:cityton_mobile/models/enums.dart';
 import 'package:cityton_mobile/models/groupProgression.dart';
+import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.bloc.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,14 +22,20 @@ class Progression extends StatefulWidget {
 }
 
 class ProgressionState extends State<Progression> {
+  AuthBloc authBloc = AuthBloc();
   ProgressionBloc progressionBloc = ProgressionBloc();
 
   Map datas;
+  Future<User> currentUser;
+  Future<GroupProgression> groupProgression;
 
   @override
   void initState() {
     super.initState();
     datas = widget.arguments;
+
+    currentUser = authBloc.getCurrentUser();
+    // refreshProgression();
   }
 
   @override
@@ -29,12 +43,64 @@ class ProgressionState extends State<Progression> {
     super.dispose();
   }
 
+  refreshProgression() async {
+    ApiResponse response =
+        await progressionBloc.getProgression(datas["threadId"]);
+
+    if (response.status != 200) {
+      DisplaySnackbar.createError(message: response.value)..show(context);
+    }
+  }
+
+  validate(int challengeId) async {
+    ApiResponse response =
+        await progressionBloc.validate(challengeId, datas["threadId"]);
+
+    if (response.status == 200) {
+      DisplaySnackbar.createConfirmation(message: "Challenge validated")
+        ..show(context);
+    } else {
+      DisplaySnackbar.createError(message: response.value)..show(context);
+    }
+  }
+
+  reject(int challengeId) async {
+    ApiResponse response =
+        await progressionBloc.reject(challengeId, datas["threadId"]);
+
+    if (response.status == 200) {
+      DisplaySnackbar.createConfirmation(message: "Challenge rejected")
+        ..show(context);
+    } else {
+      DisplaySnackbar.createError(message: response.value)..show(context);
+    }
+  }
+
+  undo(int challengeId) async {
+    ApiResponse response =
+        await progressionBloc.undo(challengeId, datas["threadId"]);
+
+    if (response.status == 200) {
+      DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo")
+        ..show(context);
+    } else {
+      DisplaySnackbar.createError(message: response.value)..show(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-        child: FutureBuilder<GroupProgression>(
-            future: progressionBloc.getProgression(datas["threadId"]),
-            builder: (BuildContext context, AsyncSnapshot<GroupProgression> snapshot) {
+    refreshProgression();
+    return FramePage(
+        header: Header(
+          title: "Details",
+          leadingState: HeaderLeading.DEAD_END,
+        ),
+        sideMenu: null,
+        body: StreamBuilder(
+            stream: progressionBloc.groupProgression,
+            builder: (BuildContext context,
+                AsyncSnapshot<GroupProgression> snapshot) {
               return ListView(children: [
                 _buildDrawHeader(snapshot),
                 ..._buildDrawBody(snapshot),
@@ -43,48 +109,106 @@ class ProgressionState extends State<Progression> {
   }
 
   Widget _buildDrawHeader(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+    if (snapshot.hasData && snapshot.data.groupId != null) {
       GroupProgression groupProgression = snapshot.data;
       return DrawerHeader(
-          child: Padding(
-              padding: EdgeInsets.all(25.0),
-              child: LinearProgressIndicator(
-                value: groupProgression.progression,
-              )));
+          child: Column(children: <Widget>[
+        Text(groupProgression.progression.toInt().toString() +
+            "% achievements earned"),
+        LinearProgressIndicator(
+          value: groupProgression.progression / 100.0,
+          backgroundColor: Colors.green,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+        ),
+      ]));
     } else {
       return CircularProgressIndicator();
     }
   }
 
   List<Widget> _buildDrawBody(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+    if (snapshot.hasData && snapshot.data.groupId != null) {
       GroupProgression groupProgression = snapshot.data;
 
       return <Widget>[
-        _buildCategory(groupProgression.inProgress, "In progress"),
-        _buildCategory(groupProgression.succeed, "Succeed"),
-        _buildCategory(groupProgression.failed, "Failed"),
+        _buildCategory(groupProgression.inProgress, StatusChallenge.InProgress),
+        _buildCategory(groupProgression.succeed, StatusChallenge.Succeed),
+        _buildCategory(groupProgression.failed, StatusChallenge.Failed),
       ];
     } else {
       return <Widget>[CircularProgressIndicator()];
     }
   }
 
-  Widget _buildCategory(List<ChallengeMinimal> challenges, String title) {
-    return ExpansionTile(title: Text(title), children: <Widget>[
-      ListView.builder(
-          shrinkWrap: true,
-          itemCount: challenges.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(
-                challenges[index].title,
-                textAlign: TextAlign.center,
-              ),
-              subtitle: Text(challenges[index].statement,
-                  textAlign: TextAlign.center),
-            );
-          })
-    ]);
+  Widget _buildCategory(
+      List<ChallengeMinimal> challenges, StatusChallenge status) {
+    return FutureBuilder<User>(
+        future: currentUser,
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (snapshot.hasData) {
+            return ExpansionTile(title: Text(status.value), children: <Widget>[
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: challenges.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(
+                        challenges[index].title,
+                        textAlign: TextAlign.center,
+                      ),
+                      subtitle: Text(challenges[index].statement,
+                          textAlign: TextAlign.center),
+                      trailing: Role.values[snapshot.data.role] == Role.Member
+                          ? null
+                          : Column(
+                              children:
+                                  _buildButtons(status, challenges[index].id),
+                            ),
+                    );
+                  })
+            ]);
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
+  }
+
+  List<Widget> _buildButtons(StatusChallenge status, int challengeId) {
+    if (status == StatusChallenge.InProgress) {
+      return [
+        InkWell(
+          onTap: () {
+            validate(challengeId);
+          },
+          child: Icon(Icons.done),
+        ),
+        InkWell(
+          onTap: () {
+            reject(challengeId);
+          },
+          child: Icon(Icons.clear),
+        ),
+      ];
+    } else if (status == StatusChallenge.Succeed) {
+      return [
+        InkWell(
+          onTap: () {
+            undo(challengeId);
+          },
+          child: Icon(Icons.refresh),
+        ),
+      ];
+    } else if (status == StatusChallenge.Failed) {
+      return [
+        InkWell(
+          onTap: () {
+            undo(challengeId);
+          },
+          child: Icon(Icons.refresh),
+        ),
+      ];
+    } else {
+      return null;
+    }
   }
 }

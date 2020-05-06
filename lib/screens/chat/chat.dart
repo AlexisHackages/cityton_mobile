@@ -3,6 +3,8 @@ import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/thread.dart';
+import 'package:cityton_mobile/models/user.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
@@ -22,12 +24,20 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
+  AuthBloc authBloc = AuthBloc();
   ChatBloc chatBloc = ChatBloc();
 
   TextEditingController _sendController = TextEditingController();
+  User currentUser;
 
   void initState() {
     super.initState();
+
+    _initCurrentUser();
+  }
+
+  Future<void> _initCurrentUser() async {
+    currentUser = await authBloc.getCurrentUser();
   }
 
   @override
@@ -111,16 +121,15 @@ class ChatState extends State<Chat> {
 
   Widget _buildInputText(int threadId) {
     return Center(
-      child: InputIcon(
-        icon: Icons.send,
-        controller: _sendController,
-        labelText: "Write a message",
-        actionOnPressed: (String value) async {
-          chatBloc.sendChatMessage(value, threadId, null);
-          _sendController.clear();
-        },
-        )
-    );
+        child: InputIcon(
+      icon: Icons.send,
+      controller: _sendController,
+      labelText: "Write a message",
+      actionOnPressed: (String value) async {
+        chatBloc.sendChatMessage(value, threadId, null);
+        _sendController.clear();
+      },
+    ));
   }
 
   Future<Widget> _buildModalBottomSheet(String content, int messageId) {
@@ -129,21 +138,23 @@ class ChatState extends State<Chat> {
         builder: (context) => ListView(
               children: <Widget>[
                 ListTile(
-                  title: Text("Copy"),
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: content));
-                    Navigator.pop(context);
-                    DisplaySnackbar.createConfirmation(message: "Copied in clipboard")..show(context);
-                  }
-                ),
+                    title: Text("Copy"),
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: content));
+                      Navigator.pop(context);
+                      DisplaySnackbar.createConfirmation(
+                          message: "Copied in clipboard")
+                        ..show(context);
+                    }),
                 ListTile(
-                  title: Text("Remove"),
-                  onTap: () {
-                    chatBloc.removeMessage(messageId);
-                    Navigator.pop(context);
-                    DisplaySnackbar.createConfirmation(message: "Message succesfully Removed")..show(context);
-                  } 
-                ),
+                    title: Text("Remove"),
+                    onTap: () {
+                      chatBloc.removeMessage(messageId);
+                      Navigator.pop(context);
+                      DisplaySnackbar.createConfirmation(
+                          message: "Message succesfully Removed")
+                        ..show(context);
+                    }),
               ],
             ));
   }
@@ -151,7 +162,9 @@ class ChatState extends State<Chat> {
   List<IconButton> _buildHeaderIconsAction(BuildContext context, int threadId) {
     return <IconButton>[
       IconButton(
-        icon: Icon(Icons.flag), onPressed: () => Navigator.popAndPushNamed(context, '/chat/progression', arguments: {"threadId": threadId}),
+        icon: Icon(Icons.flag),
+        onPressed: () => Navigator.popAndPushNamed(context, '/chat/progression',
+            arguments: {"threadId": threadId}),
       )
     ];
   }

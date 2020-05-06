@@ -35,7 +35,25 @@ class ChallengeService {
   }
 
   Future<ApiResponse> delete(int id) async {
-    var res = await http.delete("challenge/delete/" + id.toString());
+    var res = await http.put("challenge/delete/" + id.toString());
+
+    return res;
+  }
+
+  Future<ApiResponse> validate(int id) async {
+    var res = await http.put("challenge/validate/" + id.toString());
+
+    return res;
+  }
+
+  Future<ApiResponse> reject(int id) async {
+    var res = await http.put("challenge/reject/" + id.toString());
+
+    return res;
+  }
+
+  Future<ApiResponse> undo(int id) async {
+    var res = await http.put("challenge/undo/" + id.toString());
 
     return res;
   }
