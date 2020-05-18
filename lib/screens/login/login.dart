@@ -81,7 +81,7 @@ class LoginState extends State<Login> {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);
                           } else {
-                            DisplaySnackbar.createError(message: response.value)..show(context);
+                            DisplaySnackbar.createError(message: response.value);
                           }
                         }
                       }),

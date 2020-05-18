@@ -3,6 +3,7 @@ import 'package:cityton_mobile/routes.dart';
 import 'package:cityton_mobile/theme/style.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
+import 'package:get/get.dart';
 
 Future main() async => {
   await DotEnv().load('.env'),
@@ -13,7 +14,7 @@ Future main() async => {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Cityton',
       theme: appTheme(),
       initialRoute: '/',

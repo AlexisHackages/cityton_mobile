@@ -1,23 +1,22 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
+import 'package:cityton_mobile/screens/group/create/createGroup.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class AddChallenge extends StatefulWidget {
+class CreateGroup extends StatefulWidget {
   @override
-  AddChallengeState createState() => AddChallengeState();
+  CreateGroupState createState() => CreateGroupState();
 }
 
-class AddChallengeState extends State<AddChallenge> {
-  AdminChallengeBloc adminChallengeBloc = AdminChallengeBloc();
+class CreateGroupState extends State<CreateGroup> {
+  CreateGroupBloc createGroupBloc = CreateGroupBloc();
 
   final GlobalKey<FormBuilderState> _addFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController statementController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
@@ -33,7 +32,7 @@ class AddChallengeState extends State<AddChallenge> {
   Widget build(BuildContext context) {
     return FramePage(
         header: Header(
-          title: "Add a challenge",
+          title: "Create a group",
           leadingState: HeaderLeading.DEAD_END,
         ),
         sideMenu: null,
@@ -44,9 +43,9 @@ class AddChallengeState extends State<AddChallenge> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: titleController,
-                  attribute: "title",
-                  decoration: InputDecoration(labelText: "Title"),
+                  controller: nameController,
+                  attribute: "name",
+                  decoration: InputDecoration(labelText: "Name"),
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -54,19 +53,6 @@ class AddChallengeState extends State<AddChallenge> {
                         errorText: "At least 3 characters are required"),
                     FormBuilderValidators.maxLength(50,
                         errorText: "Maximum 50 characters are allowed"),
-                  ],
-                ),
-                FormBuilderTextField(
-                  controller: statementController,
-                  attribute: "statement",
-                  decoration: InputDecoration(labelText: "Statement"),
-                  validators: [
-                    FormBuilderValidators.required(
-                        errorText: "This field is required"),
-                    FormBuilderValidators.minLength(10,
-                        errorText: "At least 10 characters are required"),
-                    FormBuilderValidators.maxLength(100,
-                        errorText: "Maximum 100 characters are allowed"),
                   ],
                 ),
                 Container(
@@ -81,10 +67,10 @@ class AddChallengeState extends State<AddChallenge> {
                         }
 
                         if (_addFormKey.currentState.saveAndValidate()) {
-                          var response = await this.adminChallengeBloc.add(
-                              titleController.text, statementController.text);
+                          var response = await this.createGroupBloc.add(nameController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
+                            DisplaySnackbar.createConfirmation(message: "Group created");
                           } else {
                             DisplaySnackbar.createError(message: response.value);
                           }

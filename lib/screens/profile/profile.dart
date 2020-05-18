@@ -77,8 +77,8 @@ class ProfileState extends State<Profile> {
                 ],
               );
             } else {
-              return DisplaySnackbar.createError(message: data.value)
-                ..show(context);
+              DisplaySnackbar.createError(message: data.value);
+              return Container();
             }
           } else {
             return CircularProgressIndicator();
@@ -96,9 +96,9 @@ class ProfileState extends State<Profile> {
           CircleAvatar(
             backgroundImage: NetworkImage(userProfile.picture),
           ),
-          IconText(icon: Icons.perm_identity, text: userProfile.username),
-          IconText(icon: Icons.supervisor_account, text: groupName),
-          IconText(icon: Icons.mail_outline, text: userProfile.email),
+          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
+          IconText.iconNotClickable(leading: Icons.supervisor_account, text: groupName),
+          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     } else {
@@ -108,9 +108,9 @@ class ProfileState extends State<Profile> {
           CircleAvatar(
             backgroundImage: NetworkImage(userProfile.picture),
           ),
-          IconText(icon: Icons.perm_identity, text: userProfile.username),
-          IconText(icon: Icons.warning, text: role[1]),
-          IconText(icon: Icons.mail_outline, text: userProfile.email),
+          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
+          IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
+          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     }

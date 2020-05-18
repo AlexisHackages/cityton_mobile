@@ -1,4 +1,4 @@
-import 'package:cityton_mobile/models/user_minimal.dart';
+import 'package:cityton_mobile/models/userMinimal.dart';
 import 'package:cityton_mobile/models/media_minimal.dart';
 
 class Message {

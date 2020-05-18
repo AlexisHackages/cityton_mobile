@@ -1,32 +1,31 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 class DisplaySnackbar {
 
-  static Flushbar createError(
+  static void createError(
       {@required String message,
       String title,
       Duration duration = const Duration(seconds: 10)}) {
-    return Flushbar(
-      title: title,
-      message: message,
+    return Get.snackbar(
+      title,
+      message,
       icon: Icon(
         Icons.warning,
         size: 28.0,
         color: Colors.red[300],
       ),
       leftBarIndicatorColor: Colors.red[300],
-      duration: duration,
-    );
+      duration: duration);
   }
 
-  static Flushbar createConfirmation(
+  static void createConfirmation(
       {@required String message,
       String title,
       Duration duration = const Duration(seconds: 10)}) {
-    return Flushbar(
-      title: title,
-      message: message,
+    return Get.snackbar(
+      title,
+      message,
       icon: Icon(
         Icons.warning,
         size: 28.0,

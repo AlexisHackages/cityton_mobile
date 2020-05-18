@@ -26,7 +26,7 @@ class ProgressionState extends State<Progression> {
   ProgressionBloc progressionBloc = ProgressionBloc();
 
   Map datas;
-  Future<User> currentUser;
+  Future<User> _currentUser;
   Future<GroupProgression> groupProgression;
 
   @override
@@ -34,8 +34,7 @@ class ProgressionState extends State<Progression> {
     super.initState();
     datas = widget.arguments;
 
-    currentUser = authBloc.getCurrentUser();
-    // refreshProgression();
+    _currentUser = authBloc.getCurrentUser();
   }
 
   @override
@@ -48,7 +47,7 @@ class ProgressionState extends State<Progression> {
         await progressionBloc.getProgression(datas["threadId"]);
 
     if (response.status != 200) {
-      DisplaySnackbar.createError(message: response.value)..show(context);
+      DisplaySnackbar.createError(message: response.value);
     }
   }
 
@@ -57,10 +56,9 @@ class ProgressionState extends State<Progression> {
         await progressionBloc.validate(challengeId, datas["threadId"]);
 
     if (response.status == 200) {
-      DisplaySnackbar.createConfirmation(message: "Challenge validated")
-        ..show(context);
+      DisplaySnackbar.createConfirmation(message: "Challenge validated");
     } else {
-      DisplaySnackbar.createError(message: response.value)..show(context);
+      DisplaySnackbar.createError(message: response.value);
     }
   }
 
@@ -69,10 +67,9 @@ class ProgressionState extends State<Progression> {
         await progressionBloc.reject(challengeId, datas["threadId"]);
 
     if (response.status == 200) {
-      DisplaySnackbar.createConfirmation(message: "Challenge rejected")
-        ..show(context);
+      DisplaySnackbar.createConfirmation(message: "Challenge rejected");
     } else {
-      DisplaySnackbar.createError(message: response.value)..show(context);
+      DisplaySnackbar.createError(message: response.value);
     }
   }
 
@@ -81,10 +78,9 @@ class ProgressionState extends State<Progression> {
         await progressionBloc.undo(challengeId, datas["threadId"]);
 
     if (response.status == 200) {
-      DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo")
-        ..show(context);
+      DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo");
     } else {
-      DisplaySnackbar.createError(message: response.value)..show(context);
+      DisplaySnackbar.createError(message: response.value);
     }
   }
 
@@ -143,7 +139,7 @@ class ProgressionState extends State<Progression> {
   Widget _buildCategory(
       List<ChallengeMinimal> challenges, StatusChallenge status) {
     return FutureBuilder<User>(
-        future: currentUser,
+        future: _currentUser,
         builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
             return ExpansionTile(title: Text(status.value), children: <Widget>[

@@ -1,7 +1,5 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
-import 'package:cityton_mobile/models/message.dart';
-
 var http = Http();
 
 class ChatService {

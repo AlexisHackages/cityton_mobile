@@ -15,14 +15,13 @@ class MainSideMenuState extends State<MainSideMenu> {
   AuthBloc authBloc = AuthBloc();
   MainSideMenuBloc mainSideMenuBloc = MainSideMenuBloc();
 
-
-  Future<User> currentUser;
+  Future<User> _currentUser;
 
   @override
   void initState() {
     super.initState();
 
-    currentUser = _initCurrentUser();
+    _currentUser = _initCurrentUser();
   }
 
   Future<User> _initCurrentUser() async {
@@ -38,7 +37,7 @@ class MainSideMenuState extends State<MainSideMenu> {
   Widget build(BuildContext context) {
     return Drawer(
         child: FutureBuilder<User>(
-            future: currentUser,
+            future: _currentUser,
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
               return ListView(children: [
                 _buildDrawHeader(snapshot),
@@ -80,7 +79,9 @@ class MainSideMenuState extends State<MainSideMenu> {
   List<Widget> _buildDrawBody(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
       User currentUser = snapshot.data;
-      Widget admin = Role.values[currentUser.role] == Role.Admin ? _buildAdminMenu() : Container();
+      Widget admin = Role.values[currentUser.role] == Role.Admin
+          ? _buildAdminMenu()
+          : Container();
 
       return <Widget>[
         ListTile(
@@ -91,6 +92,7 @@ class MainSideMenuState extends State<MainSideMenu> {
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
         _buildThreadList(currentUser.id),
+        _buildGroup(currentUser),
         admin,
         ListTile(
           title: Text(
@@ -116,32 +118,64 @@ class MainSideMenuState extends State<MainSideMenu> {
       StreamBuilder(
         stream: mainSideMenuBloc.threads,
         builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
-          final threads = snapshot.data;
-          if (threads == null) {
-            return Center(child: Text('WAITING...'));
+          if (snapshot.hasData && snapshot.data == null) {
+            final threads = snapshot.data;
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: threads.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                      title: Text(
+                        threads[index].name,
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () => {
+                            Navigator.pushNamed(context, "/chat",
+                                arguments: {"thread": threads[index]}),
+                          });
+                });
+          } else {
+            return CircularProgressIndicator();
           }
-
-          if (threads.isEmpty) {
-            return Center(child: Text('PRINT VOID...'));
-          }
-
-          return ListView.builder(
-              shrinkWrap: true,
-              itemCount: threads.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                    title: Text(
-                      threads[index].name,
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () => {
-                          Navigator.pushNamed(context, "/chat",
-                              arguments: {"thread": threads[index]}),
-                        });
-              });
         },
       )
     ]);
+  }
+
+  Widget _buildGroup(User currentUser) {
+    Widget createAGroup =
+        currentUser.groupId == 0 && Role.values[currentUser.role] == Role.Member
+            ? ListTile(
+                title: Text("Create a group"),
+                onTap: () {
+                  Navigator.pushNamed(context, '/group/create');
+                },
+              )
+            : Container();
+
+    Widget myGroup = currentUser.groupId > 0
+        ? ListTile(
+            title: Text("My group"),
+            onTap: () {
+              Navigator.pushNamed(context, '/myGroups',
+                  arguments: {"groupId": currentUser.groupId});
+            },
+          )
+        : Container();
+
+    return ExpansionTile(
+      title: Text("Group"),
+      children: <Widget>[
+        ListTile(
+          title: Text("Groups"),
+          onTap: () {
+            Navigator.pushNamed(context, '/groups');
+          },
+        ),
+        createAGroup,
+        myGroup,
+      ],
+    );
   }
 
   Widget _buildAdminMenu() {

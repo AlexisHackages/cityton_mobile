@@ -143,8 +143,7 @@ class ChatState extends State<Chat> {
                       Clipboard.setData(ClipboardData(text: content));
                       Navigator.pop(context);
                       DisplaySnackbar.createConfirmation(
-                          message: "Copied in clipboard")
-                        ..show(context);
+                          message: "Copied in clipboard");
                     }),
                 ListTile(
                     title: Text("Remove"),
@@ -152,8 +151,7 @@ class ChatState extends State<Chat> {
                       chatBloc.removeMessage(messageId);
                       Navigator.pop(context);
                       DisplaySnackbar.createConfirmation(
-                          message: "Message succesfully Removed")
-                        ..show(context);
+                          message: "Message succesfully Removed");
                     }),
               ],
             ));

@@ -4,6 +4,10 @@ import 'package:cityton_mobile/screens/admin/challenge/edit/editChallenge.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.dart';
 import 'package:cityton_mobile/screens/admin/user/userInfo/UserInfo.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.dart';
+import 'package:cityton_mobile/screens/group/allGroups/details/groupDetails.dart';
+import 'package:cityton_mobile/screens/group/allGroups/groups.dart';
+import 'package:cityton_mobile/screens/group/create/createGroup.dart';
+import 'package:cityton_mobile/screens/group/myGroup/myGroup.dart';
 import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/screens/login/login.dart';
 import 'package:cityton_mobile/screens/profile/subScreens/changePassword.dart';
@@ -21,6 +25,10 @@ final routes = <String, WidgetBuilder>{
   '/chat/progression':        (BuildContext context) => Progression(arguments: ModalRoute.of(context).settings.arguments),
   '/profile':                 (BuildContext context) => Profile(arguments: ModalRoute.of(context).settings.arguments),
   '/changePassword':          (BuildContext context) => ChangePassword(),
+  '/groups':                  (BuildContext context) => Groups(),
+  '/groups/details':          (BuildContext context) => GroupDetails(arguments: ModalRoute.of(context).settings.arguments),
+  '/group/create':            (BuildContext context) => CreateGroup(),
+  '/myGroups':                (BuildContext context) => MyGroup(arguments: ModalRoute.of(context).settings.arguments),
   '/admin/challenge':         (BuildContext context) => AdminChallenge(),
   '/admin/challenge/add':     (BuildContext context) => AddChallenge(),
   '/admin/challenge/edit':    (BuildContext context) => EditChallenge(arguments: ModalRoute.of(context).settings.arguments),

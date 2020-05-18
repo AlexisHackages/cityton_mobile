@@ -102,8 +102,7 @@ class EditChallengeState extends State<EditChallenge> {
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
-                            DisplaySnackbar.createError(message: response.value)
-                              ..show(context);
+                            DisplaySnackbar.createError(message: response.value);
                           }
                         }
                       }),
@@ -124,8 +123,7 @@ class EditChallengeState extends State<EditChallenge> {
             if (response.status == 200) {
               Navigator.pop(context);
             } else {
-              DisplaySnackbar.createError(message: response.value)
-                ..show(context);
+              DisplaySnackbar.createError(message: response.value);
             }
           }),
     ];
