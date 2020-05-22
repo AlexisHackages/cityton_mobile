@@ -16,9 +16,9 @@ class AdminChallengeBloc {
 
   Future<void> search(String searchText, DateTime selectedDate) async {
 
-    String sanitizedsearchText = searchText.trim();
+    String sanitizedSearchText = searchText.trim();
 
-    var response = await challengeService.search(sanitizedsearchText, selectedDate);
+    var response = await challengeService.search(sanitizedSearchText, selectedDate);
     
     ChallengeList challengeAdminList = ChallengeList.fromJson(response.value);
 

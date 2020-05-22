@@ -10,9 +10,9 @@ class GroupService {
     return res;
   }
 
-  Future<ApiResponse> search(int selectedFilter) async {
+  Future<ApiResponse> search(String searchText, int selectedFilter) async {
     var res =
-        await http.get("group/searchGroup", {"selectedFilter": selectedFilter});
+        await http.get("group/searchGroup", {"groupName": searchText, "selectedFilter": selectedFilter});
 
     return res;
   }

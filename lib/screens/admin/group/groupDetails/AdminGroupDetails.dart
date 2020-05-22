@@ -2,24 +2,23 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/label.dart';
+import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/group.dart';
-import 'package:cityton_mobile/screens/group/allGroups/details/groupDetails.bloc.dart';
-import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
+import 'package:cityton_mobile/screens/admin/group/groupDetails/AdminGroupDetails.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 
-class GroupDetails extends StatefulWidget {
+class AdminGroupDetails extends StatefulWidget {
   final Map arguments;
 
-  GroupDetails({@required this.arguments});
+  AdminGroupDetails({@required this.arguments});
 
   @override
-  GroupDetailsState createState() => GroupDetailsState();
+  AdminGroupDetailsState createState() => AdminGroupDetailsState();
 }
 
-class GroupDetailsState extends State<GroupDetails> {
-  GroupDetailsBloc groupDetailsBloc = GroupDetailsBloc();
-  AuthBloc authBloc = AuthBloc();
+class AdminGroupDetailsState extends State<AdminGroupDetails> {
+  AdminGroupDetailsBloc _adminGroupDetailsBloc = AdminGroupDetailsBloc();
 
   Map datas;
   int groupId;
@@ -41,20 +40,28 @@ class GroupDetailsState extends State<GroupDetails> {
 
   @override
   Widget build(BuildContext context) {
-    groupDetailsBloc.getGroupInfo(groupId);
+    _adminGroupDetailsBloc.getGroupInfo(groupId);
 
     return FramePage(
         header: Header(
           title: "Infos " + groupName,
           leadingState: HeaderLeading.DEAD_END,
+          iconsAction: _buildHeaderIconsAction(groupId),
         ),
         sideMenu: null,
-        body: StreamBuilder<Group>(
-            stream: groupDetailsBloc.groupDetails,
-            builder: (BuildContext context, AsyncSnapshot<Group> snapshot) {
-              if (snapshot.hasData && snapshot.data.id != null) {
-                Group group = snapshot.data;
-                return _buildGroupDetails(group);
+        body: FutureBuilder<ApiResponse>(
+            future: _adminGroupDetailsBloc.getGroupInfo(groupId),
+            builder:
+                (BuildContext context, AsyncSnapshot<ApiResponse> snapshot) {
+              if (snapshot.hasData) {
+                final data = snapshot.data;
+                if (data.status == 200) {
+                  Group group = Group.fromJson(data.value);
+                  return _buildGroupDetails(group);
+                } else {
+                  DisplaySnackbar.createError(message: data.value);
+                  return Container();
+                }
               } else {
                 return CircularProgressIndicator();
               }
@@ -83,19 +90,24 @@ class GroupDetailsState extends State<GroupDetails> {
         Label(
             label: group.hasReachMaxSize ? "Members (group full)" : "Members",
             component: members),
-        Text("Join group ?"),
-        RaisedButton(
-            child: Text('Ask to join'),
-            onPressed: () async {
-              var response = await groupDetailsBloc.createRequest(group.id);
-
-              if (response.status == 200) {
-                DisplaySnackbar.createConfirmation(message: "Request sent");
-              } else {
-                DisplaySnackbar.createConfirmation(message: response.value);
-              }
-            })
       ],
     );
+  }
+
+  List<IconButton> _buildHeaderIconsAction(int groupId) {
+    return <IconButton>[
+      IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () async {
+            var response = await _adminGroupDetailsBloc.delete(groupId);
+
+            if (response.status == 200) {
+              DisplaySnackbar.createConfirmation(
+                  message: "Group succesfuly deleted");
+            } else {
+              DisplaySnackbar.createError(message: response.value);
+            }
+          })
+    ];
   }
 }

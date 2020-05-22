@@ -1,6 +1,8 @@
 import 'package:cityton_mobile/screens/admin/challenge/add/addChallenge.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.dart';
 import 'package:cityton_mobile/screens/admin/challenge/edit/editChallenge.dart';
+import 'package:cityton_mobile/screens/admin/group/groupDetails/AdminGroupDetails.dart';
+import 'package:cityton_mobile/screens/admin/group/groupManagement.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.dart';
 import 'package:cityton_mobile/screens/admin/user/userInfo/UserInfo.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.dart';
@@ -34,5 +36,7 @@ final routes = <String, WidgetBuilder>{
   '/admin/challenge/edit':    (BuildContext context) => EditChallenge(arguments: ModalRoute.of(context).settings.arguments),
   '/admin/user':              (BuildContext context) => UserManagement(),
   '/admin/user/userInfo':     (BuildContext context) => UserInfo(arguments: ModalRoute.of(context).settings.arguments),
+  '/admin/group':             (BuildContext context) => GroupManagement(),
+  '/admin/group/details':     (BuildContext context) => AdminGroupDetails(arguments: ModalRoute.of(context).settings.arguments),
   '/' :                       (BuildContext context) => Door(),
 };

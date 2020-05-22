@@ -10,13 +10,13 @@ class GroupsBloc {
       BehaviorSubject<List<GroupMinimal>>.seeded(List<GroupMinimal>());
   Stream<List<GroupMinimal>> get groups => _groupsFetcher.stream;
 
-  closeChallengeStream() {
+  closeGroupStream() {
     _groupsFetcher.close();
   }
 
   Future<void> search(String groupName, int selectedFilter) async {
     var response = await _groupService
-        .search(selectedFilter);
+        .search(null, selectedFilter);
 
     if (response.status == 200) {
       GroupMinimalList groupList = GroupMinimalList.fromJson(response.value);

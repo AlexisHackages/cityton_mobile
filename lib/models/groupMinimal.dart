@@ -1,14 +1,16 @@
 class GroupMinimal {
   final int id;
   final String name;
+  final bool hasReachMaxSize;
 
 
-  GroupMinimal({this.id, this.name});
+  GroupMinimal({this.id, this.name, this.hasReachMaxSize});
 
   factory GroupMinimal.fromJson(Map<String, dynamic> json) {
     return GroupMinimal(
       id: json['id'] as int,
-      name: json['name'] as String
+      name: json['name'] as String,
+      hasReachMaxSize: json['hasReachMaxSize'] as bool,
     );
   }
 }

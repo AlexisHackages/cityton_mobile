@@ -10,14 +10,14 @@ class UserManagementBloc {
       BehaviorSubject<List<UserProfile>>.seeded(List<UserProfile>());
   Stream<List<UserProfile>> get userProfiles => _userProfilesFetcher.stream;
 
-  closeChallengeStream() {
+  closeUserProfilesStream() {
     _userProfilesFetcher.close();
   }
 
   Future<void> search(String searchText, int selectedRole) async {
-    String sanitizedsearchText = searchText.trim();
+    String sanitizedSearchText = searchText.trim();
 
-    var response = await userService.search(sanitizedsearchText, selectedRole == -1 ? null : selectedRole);
+    var response = await userService.search(sanitizedSearchText, selectedRole == -1 ? null : selectedRole);
     
     UserProfileList userProfileList = UserProfileList.fromJson(response.value);
 

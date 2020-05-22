@@ -95,6 +95,58 @@ class MyGroupState extends State<MyGroup> {
   }
 
   Widget _buildGroupDetailsCreator(Group group) {
+    Widget members = group.members.length > 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: group.members.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(
+                  group.members[index].user.username,
+                  textAlign: TextAlign.center,
+                ),
+                trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      myGroupBloc.deleteMembership(
+                          group.members[index].id, group.id);
+                    }),
+              );
+            })
+        : Text("No members except the creator");
+    Widget requests = group.requestsAdhesion.length > 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: group.requestsAdhesion.length,
+            itemBuilder: (BuildContext context, int index) {
+              Widget accept = group.hasReachMaxSize
+                  ? Container()
+                  : IconButton(
+                      icon: Icon(Icons.done),
+                      onPressed: () {
+                        myGroupBloc.acceptRequest(
+                            group.requestsAdhesion[index].id, group.id);
+                      });
+              return ListTile(
+                  title: Text(
+                    group.requestsAdhesion[index].user.username,
+                    textAlign: TextAlign.center,
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      accept,
+                      IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            myGroupBloc.deleteRequest(
+                                group.requestsAdhesion[index].id, group.id);
+                          })
+                    ],
+                  ));
+            })
+        : Text("No Request");
+
     return Column(
       children: <Widget>[
         Label(
@@ -107,59 +159,12 @@ class MyGroupState extends State<MyGroup> {
                     },
                     icon: Icons.mode_edit))),
         Label(label: "Creator", component: Text(_creatorName)),
-        Label(
-            label: "Members",
-            component: ListView.builder(
-                shrinkWrap: true,
-                itemCount: group.members.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(
-                      group.members[index].user.username,
-                      textAlign: TextAlign.center,
-                    ),
-                    trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          myGroupBloc.deleteMembership(
-                              group.members[index].id, group.id);
-                        }),
-                  );
-                })),
+        Label(label: "Members", component: members),
         Label(
             label: group.hasReachMaxSize
                 ? "Requests to join (group full)"
                 : "Requests to join",
-            component: ListView.builder(
-                shrinkWrap: true,
-                itemCount: group.requestsAdhesion.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Widget accept = group.hasReachMaxSize
-                      ? Container()
-                      : IconButton(
-                          icon: Icon(Icons.done),
-                          onPressed: () {
-                            myGroupBloc.acceptRequest(
-                                group.requestsAdhesion[index].id, group.id);
-                          });
-                  return ListTile(
-                      title: Text(
-                        group.requestsAdhesion[index].user.username,
-                        textAlign: TextAlign.center,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          accept,
-                          IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                myGroupBloc.deleteRequest(
-                                    group.requestsAdhesion[index].id, group.id);
-                              })
-                        ],
-                      ));
-                })),
+            component: requests),
         Text("Delete group ?"),
         RaisedButton(
             child: Text('Delete'),
@@ -202,12 +207,14 @@ class MyGroupState extends State<MyGroup> {
                 shrinkWrap: true,
                 itemCount: group.members.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(
-                      group.members[index].user.username,
-                      textAlign: TextAlign.center,
-                    ),
-                  );
+                  return group.members.length > 0
+                      ? ListTile(
+                          title: Text(
+                            group.members[index].user.username,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Text("No memebers except the creator");
                 })),
       ],
     );
