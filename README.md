@@ -1,3 +1,6 @@
+# Cityton_mobile
+Is combined with "cityton_backend"
+
 # To do / Corrections
 - Signup => add pick up profile picture (not mandatory, else default picture)
 - Login => hidden password
@@ -11,7 +14,7 @@
 - Global => Improve visual
 - Global => Rework code (improvement, security)
 
-# to do bonus
+# To do bonus
 - Unit test
 - Stripe
 - More usage of media (search, download)
