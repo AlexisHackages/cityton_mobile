@@ -123,9 +123,9 @@ class SignupState extends State<Signup> {
               ]),
             ),
             InkWell(
-              child: Text("To signup"),
+              child: Text("To login"),
               onTap: () {
-                Navigator.popAndPushNamed(context, '/signup');
+                Navigator.popAndPushNamed(context, '/login');
               },
             ),
           ],

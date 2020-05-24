@@ -2,7 +2,9 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/label.dart';
+import 'package:cityton_mobile/models/enums.dart';
 import 'package:cityton_mobile/models/group.dart';
+import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/group/allGroups/details/groupDetails.bloc.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,8 @@ class GroupDetailsState extends State<GroupDetails> {
   int groupId;
   String groupName;
 
+  Future<User> _currentUser;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +36,11 @@ class GroupDetailsState extends State<GroupDetails> {
     datas = widget.arguments;
     groupId = datas["groupId"];
     groupName = datas["groupName"];
+    _currentUser = _initCurrentUser();
+  }
+
+  Future<User> _initCurrentUser() async {
+    return await authBloc.getCurrentUser();
   }
 
   @override
@@ -54,14 +63,24 @@ class GroupDetailsState extends State<GroupDetails> {
             builder: (BuildContext context, AsyncSnapshot<Group> snapshot) {
               if (snapshot.hasData && snapshot.data.id != null) {
                 Group group = snapshot.data;
-                return _buildGroupDetails(group);
+                return FutureBuilder<User>(
+                    future: _currentUser,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<User> snapshot) {
+                      if (snapshot.hasData && snapshot.data.id != null) {
+                        User user = snapshot.data;
+                        return _buildGroupDetails(group, user);
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    });
               } else {
                 return CircularProgressIndicator();
               }
             }));
   }
 
-  Widget _buildGroupDetails(Group group) {
+  Widget _buildGroupDetails(Group group, User currentUser) {
     Widget members = group.members.length > 0
         ? ListView.builder(
             shrinkWrap: true,
@@ -76,6 +95,23 @@ class GroupDetailsState extends State<GroupDetails> {
             })
         : Text("No members except the creator");
 
+    List<Widget> request = Role.values[currentUser.role] == Role.Member
+        ? <Widget>[
+            Text("Join group ?"),
+            RaisedButton(
+                child: Text('Ask to join'),
+                onPressed: () async {
+                  var response = await groupDetailsBloc.createRequest(group.id);
+
+                  if (response.status == 200) {
+                    DisplaySnackbar.createConfirmation(message: "Request sent");
+                  } else {
+                    DisplaySnackbar.createConfirmation(message: response.value);
+                  }
+                })
+          ]
+        : List<Widget>();
+
     return Column(
       children: <Widget>[
         Label(label: "Name", component: Text(group.name)),
@@ -83,18 +119,7 @@ class GroupDetailsState extends State<GroupDetails> {
         Label(
             label: group.hasReachMaxSize ? "Members (group full)" : "Members",
             component: members),
-        Text("Join group ?"),
-        RaisedButton(
-            child: Text('Ask to join'),
-            onPressed: () async {
-              var response = await groupDetailsBloc.createRequest(group.id);
-
-              if (response.status == 200) {
-                DisplaySnackbar.createConfirmation(message: "Request sent");
-              } else {
-                DisplaySnackbar.createConfirmation(message: response.value);
-              }
-            })
+        ...request
       ],
     );
   }
