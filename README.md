@@ -9,6 +9,7 @@
 - Profile => change profile's picture
 - Global => Correct "back to previous page"
 - Global => Improve visual
+- Global => Rework code (improvement, security)
 
 # to do bonus
 - Unit test
