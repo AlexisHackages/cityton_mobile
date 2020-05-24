@@ -6,9 +6,12 @@
 - Details group => hide "join group" if admin or checker
 - Admin group => add filter by name
 - Chat => add picture and video
+- Profile => change profile's picture
 - Global => Correct "back to previous page"
+- Global => Improve visual
 
 # to do bonus
 - Unit test
 - Stripe
-- More usage of media
+- More usage of media (search, download)
+- Password change
