@@ -49,6 +49,7 @@ class LoginState extends State<Login> {
                   controller: emailController,
                   attribute: "email",
                   decoration: InputDecoration(labelText: "Email"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required")
@@ -58,6 +59,8 @@ class LoginState extends State<Login> {
                   controller: passwordController,
                   attribute: "password",
                   decoration: InputDecoration(labelText: "Password"),
+                  obscureText: true,
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required")

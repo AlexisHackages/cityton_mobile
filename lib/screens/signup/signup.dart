@@ -55,6 +55,7 @@ class SignupState extends State<Signup> {
                   attribute: "username",
                   decoration: InputDecoration(
                       labelText: "Username", hintText: "At least 3 characters"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -66,6 +67,7 @@ class SignupState extends State<Signup> {
                   controller: emailController,
                   attribute: "email",
                   decoration: InputDecoration(labelText: "Email"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -77,6 +79,8 @@ class SignupState extends State<Signup> {
                   controller: passwordController,
                   attribute: "password",
                   decoration: InputDecoration(labelText: "Password"),
+                  obscureText: true,
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -86,8 +90,10 @@ class SignupState extends State<Signup> {
                 ),
                 FormBuilderTextField(
                   controller: verifyPasswordController,
-                  attribute: "password",
+                  attribute: "verifyPassword",
                   decoration: InputDecoration(labelText: "Verify password"),
+                  obscureText: true,
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
