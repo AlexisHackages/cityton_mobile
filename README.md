@@ -6,7 +6,7 @@ Is combined with "cityton_backend"
 - [ ] Login => hidden password
 - [ ] Welcome => add presentation text
 - [ ] All group => add filter by name
-- [ ] Details group => hide "join group" if admin or checker
+- [X] Details group => hide "join group" if admin or checker
 - [ ] Admin group => add filter by name
 - [ ] Chat => add picture and video
 - [ ] Profile => change profile's picture
