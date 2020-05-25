@@ -1,4 +1,5 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
+import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/constants/group.constant.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
@@ -23,6 +24,7 @@ class GroupsState extends State<Groups> {
 
   User currentUser;
   int _selectedFilter = FilterGroupSize.All.index;
+  String searchText = "";
 
   void initState() {
     super.initState();
@@ -35,7 +37,7 @@ class GroupsState extends State<Groups> {
   }
 
   void search() {
-    groupsBloc.search(null, _selectedFilter);
+    groupsBloc.search(searchText, _selectedFilter);
   }
 
   @override
@@ -77,45 +79,63 @@ class GroupsState extends State<Groups> {
   }
 
   Widget _buildFilter() {
-    return ExpansionTile(
-      title: Text("Filter"),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            RadioListTile<int>(
-              title: const Text('All'),
-              value: FilterGroupSize.All.index,
-              groupValue: _selectedFilter,
-              onChanged: (int value) {
-                setState(() {
-                  _selectedFilter = value;
-                });
-                search();
-              },
-            ),
-            RadioListTile<int>(
-              title: const Text('Full'),
-              value: FilterGroupSize.Full.index,
-              groupValue: _selectedFilter,
-              onChanged: (int value) {
-                setState(() {
-                  _selectedFilter = value;
-                });
-                search();
-              },
-            ),
-            RadioListTile<int>(
-              title: const Text('Not full'),
-              value: FilterGroupSize.NotFull.index,
-              groupValue: _selectedFilter,
-              onChanged: (int value) {
-                setState(() {
-                  _selectedFilter = value;
-                });
-                search();
-              },
-            ),
-          ],
+        InputIcon(
+          icon: Icons.search,
+          placeholder: searchText,
+          actionOnPressed: (value) {
+            searchText = value;
+            search();
+          },
+        ),
+        SizedBox(
+          height: 44.0,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Container(
+                width: 160.0,
+                child: ChoiceChip(
+                  selectedColor: Color(0xff6200ee),
+                  label: Text('All'),
+                  selected: _selectedFilter == FilterGroupSize.All.index,
+                  onSelected: (bool selected) {
+                      setState(() {
+                        _selectedFilter = FilterGroupSize.All.index;
+                      });
+                      search();
+                    },),
+              ),
+              Container(
+                width: 160.0,
+                child: ChoiceChip(
+                  selectedColor: Color(0xff6200ee),
+                  label: Text('Full'),
+                  selected: _selectedFilter == FilterGroupSize.Full.index,
+                  onSelected: (bool selected) {
+                      setState(() {
+                        _selectedFilter = FilterGroupSize.Full.index;
+                      });
+                      search();
+                    },),
+              ),
+              Container(
+                width: 160.0,
+                child: ChoiceChip(
+                  selectedColor: Color(0xff6200ee),
+                  label: Text('Not Full'),
+                  selected: _selectedFilter == FilterGroupSize.NotFull.index,
+                  onSelected: (bool selected) {
+                      setState(() {
+                        _selectedFilter = FilterGroupSize.NotFull.index;
+                      });
+                      search();
+                    },),
+              ),
+            ],
+          ),
         )
       ],
     );

@@ -15,8 +15,10 @@ class GroupsBloc {
   }
 
   Future<void> search(String groupName, int selectedFilter) async {
+    String sanitizedGroupName = groupName.trim();
+    
     var response = await _groupService
-        .search(null, selectedFilter);
+        .search(sanitizedGroupName, selectedFilter);
 
     if (response.status == 200) {
       GroupMinimalList groupList = GroupMinimalList.fromJson(response.value);

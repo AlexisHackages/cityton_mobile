@@ -5,8 +5,9 @@ class InputIcon extends StatefulWidget {
   final Function actionOnPressed;
   final TextEditingController controller;
   final String labelText;
+  final String placeholder;
 
-  InputIcon({@required this.icon, this.actionOnPressed, this.controller, this.labelText});
+  InputIcon({@required this.icon, this.actionOnPressed, this.controller, this.labelText, this.placeholder});
 
   @override
   InputIconState createState() => InputIconState();
@@ -17,6 +18,7 @@ class InputIconState extends State<InputIcon> {
   @override
   Widget build(BuildContext context) {
   TextEditingController inputController = widget.controller == null ? TextEditingController() : widget.controller;
+  inputController.text = widget.placeholder;
 
     return Row(
         children: <Widget>[
