@@ -118,7 +118,7 @@ class MainSideMenuState extends State<MainSideMenu> {
       StreamBuilder(
         stream: mainSideMenuBloc.threads,
         builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
-          if (snapshot.hasData && snapshot.data == null) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             final threads = snapshot.data;
             return ListView.builder(
                 shrinkWrap: true,
