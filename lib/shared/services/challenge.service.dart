@@ -15,7 +15,7 @@ class ChallengeService {
 
   Future<ApiResponse> add(String title, String statement) async {
     var res = await http.post("challenge/add",
-    {
+    data: {
       "title": title,
       "statement": statement,
     });
@@ -25,7 +25,7 @@ class ChallengeService {
 
   Future<ApiResponse> edit(int id, String title, String statement) async {
     var res = await http.post("challenge/edit",
-    {
+    data: {
       "challengeId": id,
       "title": title,
       "statement": statement,

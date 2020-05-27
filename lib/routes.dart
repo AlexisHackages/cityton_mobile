@@ -22,6 +22,7 @@ import 'package:cityton_mobile/screens/profile/profile.dart';
 final routes = <String, WidgetBuilder>{
   '/login':                   (BuildContext context) => Login(),
   '/signup':                  (BuildContext context) => Signup(),
+  '/door':                    (BuildContext context) => Door(),
   '/home':                    (BuildContext context) => Home(),
   '/chat':                    (BuildContext context) => Chat(arguments: ModalRoute.of(context).settings.arguments),
   '/chat/progression':        (BuildContext context) => Progression(arguments: ModalRoute.of(context).settings.arguments),

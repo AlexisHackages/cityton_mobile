@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -12,28 +16,31 @@ class Signup extends StatefulWidget {
 }
 
 class SignupState extends State<Signup> {
-  AuthBloc authBloc;
+  AuthBloc _authBloc = AuthBloc();
 
   final GlobalKey<FormBuilderState> _signupFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController usernameController;
-  TextEditingController emailController;
-  TextEditingController passwordController;
-  TextEditingController verifyPasswordController;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController verifyPasswordController = TextEditingController();
+  File _profilePicture = File(DotEnv().env['DEFAULT_PROFILR_PICTURE']);
 
   @override
   void initState() {
     super.initState();
-    authBloc = AuthBloc();
-    usernameController = TextEditingController();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    verifyPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void openGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      _profilePicture = image;
+    }
   }
 
   Widget build(BuildContext context) {
@@ -43,8 +50,31 @@ class SignupState extends State<Signup> {
           leadingState: HeaderLeading.DEAD_END,
         ),
         sideMenu: null,
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           children: <Widget>[
+            Stack(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(_profilePicture.path),
+                ),
+                Positioned(
+                    right: -20,
+                    top: -20,
+                    height: 50.0,
+                    width: 50.0,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.wallpaper,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          openGallery();
+                        }))
+              ],
+              overflow: Overflow.visible,
+            ),
             FormBuilder(
               key: _signupFormKey,
               autovalidate: true,
@@ -112,16 +142,17 @@ class SignupState extends State<Signup> {
                       child: Text('Submit'),
                       onPressed: () async {
                         if (_signupFormKey.currentState.saveAndValidate()) {
-                          var response = await this.authBloc.signup(
+                          var response = await this._authBloc.signup(
                               usernameController.text,
                               emailController.text,
                               passwordController.text,
-                              null);
+                              _profilePicture);
                           if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);
                           } else {
-                            DisplaySnackbar.createError(message: response.value);
+                            DisplaySnackbar.createError(
+                                message: response.value);
                           }
                         }
                       }),
@@ -135,6 +166,6 @@ class SignupState extends State<Signup> {
               },
             ),
           ],
-        ));
+        )));
   }
 }

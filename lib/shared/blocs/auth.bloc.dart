@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/services/auth.service.dart';
 import 'package:cityton_mobile/shared/services/user.service.dart';
@@ -43,13 +45,13 @@ class AuthBloc {
   }
 
   Future<ApiResponse> signup(
-      String username, String email, String password, String picture) async {
+      String username, String email, String password, File profilePicture) async {
     String sanitizedUsername = username.trim();
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 
     var response = await authService.signup(
-        sanitizedUsername, sanitizedEmail, sanitizedPassword, picture);
+        sanitizedUsername, sanitizedEmail, sanitizedPassword, profilePicture);
 
     if (response.status == 200) {
       User currentUser = User.fromJson(response.value);

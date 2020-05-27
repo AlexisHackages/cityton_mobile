@@ -17,10 +17,10 @@ class Http {
   Http._internal() {
     _options = BaseOptions(
       baseUrl: DotEnv().env['API_URL'],
-      headers: {
-        'content-type': 'application/json',
-        'accept': "application/json",
-      },
+      // headers: {
+      //   'content-type': 'application/json',
+      //   'accept': "application/json",
+      // },
       followRedirects: false,
       validateStatus: (status) {
         return status < 500;
@@ -48,8 +48,12 @@ class Http {
     return _returnResponse(requestResponse);
   }
 
-  Future<ApiResponse> post(String url, [Map<String, dynamic> params]) async {
-    final requestResponse = await _dio.post(url, data: params == null ? {} : params);
+  Future<ApiResponse> post(String url, {dynamic data, Map<String, dynamic> queryParameters, void Function(int, int) onSendProgress}) async {
+    final requestResponse = await _dio.post(
+      url,
+      data: data == null ? {} : data,
+      queryParameters: queryParameters == null ? {} : queryParameters,
+      onSendProgress: onSendProgress);
     return _returnResponse(requestResponse);
   }
 
@@ -58,8 +62,12 @@ class Http {
     return _returnResponse(requestResponse);
   }
 
-  Future<ApiResponse> put(String url, [Map<String, dynamic> params]) async {
-    final requestResponse = await _dio.put(url, queryParameters: params == null ? {} : params);
+  Future<ApiResponse> put(String url, {dynamic data, Map<String, dynamic> queryParameters, void Function(int, int) onSendProgress}) async {
+    final requestResponse = await _dio.put(
+      url,
+      data: data == null ? {} : data,
+      queryParameters: queryParameters == null ? {} : queryParameters,
+      onSendProgress: onSendProgress);
     return _returnResponse(requestResponse);
   }
 

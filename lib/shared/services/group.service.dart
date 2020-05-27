@@ -18,7 +18,7 @@ class GroupService {
   }
 
   Future<ApiResponse> add(String name) async {
-    var res = await http.post("group/createGroup", {"name": name});
+    var res = await http.post("group/createGroup", data: {"name": name});
 
     return res;
   }
@@ -55,7 +55,7 @@ class GroupService {
 
   Future<ApiResponse> editName(String name, int id) async {
     var res = await http
-        .put("group/editName/" + id.toString(), {"groupName": name});
+        .put("group/editName/" + id.toString(), queryParameters: {"groupName": name});
 
     return res;
   }
@@ -63,7 +63,7 @@ class GroupService {
   Future<ApiResponse> createRequest(int groupId) async {
     var res = await http
         .post("group/createRequest/",
-        {
+        data: {
           "GroupId": groupId
         });
 

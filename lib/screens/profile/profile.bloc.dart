@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/shared/services/user.service.dart';
@@ -24,4 +25,10 @@ class ProfileBloc {
     var response = await userService.getProfile(userId);
     return response;
   }
+
+  Future<ApiResponse> changePicture(File newProfilePicture) async {
+    var response = await userService.changePictureProfile(newProfilePicture);
+    return response;
+  }
+
 }

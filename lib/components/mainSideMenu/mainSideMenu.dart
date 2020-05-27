@@ -102,7 +102,7 @@ class MainSideMenuState extends State<MainSideMenu> {
           onTap: () => {
             authBloc.logout(),
             Navigator.pushNamedAndRemoveUntil(
-                context, '/login', (Route<dynamic> route) => false)
+                context, '/door', (Route<dynamic> route) => false)
           },
         ),
       ];

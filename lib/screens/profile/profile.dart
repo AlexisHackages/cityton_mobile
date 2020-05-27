@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
@@ -8,6 +9,7 @@ import 'package:cityton_mobile/screens/profile/profile.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/enums.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   final Map arguments;
@@ -19,7 +21,7 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
-  ProfileBloc profileBloc = ProfileBloc();
+  ProfileBloc _profileBloc = ProfileBloc();
 
   @override
   void initState() {
@@ -29,6 +31,20 @@ class ProfileState extends State<Profile> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void openGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      ApiResponse response = await _profileBloc.changePicture(image);
+
+      if (response.status == 200) {
+        DisplaySnackbar.createConfirmation(message: "Profile picture updated");
+      } else {
+        DisplaySnackbar.createError(
+            message: response.value);
+      }
+    }
   }
 
   @override
@@ -65,7 +81,7 @@ class ProfileState extends State<Profile> {
 
   Widget _buildUserInfos(int userId) {
     return FutureBuilder<ApiResponse>(
-        future: profileBloc.getProfile(userId),
+        future: _profileBloc.getProfile(userId),
         builder: (BuildContext context, AsyncSnapshot<ApiResponse> snapshot) {
           if (snapshot.hasData) {
             final data = snapshot.data;
@@ -96,21 +112,45 @@ class ProfileState extends State<Profile> {
           CircleAvatar(
             backgroundImage: NetworkImage(userProfile.picture),
           ),
-          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
-          IconText.iconNotClickable(leading: Icons.supervisor_account, text: groupName),
-          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
+          IconText.iconNotClickable(
+              leading: Icons.perm_identity, text: userProfile.username),
+          IconText.iconNotClickable(
+              leading: Icons.supervisor_account, text: groupName),
+          IconText.iconNotClickable(
+              leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     } else {
       List<String> role = userProfile.role.toString().split('.');
       return Column(
         children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(userProfile.picture),
+          Stack(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(userProfile.picture),
+              ),
+              Positioned(
+                  right: -20,
+                  top: -20,
+                  height: 50.0,
+                  width: 50.0,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.wallpaper,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        openGallery();
+                      }))
+            ],
+            overflow: Overflow.visible,
           ),
-          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
+          IconText.iconNotClickable(
+              leading: Icons.perm_identity, text: userProfile.username),
           IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
-          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
+          IconText.iconNotClickable(
+              leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     }
