@@ -12,27 +12,33 @@ class AvatarProfile extends StatelessWidget {
     print(picturePath);
     print("!!!!! END AVATAR !!!!!");
     return Stack(
+      overflow: Overflow.visible,
       children: <Widget>[
         CircleAvatar(
           radius: 50,
           backgroundColor: Colors.white,
-          backgroundImage: RegExp("http").hasMatch(picturePath) ? NetworkImage(picturePath) : AssetImage(picturePath),
+          backgroundImage: RegExp("http").hasMatch(picturePath)
+              ? NetworkImage(picturePath)
+              : AssetImage(picturePath),
         ),
         Positioned(
             right: -20,
-            top: -20,
+            bottom: -20,
             height: 50.0,
             width: 50.0,
-            child: IconButton(
-                icon: Icon(
-                  Icons.add_a_photo,
-                  size: 30,
-                ),
-                onPressed: () {
-                  onPressed();
-                }))
+            child: Ink(
+                decoration: const ShapeDecoration(
+                    color: Colors.pink, shape: CircleBorder()),
+                child: IconButton(
+                    hoverColor: Colors.pink,
+                    icon: Icon(
+                      Icons.edit,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      onPressed();
+                    })))
       ],
-      overflow: Overflow.visible,
     );
   }
 }

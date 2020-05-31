@@ -57,7 +57,7 @@
         onSecondary: Color( 0xff000000 ),
         onSurface: Color( 0xffffffff ),
         onBackground: Color( 0xffffffff ),
-        onError: Color( 0xff000000 ),
+        onError: Color( 0xffd32f2f ),
         brightness: Brightness.dark,
       ),
     ),
@@ -315,13 +315,13 @@
       fontStyle: FontStyle.normal,
     ),
     hintStyle: TextStyle(
-      color: Color( 0xffffffff ),
+      color: Color( 0x80ffffff ),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
     ),
     errorStyle: TextStyle(
-      color: Color( 0xffffffff ),
+      color: Color( 0xffd32f2f ),
       fontSize: 16.0,
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
@@ -352,7 +352,7 @@
     filled: false,
     fillColor: Color( 0x00000000 ),
     errorBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Color(0xff000000), width: 1.0, style: BorderStyle.solid, ),
+      borderSide: BorderSide(color: Color(0xffd32f2f), width: 1.0, style: BorderStyle.solid, ),
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
     focusedBorder: UnderlineInputBorder(
@@ -360,7 +360,7 @@
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
     focusedErrorBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Color(0xff000000), width: 1.0, style: BorderStyle.solid, ),
+      borderSide: BorderSide(color: Color(0xffd32f2f), width: 1.0, style: BorderStyle.solid, ),
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
     disabledBorder: UnderlineInputBorder(
