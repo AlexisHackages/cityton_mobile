@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Cityton',
-      theme: appTheme(),
+      theme: appTheme,
       initialRoute: '/',
       routes: routes,
     );
