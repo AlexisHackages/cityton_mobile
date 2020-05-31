@@ -71,14 +71,14 @@ class GroupManagementState extends State<GroupManagement> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(
-          icon: Icons.search,
-          placeholder: searchText,
-          actionOnPressed: (value) {
-            searchText = value;
-            search();
-          },
-        ),
+        InputIcon(placeholder: searchText, iconsAction: <IconAction>[
+          IconAction(
+              icon: Icon(Icons.search),
+              action: (String input) {
+                searchText = input;
+                search();
+              }),
+        ]),
         SizedBox(
           height: 44.0,
           child: ListView(
@@ -91,11 +91,12 @@ class GroupManagementState extends State<GroupManagement> {
                   label: Text('All'),
                   selected: _selectedFilter == FilterGroupSize.All.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.All.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.All.index;
+                    });
+                    search();
+                  },
+                ),
               ),
               Container(
                 width: 160.0,
@@ -104,11 +105,12 @@ class GroupManagementState extends State<GroupManagement> {
                   label: Text('Full'),
                   selected: _selectedFilter == FilterGroupSize.Full.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.Full.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.Full.index;
+                    });
+                    search();
+                  },
+                ),
               ),
               Container(
                 width: 160.0,
@@ -117,24 +119,27 @@ class GroupManagementState extends State<GroupManagement> {
                   label: Text('Not Full'),
                   selected: _selectedFilter == FilterGroupSize.NotFull.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.NotFull.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.NotFull.index;
+                    });
+                    search();
+                  },
+                ),
               ),
               Container(
                 width: 160.0,
                 child: ChoiceChip(
                   selectedColor: Color(0xff6200ee),
                   label: Text('< minimal size'),
-                  selected: _selectedFilter == FilterGroupSize.InferiorToMinSize.index,
+                  selected: _selectedFilter ==
+                      FilterGroupSize.InferiorToMinSize.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.InferiorToMinSize.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.InferiorToMinSize.index;
+                    });
+                    search();
+                  },
+                ),
               ),
             ],
           ),

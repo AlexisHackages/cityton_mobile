@@ -82,14 +82,15 @@ class GroupsState extends State<Groups> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(
-          icon: Icons.search,
-          placeholder: searchText,
-          actionOnPressed: (value) {
-            searchText = value;
-            search();
-          },
-        ),
+        InputIcon(placeholder: searchText, iconsAction: <IconAction>[
+          IconAction(
+              
+              icon: Icon(Icons.search),
+              action: (String input) {
+                searchText = input;
+                search();
+              })
+        ]),
         SizedBox(
           height: 44.0,
           child: ListView(
@@ -102,11 +103,12 @@ class GroupsState extends State<Groups> {
                   label: Text('All'),
                   selected: _selectedFilter == FilterGroupSize.All.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.All.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.All.index;
+                    });
+                    search();
+                  },
+                ),
               ),
               Container(
                 width: 160.0,
@@ -115,11 +117,12 @@ class GroupsState extends State<Groups> {
                   label: Text('Full'),
                   selected: _selectedFilter == FilterGroupSize.Full.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.Full.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.Full.index;
+                    });
+                    search();
+                  },
+                ),
               ),
               Container(
                 width: 160.0,
@@ -128,11 +131,12 @@ class GroupsState extends State<Groups> {
                   label: Text('Not Full'),
                   selected: _selectedFilter == FilterGroupSize.NotFull.index,
                   onSelected: (bool selected) {
-                      setState(() {
-                        _selectedFilter = FilterGroupSize.NotFull.index;
-                      });
-                      search();
-                    },),
+                    setState(() {
+                      _selectedFilter = FilterGroupSize.NotFull.index;
+                    });
+                    search();
+                  },
+                ),
               ),
             ],
           ),

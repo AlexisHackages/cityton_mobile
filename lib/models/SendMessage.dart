@@ -1,18 +1,18 @@
 class SendMessage {
   String message;
   int discussionId;
-  String imageUrl;
+  String mediaUrl;
 
-  SendMessage(String message, int discussionId, String imageUrl){
+  SendMessage(String message, int discussionId, String mediaUrl){
     this.message = message;
     this.discussionId = discussionId;
-    this.imageUrl = imageUrl;
+    this.mediaUrl = mediaUrl;
   }
 
   Map<String, dynamic> toJson() => 
   {
     'message': this.message,
     'discussionId': this.discussionId,
-    'imageUrl': this.imageUrl,
+    'mediaUrl': this.mediaUrl,
   };
 }

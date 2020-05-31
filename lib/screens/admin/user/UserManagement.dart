@@ -66,13 +66,14 @@ class UserManagementState extends State<UserManagement> {
 
   Widget _buildSearchAndFilter() {
     return ExpansionTile(
-      title: InputIcon(
-        icon: Icons.search,
-        actionOnPressed: (value) {
-          searchText = value;
-          search();
-        },
-      ),
+      title: InputIcon(iconsAction: <IconAction>[
+        IconAction(
+            icon: Icon(Icons.search),
+            action: (String input) {
+              searchText = input;
+              search();
+            }),
+      ]),
       children: <Widget>[
         Column(
           children: <Widget>[
@@ -80,25 +81,41 @@ class UserManagementState extends State<UserManagement> {
               title: const Text('All'),
               value: -1,
               groupValue: _selectedRole,
-              onChanged: (int value) { setState(() { _selectedRole = value; }); },
+              onChanged: (int value) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              },
             ),
             RadioListTile<int>(
               title: const Text('Admin'),
               value: Role.Admin.index,
               groupValue: _selectedRole,
-              onChanged: (int value) { setState(() { _selectedRole = value; }); },
+              onChanged: (int value) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              },
             ),
             RadioListTile<int>(
               title: const Text('Checker'),
               value: Role.Checker.index,
               groupValue: _selectedRole,
-              onChanged: (int value) { setState(() { _selectedRole = value; }); },
+              onChanged: (int value) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              },
             ),
             RadioListTile<int>(
               title: const Text('Member'),
               value: Role.Member.index,
               groupValue: _selectedRole,
-              onChanged: (int value) { setState(() { _selectedRole = value; }); },
+              onChanged: (int value) {
+                setState(() {
+                  _selectedRole = value;
+                });
+              },
             ),
           ],
         )
@@ -116,8 +133,11 @@ class UserManagementState extends State<UserManagement> {
 
         return ListTile(
           title: Text(item.username),
-          onTap: () => Navigator.popAndPushNamed(context, '/admin/user/userInfo',
-              arguments: {"userProfile": item, }),
+          onTap: () => Navigator.popAndPushNamed(
+              context, '/admin/user/userInfo',
+              arguments: {
+                "userProfile": item,
+              }),
         );
       },
     );

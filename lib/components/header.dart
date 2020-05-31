@@ -26,7 +26,6 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
           title: Text(title),
           actions: _buildActions());
     } else {
-      // headerLeading.DEAD_END
       return AppBar(
         leading: _buildBack(context),
         title: Text(title),
@@ -36,15 +35,14 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   }
 
   List<Widget> _buildActions() {
+    List<Widget> widgets = List<Widget>();
+
     if (iconsAction != null) {
-      List<Widget> widgets = List<Widget>();
 
       iconsAction.forEach((IconButton iconsButton) => widgets.add(iconsButton));
-
-      return widgets;
-    } else {
-      return List<Widget>();
     }
+    
+    return widgets;
   }
 
   Widget _buildMenu(BuildContext context) {

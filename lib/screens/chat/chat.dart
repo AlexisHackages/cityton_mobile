@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
@@ -11,6 +13,7 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'chat.bloc.dart';
 
@@ -29,6 +32,9 @@ class ChatState extends State<Chat> {
 
   TextEditingController _sendController = TextEditingController();
   User currentUser;
+  File _filePicked;
+
+  Widget _popupFileSelected = Container();
 
   void initState() {
     super.initState();
@@ -38,6 +44,26 @@ class ChatState extends State<Chat> {
 
   Future<void> _initCurrentUser() async {
     currentUser = await authBloc.getCurrentUser();
+  }
+
+  void openGallery() async {
+    File media = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (media != null) {
+      _filePicked = media;
+      setState(() {
+        _popupFileSelected = _buildFileSelected();
+      });
+    }
+  }
+
+  void openCamera() async {
+    File media = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (media != null) {
+      _filePicked = media;
+      setState(() {
+        _popupFileSelected = _buildFileSelected();
+      });
+    }
   }
 
   @override
@@ -92,44 +118,53 @@ class ChatState extends State<Chat> {
     chatBloc.getMessages(threadId);
 
     return StreamBuilder(
-      stream: chatBloc.messages,
-      builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
+        stream: chatBloc.messages,
+        builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        final results = snapshot.data;
+          final List<Message> messages = snapshot.data;
 
-        return ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: results.length,
-            itemBuilder: (BuildContext context, int index) {
-              _scrollToBottom();
-              return ListTile(
-                onLongPress: () => _buildModalBottomSheet(
-                    results[index].content, results[index].id),
-                title: Text(
-                  results[index].content,
-                  textAlign: TextAlign.center,
-                ),
-              );
-            });
-      },
-    );
+          return ListView.builder(
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: messages.length,
+              itemBuilder: (BuildContext context, int index) {
+                _scrollToBottom();
+                return _buildBubble(messages[index]);
+              });
+        });
   }
 
   Widget _buildInputText(int threadId) {
-    return Center(
-        child: InputIcon(
-      icon: Icons.send,
-      controller: _sendController,
-      labelText: "Write a message",
-      actionOnPressed: (String value) async {
-        chatBloc.sendChatMessage(value, threadId, null);
-        _sendController.clear();
-      },
-    ));
+    return SingleChildScrollView(
+        child: Column(children: <Widget>[
+      _popupFileSelected,
+      Center(
+          child: InputIcon(
+              labelText: "Write a message",
+              customController: _sendController,
+              iconsAction: <IconAction>[
+            IconAction(
+                icon: Icon(Icons.attach_file),
+                action: (String input) {
+                  openGallery();
+                }),
+            IconAction(
+                icon: Icon(Icons.camera_alt),
+                action: (String input) {
+                  openCamera();
+                }),
+            IconAction(
+                icon: Icon(Icons.send),
+                action: (String input) {
+                  chatBloc.sendChatMessage(input, threadId, _filePicked);
+                  _sendController.clear();
+                  _filePicked = null;
+                })
+          ]))
+    ]));
   }
 
   Future<Widget> _buildModalBottomSheet(String content, int messageId) {
@@ -165,5 +200,44 @@ class ChatState extends State<Chat> {
             arguments: {"threadId": threadId}),
       )
     ];
+  }
+
+  Widget _buildBubble(Message message) {
+    if (message.media?.url != null) {
+      return ListTile(
+        onLongPress: () => _buildModalBottomSheet(message.content, message.id),
+        title: Image.network(message.media.url, width: 50.0, height: 50.0),
+        subtitle: Text(
+          message.content,
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      return ListTile(
+        onLongPress: () => _buildModalBottomSheet(message.content, message.id),
+        title: Text(
+          message.content,
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+  }
+
+  Widget _buildFileSelected() {
+    return Container(
+        width: 200.0,
+        height: 50.0,
+        child: Row(children: <Widget>[
+          Text("Picture selected"),
+          IconButton(
+            onPressed: () {
+              _filePicked = null;
+              setState(() {
+                _popupFileSelected = Container();
+              });
+            },
+            icon: Icon(Icons.close),
+          )
+        ]));
   }
 }

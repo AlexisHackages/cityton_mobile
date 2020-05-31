@@ -14,6 +14,10 @@ class Http {
     return _instance;
   }
 
+  Dio getDioClient(){
+    return _dio;
+  }
+
   Http._internal() {
     _options = BaseOptions(
       baseUrl: DotEnv().env['API_URL'],

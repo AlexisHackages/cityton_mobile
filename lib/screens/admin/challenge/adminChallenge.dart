@@ -78,7 +78,8 @@ class AdminChallengeState extends State<AdminChallenge> {
                         flex: 0,
                         child: _buildSearchAndFilter(),
                       ),
-                      Flexible(flex: 1, child: _buildChallengeList(snapshot.data)),
+                      Flexible(
+                          flex: 1, child: _buildChallengeList(snapshot.data)),
                     ],
                   ),
                 );
@@ -90,19 +91,24 @@ class AdminChallengeState extends State<AdminChallenge> {
 
   Widget _buildSearchAndFilter() {
     return ExpansionTile(
-      title: InputIcon(
-        icon: Icons.search,
-        actionOnPressed: (value) {
-          searchText = value;
-          search();
-        },
-      ),
+      title: InputIcon(iconsAction: <IconAction>[
+        IconAction(
+            icon: Icon(Icons.search),
+            action: (String input) {
+              searchText = input;
+              search();
+            }),
+      ]),
       children: <Widget>[
         Column(
           children: <Widget>[
             Text("Start date"),
             IconText.iconClickable(
-              trailing: IconButtonCustom(onAction: () {callDatePicker();}, icon: Icons.date_range),
+              trailing: IconButtonCustom(
+                  onAction: () {
+                    callDatePicker();
+                  },
+                  icon: Icons.date_range),
               text: "$finaldate",
             ),
           ],
@@ -122,8 +128,12 @@ class AdminChallengeState extends State<AdminChallenge> {
         return ListTile(
           title: Text(item.title),
           subtitle: Text(item.statement),
-          onTap: () => Navigator.popAndPushNamed(context, '/admin/challenge/edit',
-              arguments: {"id": item.id, "title": item.title, "statement": item.statement}),
+          onTap: () => Navigator.popAndPushNamed(
+              context, '/admin/challenge/edit', arguments: {
+            "id": item.id,
+            "title": item.title,
+            "statement": item.statement
+          }),
         );
       },
     );
@@ -132,7 +142,9 @@ class AdminChallengeState extends State<AdminChallenge> {
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
     return <IconButton>[
       IconButton(
-          icon: Icon(Icons.add_circle_outline), onPressed: () => Navigator.pushNamed(context, '/admin/challenge/add')),
+          icon: Icon(Icons.add_circle_outline),
+          onPressed: () =>
+              Navigator.pushNamed(context, '/admin/challenge/add')),
     ];
   }
 }
