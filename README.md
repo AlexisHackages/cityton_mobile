@@ -2,15 +2,16 @@
 Is combined with "cityton_backend"
 
 # To do / Corrections
-- [ ] Signup => add pick up profile picture (not mandatory, else default picture)
+- [X] Signup => add pick up profile picture (not mandatory, else default picture)
 - [X] Login => hidden password
 - [X] Signup => hidden password
 - [ ] Welcome => add presentation text
 - [X] All group => add filter by name
 - [X] Details group => hide "join group" if admin or checker
 - [X] Admin group => add filter by name
-- [ ] Chat => add picture and video
-- [ ] Profile => change profile's picture
+- [X] Chat => add picture and video
+- [X] Profile => change profile's picture
+- [X] App theme
 - [ ] Global => Correct "back to previous page"
 - [ ] Global => Improve visual
 - [ ] Global => Rework code (improvement, security)
