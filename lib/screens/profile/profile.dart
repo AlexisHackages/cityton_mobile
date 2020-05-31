@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
+import 'package:cityton_mobile/components/avatarProfile.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/iconText.dart';
@@ -23,6 +23,8 @@ class Profile extends StatefulWidget {
 class ProfileState extends State<Profile> {
   ProfileBloc _profileBloc = ProfileBloc();
 
+  Widget _avatarProfile;
+
   @override
   void initState() {
     super.initState();
@@ -39,10 +41,13 @@ class ProfileState extends State<Profile> {
       ApiResponse response = await _profileBloc.changePicture(image);
 
       if (response.status == 200) {
+        setState(() {
+          _avatarProfile =
+              AvatarProfile(picturePath: image.path, onPressed: openGallery);
+        });
         DisplaySnackbar.createConfirmation(message: "Profile picture updated");
       } else {
-        DisplaySnackbar.createError(
-            message: response.value);
+        DisplaySnackbar.createError(message: response.value);
       }
     }
   }
@@ -103,15 +108,15 @@ class ProfileState extends State<Profile> {
   }
 
   Widget _buildDetails(UserProfile userProfile) {
+    _avatarProfile =
+        AvatarProfile(picturePath: userProfile.picture, onPressed: openGallery);
     if (userProfile.role == Role.Member) {
       String groupName = userProfile.groupName != null
           ? userProfile.groupName
           : "Is not yet in a group";
       return Column(
         children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(userProfile.picture),
-          ),
+          _avatarProfile,
           IconText.iconNotClickable(
               leading: Icons.perm_identity, text: userProfile.username),
           IconText.iconNotClickable(
@@ -124,28 +129,7 @@ class ProfileState extends State<Profile> {
       List<String> role = userProfile.role.toString().split('.');
       return Column(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(userProfile.picture),
-              ),
-              Positioned(
-                  right: -20,
-                  top: -20,
-                  height: 50.0,
-                  width: 50.0,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.wallpaper,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        openGallery();
-                      }))
-            ],
-            overflow: Overflow.visible,
-          ),
+          _avatarProfile,
           IconText.iconNotClickable(
               leading: Icons.perm_identity, text: userProfile.username),
           IconText.iconNotClickable(leading: Icons.warning, text: role[1]),

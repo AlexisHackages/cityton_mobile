@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
+import 'package:cityton_mobile/components/avatarProfile.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
@@ -24,7 +25,9 @@ class SignupState extends State<Signup> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController verifyPasswordController = TextEditingController();
-  File _profilePicture = File(DotEnv().env['DEFAULT_PROFILR_PICTURE']);
+  File _profilePicture = File(DotEnv().env['DEFAULT_PROFILE_PICTURE']);
+
+  Widget _avatarProfile;
 
   @override
   void initState() {
@@ -40,10 +43,14 @@ class SignupState extends State<Signup> {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       _profilePicture = image;
+      setState(() {
+        _avatarProfile = AvatarProfile(picturePath: _profilePicture.path, onPressed: openGallery);
+      });
     }
   }
 
   Widget build(BuildContext context) {
+    _avatarProfile = AvatarProfile(picturePath: _profilePicture.path, onPressed: openGallery);
     return FramePage(
         header: Header(
           title: "Signup",
@@ -53,28 +60,7 @@ class SignupState extends State<Signup> {
         body: SingleChildScrollView(
             child: Column(
           children: <Widget>[
-            Stack(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(_profilePicture.path),
-                ),
-                Positioned(
-                    right: -20,
-                    top: -20,
-                    height: 50.0,
-                    width: 50.0,
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.wallpaper,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          openGallery();
-                        }))
-              ],
-              overflow: Overflow.visible,
-            ),
+            _avatarProfile,
             FormBuilder(
               key: _signupFormKey,
               autovalidate: true,
