@@ -6,6 +6,7 @@ import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/constants/group.constant.dart';
 import 'package:cityton_mobile/models/groupMinimal.dart';
 import 'package:cityton_mobile/screens/admin/group/groupManagement.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 
@@ -55,8 +56,9 @@ class GroupManagementState extends State<GroupManagement> {
                     children: <Widget>[
                       Flexible(
                         flex: 0,
-                        child: _buildFilter(),
+                        child: _buildSearchAndFilter(),
                       ),
+                      SizedBox(height: space_after_filter),
                       Flexible(flex: 1, child: _buildGroupList(snapshot.data)),
                     ],
                   ),
@@ -67,11 +69,11 @@ class GroupManagementState extends State<GroupManagement> {
             }));
   }
 
-  Widget _buildFilter() {
+  Widget _buildSearchAndFilter() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(placeholder: searchText, iconsAction: <IconAction>[
+        InputIcon(placeholder: searchText, hintText: "Search...", iconsAction: <IconAction>[
           IconAction(
               icon: Icon(Icons.search),
               action: (String input) {
@@ -79,71 +81,54 @@ class GroupManagementState extends State<GroupManagement> {
                 search();
               }),
         ]),
-        SizedBox(
-          height: 44.0,
-          child: ListView(
+        SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('All'),
-                  selected: _selectedFilter == FilterGroupSize.All.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.All.index;
-                    });
-                    search();
-                  },
-                ),
+            child: Row(children: <Widget>[
+              ChoiceChip(
+                label: Text('All'),
+                selected: _selectedFilter == FilterGroupSize.All.index,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _selectedFilter = FilterGroupSize.All.index;
+                  });
+                  search();
+                },
               ),
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('Full'),
-                  selected: _selectedFilter == FilterGroupSize.Full.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.Full.index;
-                    });
-                    search();
-                  },
-                ),
+              SizedBox(width: 25.0),
+              ChoiceChip(
+                label: Text('Full'),
+                selected: _selectedFilter == FilterGroupSize.Full.index,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _selectedFilter = FilterGroupSize.Full.index;
+                  });
+                  search();
+                },
               ),
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('Not Full'),
-                  selected: _selectedFilter == FilterGroupSize.NotFull.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.NotFull.index;
-                    });
-                    search();
-                  },
-                ),
+              SizedBox(width: 25.0),
+              ChoiceChip(
+                label: Text('Not Full'),
+                selected: _selectedFilter == FilterGroupSize.NotFull.index,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _selectedFilter = FilterGroupSize.NotFull.index;
+                  });
+                  search();
+                },
               ),
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('< minimal size'),
-                  selected: _selectedFilter ==
-                      FilterGroupSize.InferiorToMinSize.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.InferiorToMinSize.index;
-                    });
-                    search();
-                  },
-                ),
+              SizedBox(width: 25.0),
+              ChoiceChip(
+                label: Text('< minimal size'),
+                selected:
+                    _selectedFilter == FilterGroupSize.InferiorToMinSize.index,
+                onSelected: (bool selected) {
+                  setState(() {
+                    _selectedFilter = FilterGroupSize.InferiorToMinSize.index;
+                  });
+                  search();
+                },
               ),
-            ],
-          ),
-        )
+            ]))
       ],
     );
   }

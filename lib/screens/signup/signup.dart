@@ -62,7 +62,6 @@ class SignupState extends State<Signup> {
         sideMenu: null,
         body: Center(
             child: SingleChildScrollView(
-                padding: padding,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -76,8 +75,8 @@ class SignupState extends State<Signup> {
                           controller: usernameController,
                           attribute: "username",
                           decoration: InputDecoration(
-                              labelText: "Username",
-                              hintText: "At least 3 characters"),
+                              hintText: "Username",
+                          ),
                           maxLines: 1,
                           validators: [
                             FormBuilderValidators.required(
@@ -90,7 +89,7 @@ class SignupState extends State<Signup> {
                         FormBuilderTextField(
                           controller: emailController,
                           attribute: "email",
-                          decoration: InputDecoration(labelText: "Email"),
+                          decoration: InputDecoration(hintText: "Email"),
                           maxLines: 1,
                           validators: [
                             FormBuilderValidators.required(
@@ -103,7 +102,7 @@ class SignupState extends State<Signup> {
                         FormBuilderTextField(
                           controller: passwordController,
                           attribute: "password",
-                          decoration: InputDecoration(labelText: "Password"),
+                          decoration: InputDecoration(hintText: "Password"),
                           obscureText: true,
                           maxLines: 1,
                           validators: [
@@ -118,7 +117,7 @@ class SignupState extends State<Signup> {
                           controller: verifyPasswordController,
                           attribute: "verifyPassword",
                           decoration:
-                              InputDecoration(labelText: "Verify password"),
+                              InputDecoration(hintText: "Verify password"),
                           obscureText: true,
                           maxLines: 1,
                           validators: [

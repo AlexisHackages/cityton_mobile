@@ -234,7 +234,8 @@ class MyGroupState extends State<MyGroup> {
             FormBuilderTextField(
               controller: groupNameController,
               attribute: "name",
-              decoration: InputDecoration(labelText: "Name"),
+              decoration: InputDecoration(hintText: "Name"),
+              maxLines: 1,
               validators: [
                 FormBuilderValidators.required(
                     errorText: "This field is required")

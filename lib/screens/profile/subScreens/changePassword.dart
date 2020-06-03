@@ -46,7 +46,8 @@ class ChangePasswordState extends State<ChangePassword> {
                 FormBuilderTextField(
                   controller: oldPasswordController,
                   attribute: "oldPassword",
-                  decoration: InputDecoration(labelText: "Old password"),
+                  decoration: InputDecoration(hintText: "Old password"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required")
@@ -55,7 +56,8 @@ class ChangePasswordState extends State<ChangePassword> {
                 FormBuilderTextField(
                   controller: newPasswordController,
                   attribute: "newPassword",
-                  decoration: InputDecoration(labelText: "New password"),
+                  decoration: InputDecoration(hintText: "New password"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -66,7 +68,8 @@ class ChangePasswordState extends State<ChangePassword> {
                 FormBuilderTextField(
                   controller: verifyNewPasswordController,
                   attribute: "verifyNewPassword",
-                  decoration: InputDecoration(labelText: "Verify new password"),
+                  decoration: InputDecoration(hintText: "Verify new password"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),

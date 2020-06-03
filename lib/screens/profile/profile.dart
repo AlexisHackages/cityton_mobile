@@ -6,6 +6,7 @@ import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/profile/profile.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/enums.dart';
@@ -63,8 +64,10 @@ class ProfileState extends State<Profile> {
           ),
           sideMenu: null,
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               _buildUserInfos(datas["userId"]),
+              SizedBox(height: space_between_input),
               InkWell(
                 child: Text("Change password ?"),
                 onTap: () {
@@ -117,10 +120,13 @@ class ProfileState extends State<Profile> {
       return Column(
         children: <Widget>[
           _avatarProfile,
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.perm_identity, text: userProfile.username),
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.supervisor_account, text: groupName),
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.mail_outline, text: userProfile.email),
         ],
@@ -130,11 +136,15 @@ class ProfileState extends State<Profile> {
       return Column(
         children: <Widget>[
           _avatarProfile,
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.perm_identity, text: userProfile.username),
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.mail_outline, text: userProfile.email),
+          SizedBox(height: space_between_input),
         ],
       );
     }

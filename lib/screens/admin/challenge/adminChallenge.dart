@@ -90,26 +90,30 @@ class AdminChallengeState extends State<AdminChallenge> {
   }
 
   Widget _buildSearchAndFilter() {
-    return ExpansionTile(
-      title: InputIcon(iconsAction: <IconAction>[
-        IconAction(
-            icon: Icon(Icons.search),
-            action: (String input) {
-              searchText = input;
-              search();
-            }),
-      ]),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Column(
+        InputIcon(
+            placeholder: searchText,
+            hintText: "Search...",
+            iconsAction: <IconAction>[
+              IconAction(
+                  icon: Icon(Icons.search),
+                  action: (String input) {
+                    searchText = input;
+                    search();
+                  }),
+            ]),
+        Row(
           children: <Widget>[
-            Text("Start date"),
+            Text("Start date: "),
             IconText.iconClickable(
               trailing: IconButtonCustom(
                   onAction: () {
                     callDatePicker();
                   },
                   icon: Icons.date_range),
-              text: "$finaldate",
+              text: finaldate == null ? "none" : finaldate.toString(),
             ),
           ],
         )

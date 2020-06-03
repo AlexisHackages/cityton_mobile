@@ -2,6 +2,7 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -48,6 +49,7 @@ class EditChallengeState extends State<EditChallenge> {
         ),
         sideMenu: null,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FormBuilder(
               key: _editFormKey,
@@ -57,6 +59,7 @@ class EditChallengeState extends State<EditChallenge> {
                   controller: titleController,
                   attribute: "title",
                   decoration: InputDecoration(labelText: "Title"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -66,10 +69,12 @@ class EditChallengeState extends State<EditChallenge> {
                         errorText: "Maximum 50 characters are allowed"),
                   ],
                 ),
+                SizedBox(height: space_between_input),
                 FormBuilderTextField(
                   controller: statementController,
                   attribute: "statement",
                   decoration: InputDecoration(labelText: "Statement"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -91,7 +96,8 @@ class EditChallengeState extends State<EditChallenge> {
                         }
 
                         if (_editFormKey.currentState.saveAndValidate()) {
-                          if (titleController.text != datas["title"] && statementController.text != datas["statement"]) {
+                          if (titleController.text != datas["title"] &&
+                              statementController.text != datas["statement"]) {
                             Navigator.pop(context);
                           }
 
@@ -102,7 +108,8 @@ class EditChallengeState extends State<EditChallenge> {
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
-                            DisplaySnackbar.createError(message: response.value);
+                            DisplaySnackbar.createError(
+                                message: response.value);
                           }
                         }
                       }),

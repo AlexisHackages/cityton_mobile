@@ -9,6 +9,7 @@ import 'package:cityton_mobile/models/groupProgression.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.bloc.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -107,14 +108,13 @@ class ProgressionState extends State<Progression> {
   Widget _buildDrawHeader(AsyncSnapshot snapshot) {
     if (snapshot.hasData && snapshot.data.groupId != null) {
       GroupProgression groupProgression = snapshot.data;
-      return DrawerHeader(
-          child: Column(children: <Widget>[
+      return Container(padding: EdgeInsets.all(30.0), child: Column(children: <Widget>[
         Text(groupProgression.progression.toInt().toString() +
             "% achievements earned"),
         LinearProgressIndicator(
           value: groupProgression.progression / 100.0,
-          backgroundColor: Colors.green,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+          backgroundColor: Colors.blueGrey[700],
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         ),
       ]));
     } else {
@@ -142,7 +142,7 @@ class ProgressionState extends State<Progression> {
         future: _currentUser,
         builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
           if (snapshot.hasData) {
-            return ExpansionTile(title: Text(status.value), children: <Widget>[
+            return ExpansionTile(title: Text(status.value, style: TextStyle(fontWeight: FontWeight.bold),), children: <Widget>[
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: challenges.length,

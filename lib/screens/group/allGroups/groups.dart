@@ -84,7 +84,6 @@ class GroupsState extends State<Groups> {
       children: <Widget>[
         InputIcon(placeholder: searchText, iconsAction: <IconAction>[
           IconAction(
-              
               icon: Icon(Icons.search),
               action: (String input) {
                 searchText = input;
@@ -178,11 +177,16 @@ class GroupsState extends State<Groups> {
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
-    return <IconButton>[
-      IconButton(
-        icon: Icon(Icons.add),
-        onPressed: () => Navigator.popAndPushNamed(context, '/group/create'),
-      )
-    ];
+    if (currentUser != null && Role.values[currentUser.role] == Role.Member &&
+        currentUser.groupId < 1) {
+      return <IconButton>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => Navigator.popAndPushNamed(context, '/group/create'),
+        )
+      ];
+    } else {
+      return List<IconButton>();
+    }
   }
 }

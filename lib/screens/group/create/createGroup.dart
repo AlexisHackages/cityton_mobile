@@ -37,6 +37,7 @@ class CreateGroupState extends State<CreateGroup> {
         ),
         sideMenu: null,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FormBuilder(
               key: _addFormKey,
@@ -45,7 +46,8 @@ class CreateGroupState extends State<CreateGroup> {
                 FormBuilderTextField(
                   controller: nameController,
                   attribute: "name",
-                  decoration: InputDecoration(labelText: "Name"),
+                  decoration: InputDecoration(hintText: "Name"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),

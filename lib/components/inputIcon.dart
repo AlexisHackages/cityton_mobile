@@ -5,12 +5,14 @@ class InputIcon extends StatefulWidget {
   final List<IconAction> iconsAction;
   final String placeholder;
   final TextEditingController customController;
+  final String hintText;
 
   InputIcon(
       {@required this.iconsAction,
       this.labelText,
       this.placeholder,
-      this.customController});
+      this.customController,
+      this.hintText});
 
   @override
   InputIconState createState() => InputIconState();
@@ -35,7 +37,9 @@ class InputIconState extends State<InputIcon> {
       Flexible(
           child: TextField(
               controller: inputController,
-              decoration: InputDecoration(labelText: widget.labelText))),
+              decoration: InputDecoration(
+                  labelText: widget.labelText, hintText: widget.hintText),
+              maxLines: 1)),
       Row(children: <Widget>[..._buildIcons()])
     ]);
   }

@@ -38,6 +38,7 @@ class AddChallengeState extends State<AddChallenge> {
         ),
         sideMenu: null,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FormBuilder(
               key: _addFormKey,
@@ -46,7 +47,8 @@ class AddChallengeState extends State<AddChallenge> {
                 FormBuilderTextField(
                   controller: titleController,
                   attribute: "title",
-                  decoration: InputDecoration(labelText: "Title"),
+                  decoration: InputDecoration(hintText: "Title"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),
@@ -59,7 +61,8 @@ class AddChallengeState extends State<AddChallenge> {
                 FormBuilderTextField(
                   controller: statementController,
                   attribute: "statement",
-                  decoration: InputDecoration(labelText: "Statement"),
+                  decoration: InputDecoration(hintText: "Statement"),
+                  maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
                         errorText: "This field is required"),

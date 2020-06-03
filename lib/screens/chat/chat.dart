@@ -36,6 +36,9 @@ class ChatState extends State<Chat> {
 
   Widget _popupFileSelected = Container();
 
+  String test =
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
   void initState() {
     super.initState();
 
@@ -95,7 +98,7 @@ class ChatState extends State<Chat> {
       child: Column(
         children: <Widget>[
           Flexible(flex: 1, child: _buildMessages(threadId)),
-          Container(height: 100, child: _buildInputText(threadId)),
+          _buildInputText(threadId),
         ],
       ),
       alignment: Alignment.center,
@@ -132,7 +135,23 @@ class ChatState extends State<Chat> {
               itemCount: messages.length,
               itemBuilder: (BuildContext context, int index) {
                 _scrollToBottom();
-                return _buildBubble(messages[index]);
+                if (index == 0) {
+                  return Column(children: <Widget>[
+                    ..._buildBubbleFrame(messages[index], false),
+                    SizedBox(height: 25.0)
+                  ]);
+                } else {
+                  return messages[index].author.id ==
+                          messages[index - 1].author.id
+                      ? Column(children: <Widget>[
+                          ..._buildBubbleFrame(messages[index], true),
+                          SizedBox(height: 25.0)
+                        ])
+                      : Column(children: <Widget>[
+                          ..._buildBubbleFrame(messages[index], false),
+                          SizedBox(height: 25.0)
+                        ]);
+                }
               });
         });
   }
@@ -142,28 +161,33 @@ class ChatState extends State<Chat> {
         child: Column(children: <Widget>[
       _popupFileSelected,
       Center(
-          child: InputIcon(
-              labelText: "Write a message",
-              customController: _sendController,
-              iconsAction: <IconAction>[
-            IconAction(
-                icon: Icon(Icons.attach_file),
-                action: (String input) {
-                  openGallery();
-                }),
-            IconAction(
-                icon: Icon(Icons.camera_alt),
-                action: (String input) {
-                  openCamera();
-                }),
-            IconAction(
-                icon: Icon(Icons.send),
-                action: (String input) {
-                  chatBloc.sendChatMessage(input, threadId, _filePicked);
-                  _sendController.clear();
-                  _filePicked = null;
-                })
-          ]))
+          child: Container(
+              padding: EdgeInsets.only(top: 5.0),
+              decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: Colors.blueGrey[700]))),
+              child: InputIcon(
+                  hintText: "Write a message",
+                  customController: _sendController,
+                  iconsAction: <IconAction>[
+                    IconAction(
+                        icon: Icon(Icons.attach_file),
+                        action: (String input) {
+                          openGallery();
+                        }),
+                    IconAction(
+                        icon: Icon(Icons.camera_alt),
+                        action: (String input) {
+                          openCamera();
+                        }),
+                    IconAction(
+                        icon: Icon(Icons.send),
+                        action: (String input) {
+                          chatBloc.sendChatMessage(
+                              input, threadId, _filePicked);
+                          _sendController.clear();
+                          _filePicked = null;
+                        })
+                  ])))
     ]));
   }
 
@@ -202,24 +226,51 @@ class ChatState extends State<Chat> {
     ];
   }
 
-  Widget _buildBubble(Message message) {
-    if (message.media?.url != null) {
-      return ListTile(
-        onLongPress: () => _buildModalBottomSheet(message.content, message.id),
-        title: Image.network(message.media.url, width: 50.0, height: 50.0),
-        subtitle: Text(
-          message.content,
-          textAlign: TextAlign.center,
-        ),
-      );
+  List<Widget> _buildBubbleFrame(Message message, bool isSameAuthor) {
+    if (!isSameAuthor) {
+      return <Widget>[
+        Row(children: <Widget>[
+          CircleAvatar(
+            radius: 25.0,
+            backgroundImage: NetworkImage(message.author.profilePicture),
+          ),
+          SizedBox(width: 10.0),
+          Text(message.author.username)
+        ]),
+        Row(children: <Widget>[
+          SizedBox(width: 60.0),
+          Expanded(
+              child: InkWell(
+                  onLongPress: () =>
+                      _buildModalBottomSheet(message.content, message.id),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      message.media?.url != null
+                          ? Image.network(message.media.url,
+                              width: 50.0, height: 50.0)
+                          : Container(),
+                      Text(message.content)
+                    ],
+                  )))
+        ])
+      ];
     } else {
-      return ListTile(
+      return <Widget>[
+        Row(children: <Widget>[
+          SizedBox(width: 60.0),
+          Flexible(child: InkWell(
         onLongPress: () => _buildModalBottomSheet(message.content, message.id),
-        title: Text(
-          message.content,
-          textAlign: TextAlign.center,
-        ),
-      );
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+          message.media?.url != null
+              ? Image.network(message.media.url, width: 50.0, height: 50.0)
+              : Container(),
+          Text(message.content)
+        ])))
+        ])
+      ];
     }
   }
 

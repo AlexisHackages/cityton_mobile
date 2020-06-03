@@ -4,6 +4,7 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/enums.dart';
@@ -38,14 +39,17 @@ class UserInfoState extends State<UserInfo> {
     if (datas != null) {
       return FramePage(
           header: Header(
-            title: "Infos " + user.username,
+            title: "Details " + user.username,
             leadingState: HeaderLeading.DEAD_END,
-            iconsAction: _buildHeaderIconsAction(context, datas["userProfile"].id),
+            iconsAction:
+                _buildHeaderIconsAction(context, datas["userProfile"].id),
           ),
           sideMenu: null,
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               _buildUserInfos(user),
+              SizedBox(height: space_between_input),
               InkWell(
                 child: Text("Change password ?"),
                 onTap: () {
@@ -57,7 +61,7 @@ class UserInfoState extends State<UserInfo> {
     } else {
       return FramePage(
           header: Header(
-            title: "Profile",
+            title: "Details " + user.username,
             leadingState: HeaderLeading.DEAD_END,
           ),
           sideMenu: null,
@@ -65,16 +69,7 @@ class UserInfoState extends State<UserInfo> {
     }
   }
 
-  Widget _buildUserInfos(UserProfile user) {
-    return Column(
-      children: <Widget>[
-        _buildDetails(user),
-      ],
-    );
-    ;
-  }
-
-  Widget _buildDetails(UserProfile userProfile) {
+  Widget _buildUserInfos(UserProfile userProfile) {
     if (userProfile.role == Role.Member) {
       String groupName = userProfile.groupName != null
           ? userProfile.groupName
@@ -82,11 +77,18 @@ class UserInfoState extends State<UserInfo> {
       return Column(
         children: <Widget>[
           CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.white,
             backgroundImage: NetworkImage(userProfile.picture),
           ),
-          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
-          IconText.iconNotClickable(leading: Icons.supervisor_account, text: groupName),
-          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
+          IconText.iconNotClickable(
+              leading: Icons.perm_identity, text: userProfile.username),
+          SizedBox(height: space_between_input),
+          IconText.iconNotClickable(
+              leading: Icons.supervisor_account, text: groupName),
+          SizedBox(height: space_between_input),
+          IconText.iconNotClickable(
+              leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     } else {
@@ -96,9 +98,13 @@ class UserInfoState extends State<UserInfo> {
           CircleAvatar(
             backgroundImage: NetworkImage(userProfile.picture),
           ),
-          IconText.iconNotClickable(leading: Icons.perm_identity, text: userProfile.username),
+          IconText.iconNotClickable(
+              leading: Icons.perm_identity, text: userProfile.username),
+          SizedBox(height: space_between_input),
           IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
-          IconText.iconNotClickable(leading: Icons.mail_outline, text: userProfile.email),
+          SizedBox(height: space_between_input),
+          IconText.iconNotClickable(
+              leading: Icons.mail_outline, text: userProfile.email),
         ],
       );
     }

@@ -38,7 +38,7 @@ class UserManagementState extends State<UserManagement> {
   Widget build(BuildContext context) {
     return FramePage(
         header: Header(
-          title: "Challenge",
+          title: "User management",
           leadingState: HeaderLeading.MENU,
         ),
         sideMenu: MainSideMenu(),
@@ -65,62 +65,66 @@ class UserManagementState extends State<UserManagement> {
   }
 
   Widget _buildSearchAndFilter() {
-    return ExpansionTile(
-      title: InputIcon(iconsAction: <IconAction>[
-        IconAction(
-            icon: Icon(Icons.search),
-            action: (String input) {
-              searchText = input;
-              search();
-            }),
-      ]),
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            RadioListTile<int>(
-              title: const Text('All'),
-              value: -1,
-              groupValue: _selectedRole,
-              onChanged: (int value) {
+    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      InputIcon(
+          placeholder: searchText,
+          hintText: "Search...",
+          iconsAction: <IconAction>[
+            IconAction(
+                icon: Icon(Icons.search),
+                action: (String input) {
+                  searchText = input;
+                  search();
+                }),
+          ]),
+      SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: <Widget>[
+            ChoiceChip(
+              label: Text('All'),
+              selected: _selectedRole == -1,
+              onSelected: (bool selected) {
                 setState(() {
-                  _selectedRole = value;
+                  _selectedRole = -1;
                 });
+                search();
               },
             ),
-            RadioListTile<int>(
-              title: const Text('Admin'),
-              value: Role.Admin.index,
-              groupValue: _selectedRole,
-              onChanged: (int value) {
+            SizedBox(width: 25.0),
+            ChoiceChip(
+              label: Text('Admin'),
+              selected: _selectedRole == Role.Admin.index,
+              onSelected: (bool selected) {
                 setState(() {
-                  _selectedRole = value;
+                  _selectedRole = Role.Admin.index;
                 });
+                search();
               },
             ),
-            RadioListTile<int>(
-              title: const Text('Checker'),
-              value: Role.Checker.index,
-              groupValue: _selectedRole,
-              onChanged: (int value) {
+            SizedBox(width: 25.0),
+            ChoiceChip(
+              label: Text('Checker'),
+              selected: _selectedRole == Role.Checker.index,
+              onSelected: (bool selected) {
                 setState(() {
-                  _selectedRole = value;
+                  _selectedRole = Role.Checker.index;
                 });
+                search();
               },
             ),
-            RadioListTile<int>(
-              title: const Text('Member'),
-              value: Role.Member.index,
-              groupValue: _selectedRole,
-              onChanged: (int value) {
+            SizedBox(width: 25.0),
+            ChoiceChip(
+              label: Text('Member'),
+              selected: _selectedRole == Role.Member.index,
+              onSelected: (bool selected) {
                 setState(() {
-                  _selectedRole = value;
+                  _selectedRole = Role.Member.index;
                 });
+                search();
               },
-            ),
-          ],
-        )
-      ],
-    );
+            )
+          ]))
+    ]);
   }
 
   Widget _buildUserList(List<UserProfile> userProfiles) {

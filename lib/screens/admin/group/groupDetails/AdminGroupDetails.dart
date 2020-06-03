@@ -5,6 +5,7 @@ import 'package:cityton_mobile/components/label.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/group.dart';
 import 'package:cityton_mobile/screens/admin/group/groupDetails/AdminGroupDetails.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 
@@ -44,7 +45,7 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
 
     return FramePage(
         header: Header(
-          title: "Infos " + groupName,
+          title: groupName,
           leadingState: HeaderLeading.DEAD_END,
           iconsAction: _buildHeaderIconsAction(groupId),
         ),
@@ -83,15 +84,34 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
             })
         : Text("No members except the creator");
 
-    return Column(
-      children: <Widget>[
-        Label(label: "Name", component: Text(group.name)),
-        Label(label: "Creator", component: Text(group.creator.username)),
-        Label(
-            label: group.hasReachMaxSize ? "Members (group full)" : "Members",
-            component: members),
-      ],
-    );
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+        Widget>[
+      Container(
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.blueGrey[700]),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Group details",
+                  style:
+                      TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+              SizedBox(height: space_around_divider),
+              Divider(thickness: 1.0),
+              SizedBox(height: space_around_divider),
+              Label(label: "Name", component: Text(group.name)),
+              SizedBox(height: space_between_text),
+              Label(label: "Creator", component: Text(group.creator.username)),
+              SizedBox(height: space_between_text),
+              Label(
+                  label: group.hasReachMaxSize
+                      ? "Members (group full)"
+                      : "Members",
+                  component: members),
+            ],
+          ))
+    ]);
   }
 
   List<IconButton> _buildHeaderIconsAction(int groupId) {

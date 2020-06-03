@@ -1,3 +1,4 @@
+import 'package:cityton_mobile/theme/constant.dart';
 import "package:flutter/material.dart";
 
 class FramePage extends StatelessWidget {
@@ -14,7 +15,7 @@ class FramePage extends StatelessWidget {
     return Scaffold(
       appBar: header,
       drawer: sideMenu,
-      body: body
+      body: Padding(padding: padding, child: body)
     );
   }
 }
