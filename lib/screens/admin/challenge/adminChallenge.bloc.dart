@@ -1,16 +1,15 @@
-import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/challenge.dart';
 import 'package:cityton_mobile/shared/services/challenge.service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AdminChallengeBloc {
-  final ChallengeService challengeService = ChallengeService();
+  final ChallengeService _challengeService = ChallengeService();
 
   final _challengesFetcher =
       BehaviorSubject<List<Challenge>>.seeded(List<Challenge>());
   Stream<List<Challenge>> get challenges => _challengesFetcher.stream;
 
-  closeChallengeStream() {
+  closeChallengesStream() {
     _challengesFetcher.close();
   }
 
@@ -18,7 +17,7 @@ class AdminChallengeBloc {
 
     String sanitizedSearchText = searchText.trim();
 
-    var response = await challengeService.search(sanitizedSearchText, selectedDate);
+    var response = await _challengeService.search(sanitizedSearchText, selectedDate);
     
     ChallengeList challengeAdminList = ChallengeList.fromJson(response.value);
 

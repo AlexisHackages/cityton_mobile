@@ -8,9 +8,9 @@ import 'package:cityton_mobile/models/user.dart';
 import 'dart:convert';
 
 class AuthBloc {
-  final AuthService authService = AuthService();
-  final UserService userService = UserService();
-  final FlutterSecureStorage storage = FlutterSecureStorage();
+  final AuthService _authService = AuthService();
+  final UserService _userService = UserService();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   final _tokenFetcher = BehaviorSubject<String>.seeded(null);
   Stream<String> get token => _tokenFetcher.stream;
@@ -18,7 +18,7 @@ class AuthBloc {
   AuthBloc();
 
   Future<User> getCurrentUser() async {
-    String encodedCurrentUser = await storage.read(key: "currentUser");
+    String encodedCurrentUser = await _storage.read(key: "currentUser");
     return User.fromJson(jsonDecode(encodedCurrentUser));
   }
 
@@ -26,16 +26,16 @@ class AuthBloc {
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 
-    var response = await authService.login(sanitizedEmail, sanitizedPassword);
+    var response = await _authService.login(sanitizedEmail, sanitizedPassword);
 
     if (response.status == 200) {
       User currentUser = User.fromJson(response.value);
 
-      await storage.write(key: "token", value: currentUser.token);
+      await _storage.write(key: "token", value: currentUser.token);
 
       _tokenFetcher.sink.add(currentUser.token);
 
-      await storage.write(
+      await _storage.write(
           key: "currentUser", value: jsonEncode(currentUser));
     }
 
@@ -48,16 +48,16 @@ class AuthBloc {
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 
-    var response = await authService.signup(
+    var response = await _authService.signup(
         sanitizedUsername, sanitizedEmail, sanitizedPassword, profilePicture);
 
     if (response.status == 200) {
       User currentUser = User.fromJson(response.value);
-      await storage.write(key: "token", value: currentUser.token);
+      await _storage.write(key: "token", value: currentUser.token);
 
       _tokenFetcher.sink.add(currentUser.token);
 
-      await storage.write(
+      await _storage.write(
           key: "currentUser", value: jsonEncode(currentUser));
     }
 
@@ -65,11 +65,11 @@ class AuthBloc {
   }
 
   void logout() {
-    storage.delete(key: "token");
+    _storage.delete(key: "token");
   }
 
   Future<String> getToken() async {
-    return await storage.read(key: "token");
+    return await _storage.read(key: "token");
   }
 
   void closeTokenStream() {

@@ -12,11 +12,11 @@ class CreateGroup extends StatefulWidget {
 }
 
 class CreateGroupState extends State<CreateGroup> {
-  CreateGroupBloc createGroupBloc = CreateGroupBloc();
+  CreateGroupBloc _createGroupBloc = CreateGroupBloc();
 
   final GlobalKey<FormBuilderState> _addFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -26,6 +26,7 @@ class CreateGroupState extends State<CreateGroup> {
   @override
   void dispose() {
     super.dispose();
+    _nameController.dispose();
   }
 
   @override
@@ -44,7 +45,7 @@ class CreateGroupState extends State<CreateGroup> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: nameController,
+                  controller: _nameController,
                   attribute: "name",
                   decoration: InputDecoration(hintText: "Name"),
                   maxLines: 1,
@@ -69,7 +70,7 @@ class CreateGroupState extends State<CreateGroup> {
                         }
 
                         if (_addFormKey.currentState.saveAndValidate()) {
-                          var response = await this.createGroupBloc.add(nameController.text);
+                          var response = await this._createGroupBloc.add(_nameController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
                             DisplaySnackbar.createConfirmation(message: "Group created");

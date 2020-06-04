@@ -4,8 +4,6 @@ import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/thread.dart';
-import 'package:cityton_mobile/models/user.dart';
-import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
@@ -25,23 +23,15 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-  AuthBloc authBloc = AuthBloc();
-  ChatBloc chatBloc = ChatBloc();
+  ChatBloc _chatBloc = ChatBloc();
 
   TextEditingController _sendController = TextEditingController();
-  User currentUser;
   File _filePicked;
 
   Widget _popupFileSelected = Container();
 
   void initState() {
     super.initState();
-
-    _initCurrentUser();
-  }
-
-  Future<void> _initCurrentUser() async {
-    currentUser = await authBloc.getCurrentUser();
   }
 
   void openGallery() async {
@@ -66,9 +56,9 @@ class ChatState extends State<Chat> {
 
   @override
   void dispose() {
-    // _sendController.dispose();
-    // chatBloc.closeMessages();
-    // chatBloc.closeChatConnection();
+    _sendController.dispose();
+    _chatBloc.closeMessages();
+    _chatBloc.closeChatConnection();
     super.dispose();
   }
 
@@ -113,10 +103,10 @@ class ChatState extends State<Chat> {
       });
     }
 
-    chatBloc.getMessages(threadId);
+    _chatBloc.getMessages(threadId);
 
     return StreamBuilder(
-        stream: chatBloc.messages,
+        stream: _chatBloc.messages,
         builder: (BuildContext context, AsyncSnapshot<List<Message>> snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -177,7 +167,7 @@ class ChatState extends State<Chat> {
                     IconAction(
                         icon: Icon(Icons.send),
                         action: (String input) {
-                          chatBloc.sendChatMessage(
+                          _chatBloc.sendChatMessage(
                               input, threadId, _filePicked);
                           _sendController.clear();
                           _filePicked = null;
@@ -202,7 +192,7 @@ class ChatState extends State<Chat> {
                 ListTile(
                     title: Text("Remove"),
                     onTap: () {
-                      chatBloc.removeMessage(messageId);
+                      _chatBloc.removeMessage(messageId);
                       Navigator.pop(context);
                       DisplaySnackbar.createConfirmation(
                           message: "Message succesfully Removed");

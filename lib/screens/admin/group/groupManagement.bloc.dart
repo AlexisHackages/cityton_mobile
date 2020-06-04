@@ -10,7 +10,7 @@ class GroupManagementBloc {
       BehaviorSubject<List<GroupMinimal>>.seeded(List<GroupMinimal>());
   Stream<List<GroupMinimal>> get groups => _groupFetcher.stream;
 
-  closeGroupStream() {
+  closeGroupsStream() {
     _groupFetcher.close();
   }
 

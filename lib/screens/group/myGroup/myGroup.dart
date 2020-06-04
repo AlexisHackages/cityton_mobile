@@ -10,7 +10,6 @@ import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 class MyGroup extends StatefulWidget {
@@ -23,11 +22,11 @@ class MyGroup extends StatefulWidget {
 }
 
 class MyGroupState extends State<MyGroup> {
-  MyGroupBloc myGroupBloc = MyGroupBloc();
-  AuthBloc authBloc = AuthBloc();
+  MyGroupBloc _myGroupBloc = MyGroupBloc();
+  AuthBloc _authBloc = AuthBloc();
 
   Future<User> _currentUser;
-  Map datas;
+  Map _datas;
   int _groupId;
   String _groupName = "...";
   String _creatorName = "...";
@@ -36,24 +35,25 @@ class MyGroupState extends State<MyGroup> {
   void initState() {
     super.initState();
 
-    datas = widget.arguments;
-    _groupId = datas["groupId"];
+    _datas = widget.arguments;
+    _groupId = _datas["groupId"];
 
     _currentUser = _initCurrentUser();
   }
 
   Future<User> _initCurrentUser() async {
-    return await authBloc.getCurrentUser();
+    return await _authBloc.getCurrentUser();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _myGroupBloc.closeChallengeStream();
   }
 
   @override
   Widget build(BuildContext context) {
-    myGroupBloc.getGroupInfo(_groupId);
+    _myGroupBloc.getGroupInfo(_groupId);
 
     return FramePage(
         header: Header(
@@ -62,7 +62,7 @@ class MyGroupState extends State<MyGroup> {
         ),
         sideMenu: null,
         body: StreamBuilder<Group>(
-            stream: myGroupBloc.groupDetails,
+            stream: _myGroupBloc.groupDetails,
             builder: (BuildContext context, AsyncSnapshot<Group> snapshot) {
               if (snapshot.hasData && snapshot.data.id != null) {
                 Group group = snapshot.data;
@@ -108,7 +108,7 @@ class MyGroupState extends State<MyGroup> {
                 trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      myGroupBloc.deleteMembership(
+                      _myGroupBloc.deleteMembership(
                           group.members[index].id, group.id);
                     }),
               );
@@ -124,7 +124,7 @@ class MyGroupState extends State<MyGroup> {
                   : IconButton(
                       icon: Icon(Icons.done),
                       onPressed: () {
-                        myGroupBloc.acceptRequest(
+                        _myGroupBloc.acceptRequest(
                             group.requestsAdhesion[index].id, group.id);
                       });
               return ListTile(
@@ -139,7 +139,7 @@ class MyGroupState extends State<MyGroup> {
                       IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
-                            myGroupBloc.deleteRequest(
+                            _myGroupBloc.deleteRequest(
                                 group.requestsAdhesion[index].id, group.id);
                           })
                     ],
@@ -155,7 +155,10 @@ class MyGroupState extends State<MyGroup> {
                 text: _groupName,
                 trailing: IconButtonCustom(
                     onAction: () {
-                      Get.toNamed('/myGroup/edit', arguments: {"groupId": _groupId, "groupName": _groupName});
+                      Get.toNamed('/myGroup/edit', arguments: {
+                        "groupId": _groupId,
+                        "groupName": _groupName
+                      });
                     },
                     icon: Icons.mode_edit))),
         Label(label: "Creator", component: Text(_creatorName)),
@@ -178,7 +181,7 @@ class MyGroupState extends State<MyGroup> {
                     RaisedButton(
                         child: Text("I'm sure"),
                         onPressed: () async {
-                          var response = await myGroupBloc.delete(group.id);
+                          var response = await _myGroupBloc.delete(group.id);
 
                           if (response.status == 200) {
                             DisplaySnackbar.createConfirmation(
@@ -216,56 +219,6 @@ class MyGroupState extends State<MyGroup> {
                         )
                       : Text("No memebers except the creator");
                 })),
-      ],
-    );
-  }
-
-  Widget _buildEditName(Group group) {
-    final GlobalKey<FormBuilderState> _editNameFormKey =
-        GlobalKey<FormBuilderState>();
-    TextEditingController groupNameController;
-
-    return Column(
-      children: <Widget>[
-        FormBuilder(
-          key: _editNameFormKey,
-          readOnly: false,
-          child: Column(children: <Widget>[
-            FormBuilderTextField(
-              controller: groupNameController,
-              attribute: "name",
-              decoration: InputDecoration(hintText: "Name"),
-              maxLines: 1,
-              validators: [
-                FormBuilderValidators.required(
-                    errorText: "This field is required")
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                  child: Text('Submit'),
-                  onPressed: () async {
-                    FocusScopeNode currentFocus = FocusScope.of(context);
-
-                    if (!currentFocus.hasPrimaryFocus) {
-                      currentFocus.unfocus();
-                    }
-
-                    if (_editNameFormKey.currentState.saveAndValidate()) {
-                      var response = await this
-                          .myGroupBloc
-                          .editName(groupNameController.text, group.id);
-                      if (response.status == 200) {
-                        Get.back();
-                      } else {
-                        DisplaySnackbar.createError(message: response.value);
-                      }
-                    }
-                  }),
-            ),
-          ]),
-        ),
       ],
     );
   }

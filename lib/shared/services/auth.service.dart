@@ -3,13 +3,13 @@ import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
 import 'package:dio/dio.dart';
 
-var http = Http();
+var _http = Http();
 
 class AuthService {
 
   Future<ApiResponse> login(String email, String password) async {
     
-    var res = await http.post("authentication/login",
+    var res = await _http.post("authentication/login",
       data: {"email": email, "password": password});
       
     return res;
@@ -26,7 +26,7 @@ class AuthService {
           filename: fileName)
     });
     
-    var res = await http.post("authentication/signup", data: formdata);
+    var res = await _http.post("authentication/signup", data: formdata);
       
     return res;
     

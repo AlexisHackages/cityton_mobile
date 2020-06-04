@@ -18,22 +18,23 @@ class GroupManagement extends StatefulWidget {
 class GroupManagementState extends State<GroupManagement> {
   GroupManagementBloc _groupManagementBloc = GroupManagementBloc();
 
-  String searchText = "";
+  String _searchText = "";
   int _selectedFilter = FilterGroupSize.All.index;
 
   @override
   void initState() {
     super.initState();
-    this._groupManagementBloc.search(searchText, _selectedFilter);
+    this._groupManagementBloc.search(_searchText, _selectedFilter);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _groupManagementBloc.closeGroupsStream();
   }
 
   void search() {
-    this._groupManagementBloc.search(searchText, _selectedFilter);
+    this._groupManagementBloc.search(_searchText, _selectedFilter);
   }
 
   @override
@@ -73,11 +74,11 @@ class GroupManagementState extends State<GroupManagement> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(placeholder: searchText, hintText: "Search...", iconsAction: <IconAction>[
+        InputIcon(placeholder: _searchText, hintText: "Search...", iconsAction: <IconAction>[
           IconAction(
               icon: Icon(Icons.search),
               action: (String input) {
-                searchText = input;
+                _searchText = input;
                 search();
               }),
         ]),

@@ -3,18 +3,18 @@ import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
 import 'package:dio/dio.dart';
 
-var http = Http();
+var _http = Http();
 
 class UserService {
   Future<ApiResponse> getCurrentUser() async {
-    var res = await http.get("authentication");
+    var res = await _http.get("authentication");
 
     return res;
   }
 
   Future<ApiResponse> changePassword(
       String oldPassword, String newPassword) async {
-    var res = await http.post("user/changePassword", data: {
+    var res = await _http.post("user/changePassword", data: {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
     });
@@ -23,13 +23,13 @@ class UserService {
   }
 
   Future<ApiResponse> getProfile(int userId) async {
-    var res = await http.get("user/getProfile/" + userId.toString());
+    var res = await _http.get("user/getProfile/" + userId.toString());
 
     return res;
   }
 
   Future<ApiResponse> search(String search, int selectedRole) async {
-    var res = await http.get("user/search", {
+    var res = await _http.get("user/search", {
       "searchText": search,
       "selectedRole": selectedRole,
     });
@@ -38,7 +38,7 @@ class UserService {
   }
 
   Future<ApiResponse> delete(int id) async {
-    var res = await http.delete("user/delete/" + id.toString());
+    var res = await _http.delete("user/delete/" + id.toString());
 
     return res;
   }
@@ -51,7 +51,7 @@ class UserService {
           filename: fileName)
     });
 
-    var res = await http.put("user/changeProfilePicture", data: formdata,
+    var res = await _http.put("user/changeProfilePicture", data: formdata,
         onSendProgress: (int sent, int total) {
       print((sent / total * 100).toString() + "%");
     });

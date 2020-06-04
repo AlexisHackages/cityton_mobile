@@ -21,12 +21,12 @@ class GroupDetails extends StatefulWidget {
 }
 
 class GroupDetailsState extends State<GroupDetails> {
-  GroupDetailsBloc groupDetailsBloc = GroupDetailsBloc();
-  AuthBloc authBloc = AuthBloc();
+  GroupDetailsBloc _groupDetailsBloc = GroupDetailsBloc();
+  AuthBloc _authBloc = AuthBloc();
 
-  Map datas;
-  int groupId;
-  String groupName;
+  Map _datas;
+  int _groupId;
+  String _groupName;
 
   Future<User> _currentUser;
 
@@ -34,33 +34,34 @@ class GroupDetailsState extends State<GroupDetails> {
   void initState() {
     super.initState();
 
-    datas = widget.arguments;
-    groupId = datas["groupId"];
-    groupName = datas["groupName"];
+    _datas = widget.arguments;
+    _groupId = _datas["groupId"];
+    _groupName = _datas["groupName"];
     _currentUser = _initCurrentUser();
   }
 
   Future<User> _initCurrentUser() async {
-    return await authBloc.getCurrentUser();
+    return await _authBloc.getCurrentUser();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _groupDetailsBloc.closeGroupDetailsStream();
   }
 
   @override
   Widget build(BuildContext context) {
-    groupDetailsBloc.getGroupInfo(groupId);
+    _groupDetailsBloc.getGroupInfo(_groupId);
 
     return FramePage(
         header: Header(
-          title: "Infos " + groupName,
+          title: "Infos " + _groupName,
           leadingState: HeaderLeading.DEAD_END,
         ),
         sideMenu: null,
         body: StreamBuilder<Group>(
-            stream: groupDetailsBloc.groupDetails,
+            stream: _groupDetailsBloc.groupDetails,
             builder: (BuildContext context, AsyncSnapshot<Group> snapshot) {
               if (snapshot.hasData && snapshot.data.id != null) {
                 Group group = snapshot.data;
@@ -106,7 +107,7 @@ class GroupDetailsState extends State<GroupDetails> {
             RaisedButton(
                 child: Text('Ask to join'),
                 onPressed: () async {
-                  var response = await groupDetailsBloc.createRequest(group.id);
+                  var response = await _groupDetailsBloc.createRequest(group.id);
 
                   if (response.status == 200) {
                     DisplaySnackbar.createConfirmation(message: "Request sent");

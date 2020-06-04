@@ -18,12 +18,12 @@ class Groups extends StatefulWidget {
 }
 
 class GroupsState extends State<Groups> {
-  AuthBloc authBloc = AuthBloc();
-  GroupsBloc groupsBloc = GroupsBloc();
+  AuthBloc _authBloc = AuthBloc();
+  GroupsBloc _groupsBloc = GroupsBloc();
 
-  User currentUser;
+  User _currentUser;
   int _selectedFilter = FilterGroupSize.All.index;
-  String searchText = "";
+  String _searchText = "";
 
   void initState() {
     super.initState();
@@ -32,16 +32,17 @@ class GroupsState extends State<Groups> {
   }
 
   Future<void> _initCurrentUser() async {
-    currentUser = await authBloc.getCurrentUser();
+    _currentUser = await _authBloc.getCurrentUser();
   }
 
   void search() {
-    groupsBloc.search(searchText, _selectedFilter);
+    _groupsBloc.search(_searchText, _selectedFilter);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _groupsBloc.closeGroupStream();
   }
 
   @override
@@ -56,7 +57,7 @@ class GroupsState extends State<Groups> {
         ),
         sideMenu: MainSideMenu(),
         body: StreamBuilder(
-            stream: groupsBloc.groups,
+            stream: _groupsBloc.groups,
             builder: (BuildContext context,
                 AsyncSnapshot<List<GroupMinimal>> snapshot) {
               if (snapshot.hasData) {
@@ -81,11 +82,11 @@ class GroupsState extends State<Groups> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(placeholder: searchText, iconsAction: <IconAction>[
+        InputIcon(placeholder: _searchText, iconsAction: <IconAction>[
           IconAction(
               icon: Icon(Icons.search),
               action: (String input) {
-                searchText = input;
+                _searchText = input;
                 search();
               })
         ]),
@@ -151,12 +152,12 @@ class GroupsState extends State<Groups> {
       itemBuilder: (BuildContext context, int index) {
         final item = groupsList[index];
 
-        Widget createRequest = Role.values[currentUser.role] == Role.Member &&
-                currentUser.groupId < 1
+        Widget createRequest = Role.values[_currentUser.role] == Role.Member &&
+                _currentUser.groupId < 1
             ? IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () async {
-                  var response = await groupsBloc.createRequest(item.id);
+                  var response = await _groupsBloc.createRequest(item.id);
 
                   if (response.status == 200) {
                     DisplaySnackbar.createConfirmation(message: "Request sent");
@@ -176,8 +177,8 @@ class GroupsState extends State<Groups> {
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
-    if (currentUser != null && Role.values[currentUser.role] == Role.Member &&
-        currentUser.groupId < 1) {
+    if (_currentUser != null && Role.values[_currentUser.role] == Role.Member &&
+        _currentUser.groupId < 1) {
       return <IconButton>[
         IconButton(
           icon: Icon(Icons.add),

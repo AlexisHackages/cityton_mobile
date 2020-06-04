@@ -4,7 +4,7 @@ import 'package:cityton_mobile/shared/services/group.service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MyGroupBloc {
-  final GroupService groupService = GroupService();
+  final GroupService _groupService = GroupService();
 
   final _groupDetailsFetcher =
       BehaviorSubject<Group>.seeded(Group());
@@ -16,7 +16,7 @@ class MyGroupBloc {
 
   Future<ApiResponse> getGroupInfo(int groupId) async {
 
-    final response = await groupService.getGroupInfo(groupId);
+    final response = await _groupService.getGroupInfo(groupId);
 
     if (response.status == 200) {
       Group group = Group.fromJson(response.value);
@@ -28,7 +28,7 @@ class MyGroupBloc {
   
   Future<ApiResponse> delete(int id) async {
 
-    var response = await groupService.delete(id);
+    var response = await _groupService.delete(id);
 
     if (response.status == 200) {
       this.getGroupInfo(id);
@@ -39,7 +39,7 @@ class MyGroupBloc {
   
   Future<ApiResponse> deleteMembership(int id, int groupId) async {
 
-    var response = await groupService.deleteMembership(id);
+    var response = await _groupService.deleteMembership(id);
 
     if (response.status == 200) {
       this.getGroupInfo(groupId);
@@ -50,7 +50,7 @@ class MyGroupBloc {
   
   Future<ApiResponse> deleteRequest(int id, int groupId) async {
 
-    var response = await groupService.deleteRequest(id);
+    var response = await _groupService.deleteRequest(id);
 
     if (response.status == 200) {
       this.getGroupInfo(groupId);
@@ -61,7 +61,7 @@ class MyGroupBloc {
   
   Future<ApiResponse> acceptRequest(int id, int groupId) async {
 
-    var response = await groupService.acceptRequest(id);
+    var response = await _groupService.acceptRequest(id);
 
     if (response.status == 200) {
       this.getGroupInfo(groupId);
@@ -72,7 +72,7 @@ class MyGroupBloc {
   
   Future<ApiResponse> editName(String name, int groupId) async {
 
-    var response = await groupService.editName(name, groupId);
+    var response = await _groupService.editName(name, groupId);
 
     if (response.status == 200) {
       this.getGroupInfo(groupId);

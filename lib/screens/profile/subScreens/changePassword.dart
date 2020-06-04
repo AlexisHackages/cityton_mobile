@@ -16,9 +16,9 @@ class ChangePasswordState extends State<ChangePassword> {
 
   final GlobalKey<FormBuilderState> _changePasswordFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController oldPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController verifyNewPasswordController = TextEditingController();
+  TextEditingController _oldPasswordController = TextEditingController();
+  TextEditingController _newPasswordController = TextEditingController();
+  TextEditingController _verifyNewPasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -28,6 +28,9 @@ class ChangePasswordState extends State<ChangePassword> {
   @override
   void dispose() {
     super.dispose();
+    _oldPasswordController.dispose();
+    _newPasswordController.dispose();
+    _verifyNewPasswordController.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class ChangePasswordState extends State<ChangePassword> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: oldPasswordController,
+                  controller: _oldPasswordController,
                   attribute: "oldPassword",
                   decoration: InputDecoration(hintText: "Old password"),
                   maxLines: 1,
@@ -54,7 +57,7 @@ class ChangePasswordState extends State<ChangePassword> {
                   ],
                 ),
                 FormBuilderTextField(
-                  controller: newPasswordController,
+                  controller: _newPasswordController,
                   attribute: "newPassword",
                   decoration: InputDecoration(hintText: "New password"),
                   maxLines: 1,
@@ -66,7 +69,7 @@ class ChangePasswordState extends State<ChangePassword> {
                   ],
                 ),
                 FormBuilderTextField(
-                  controller: verifyNewPasswordController,
+                  controller: _verifyNewPasswordController,
                   attribute: "verifyNewPassword",
                   decoration: InputDecoration(hintText: "Verify new password"),
                   maxLines: 1,
@@ -76,8 +79,8 @@ class ChangePasswordState extends State<ChangePassword> {
                     FormBuilderValidators.minLength(3,
                         errorText: "At least 3 characters"),
                     (val) {
-                      if (newPasswordController.text.trim() !=
-                          verifyNewPasswordController.text.trim()) {
+                      if (_newPasswordController.text.trim() !=
+                          _verifyNewPasswordController.text.trim()) {
                         return "Passwords are not the same";
                       }
                     },
@@ -92,8 +95,8 @@ class ChangePasswordState extends State<ChangePassword> {
                             .saveAndValidate()) {
                           var response = await this
                               .changePasswordBloc
-                              .changePassword(oldPasswordController.text,
-                                  newPasswordController.text);
+                              .changePassword(_oldPasswordController.text,
+                                  _newPasswordController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {

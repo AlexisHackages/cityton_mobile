@@ -21,17 +21,17 @@ class AdminGroupDetails extends StatefulWidget {
 class AdminGroupDetailsState extends State<AdminGroupDetails> {
   AdminGroupDetailsBloc _adminGroupDetailsBloc = AdminGroupDetailsBloc();
 
-  Map datas;
-  int groupId;
-  String groupName;
+  Map _datas;
+  int _groupId;
+  String _groupName;
 
   @override
   void initState() {
     super.initState();
 
-    datas = widget.arguments;
-    groupId = datas["groupId"];
-    groupName = datas["groupName"];
+    _datas = widget.arguments;
+    _groupId = _datas["groupId"];
+    _groupName = _datas["groupName"];
   }
 
   @override
@@ -41,17 +41,17 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
 
   @override
   Widget build(BuildContext context) {
-    _adminGroupDetailsBloc.getGroupInfo(groupId);
+    _adminGroupDetailsBloc.getGroupInfo(_groupId);
 
     return FramePage(
         header: Header(
-          title: groupName,
+          title: _groupName,
           leadingState: HeaderLeading.DEAD_END,
-          iconsAction: _buildHeaderIconsAction(groupId),
+          iconsAction: _buildHeaderIconsAction(_groupId),
         ),
         sideMenu: null,
         body: FutureBuilder<ApiResponse>(
-            future: _adminGroupDetailsBloc.getGroupInfo(groupId),
+            future: _adminGroupDetailsBloc.getGroupInfo(_groupId),
             builder:
                 (BuildContext context, AsyncSnapshot<ApiResponse> snapshot) {
               if (snapshot.hasData) {

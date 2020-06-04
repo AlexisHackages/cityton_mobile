@@ -22,29 +22,30 @@ class Progression extends StatefulWidget {
 }
 
 class ProgressionState extends State<Progression> {
-  AuthBloc authBloc = AuthBloc();
-  ProgressionBloc progressionBloc = ProgressionBloc();
+  AuthBloc _authBloc = AuthBloc();
+  ProgressionBloc _progressionBloc = ProgressionBloc();
 
-  Map datas;
+  Map _datas;
   Future<User> _currentUser;
   Future<GroupProgression> groupProgression;
 
   @override
   void initState() {
     super.initState();
-    datas = widget.arguments;
+    _datas = widget.arguments;
 
-    _currentUser = authBloc.getCurrentUser();
+    _currentUser = _authBloc.getCurrentUser();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _progressionBloc.closeGroupProgression();
   }
 
   refreshProgression() async {
     ApiResponse response =
-        await progressionBloc.getProgression(datas["threadId"]);
+        await _progressionBloc.getProgression(_datas["threadId"]);
 
     if (response.status != 200) {
       DisplaySnackbar.createError(message: response.value);
@@ -53,7 +54,7 @@ class ProgressionState extends State<Progression> {
 
   validate(int challengeId) async {
     ApiResponse response =
-        await progressionBloc.validate(challengeId, datas["threadId"]);
+        await _progressionBloc.validate(challengeId, _datas["threadId"]);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge validated");
@@ -64,7 +65,7 @@ class ProgressionState extends State<Progression> {
 
   reject(int challengeId) async {
     ApiResponse response =
-        await progressionBloc.reject(challengeId, datas["threadId"]);
+        await _progressionBloc.reject(challengeId, _datas["threadId"]);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge rejected");
@@ -75,7 +76,7 @@ class ProgressionState extends State<Progression> {
 
   undo(int challengeId) async {
     ApiResponse response =
-        await progressionBloc.undo(challengeId, datas["threadId"]);
+        await _progressionBloc.undo(challengeId, _datas["threadId"]);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo");
@@ -94,7 +95,7 @@ class ProgressionState extends State<Progression> {
         ),
         sideMenu: null,
         body: StreamBuilder(
-            stream: progressionBloc.groupProgression,
+            stream: _progressionBloc.groupProgression,
             builder: (BuildContext context,
                 AsyncSnapshot<GroupProgression> snapshot) {
               return ListView(children: [

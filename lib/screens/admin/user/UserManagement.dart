@@ -14,24 +14,25 @@ class UserManagement extends StatefulWidget {
 }
 
 class UserManagementState extends State<UserManagement> {
-  UserManagementBloc userManagementBloc = UserManagementBloc();
+  UserManagementBloc _userManagementBloc = UserManagementBloc();
 
-  String searchText;
+  String _searchText;
   int _selectedRole = -1;
 
   @override
   void initState() {
     super.initState();
-    this.userManagementBloc.search("", _selectedRole);
+    this._userManagementBloc.search("", _selectedRole);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _userManagementBloc.closeUserProfilesStream();
   }
 
   void search() {
-    this.userManagementBloc.search(searchText, _selectedRole);
+    this._userManagementBloc.search(_searchText, _selectedRole);
   }
 
   @override
@@ -43,7 +44,7 @@ class UserManagementState extends State<UserManagement> {
         ),
         sideMenu: MainSideMenu(),
         body: StreamBuilder(
-            stream: userManagementBloc.userProfiles,
+            stream: _userManagementBloc.userProfiles,
             builder: (BuildContext context,
                 AsyncSnapshot<List<UserProfile>> snapshot) {
               if (snapshot.hasData) {
@@ -67,13 +68,13 @@ class UserManagementState extends State<UserManagement> {
   Widget _buildSearchAndFilter() {
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       InputIcon(
-          placeholder: searchText,
+          placeholder: _searchText,
           hintText: "Search...",
           iconsAction: <IconAction>[
             IconAction(
                 icon: Icon(Icons.search),
                 action: (String input) {
-                  searchText = input;
+                  _searchText = input;
                   search();
                 }),
           ]),

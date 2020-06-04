@@ -2,7 +2,6 @@ import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Door extends StatefulWidget {
   @override
@@ -10,8 +9,6 @@ class Door extends StatefulWidget {
 }
 
 class DoorState extends State<Door> {
-
-  final FlutterSecureStorage storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -25,8 +22,6 @@ class DoorState extends State<Door> {
 
   @override
   Widget build(BuildContext context) {
-
-    storage.deleteAll();
     
     return FramePage(
       header: Header(

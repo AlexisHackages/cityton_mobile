@@ -5,17 +5,17 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mime/mime.dart';
 
-var http = Http();
+var _http = Http();
 
 class ChatService {
   Future<ApiResponse> getThreads(int userId) async {
-    final res = await http.get("chat/getThreadsByUserId/" + userId.toString());
+    final res = await _http.get("chat/getThreadsByUserId/" + userId.toString());
 
     return res;
   }
 
   Future<ApiResponse> getMessages(int threadId) async {
-    final res = await http.get("chat/getMessages/" + threadId.toString());
+    final res = await _http.get("chat/getMessages/" + threadId.toString());
 
     return res;
   }
@@ -24,7 +24,7 @@ class ChatService {
     CloudinaryResponse response;
     final cloudinary = CloudinaryPublic(DotEnv().env['CLOUDINARY_CLOUD_NAME'],
         DotEnv().env['CLOUDINARY_UPLOAD_PRESET'],
-        cache: false, dioClient: http.getDioClient());
+        cache: false, dioClient: _http.getDioClient());
 
     String mimeStr = lookupMimeType(file.path);
     String fileType = mimeStr.split('/').first;

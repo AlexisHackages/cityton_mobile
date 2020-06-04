@@ -9,8 +9,8 @@ import 'package:signalr_client/signalr_client.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 
 class ChatBloc {
-  final ChatService chatService = ChatService();
-  static final authBloc = AuthBloc();
+  final ChatService _chatService = ChatService();
+  static final _authBloc = AuthBloc();
 
   final _messagesFetcher =
       BehaviorSubject<List<Message>>.seeded(List<Message>());
@@ -18,7 +18,7 @@ class ChatBloc {
 
   HubConnection _hubConnection;
   final httpOptions = new HttpConnectionOptions(
-      accessTokenFactory: () async => await authBloc.getToken(),
+      accessTokenFactory: () async => await _authBloc.getToken(),
       transport: HttpTransportType.WebSockets);
 
   ChatBloc() {
@@ -27,7 +27,7 @@ class ChatBloc {
   }
 
   getMessages(int discussionId) async {
-    ApiResponse response = await chatService.getMessages(discussionId);
+    ApiResponse response = await _chatService.getMessages(discussionId);
 
     if (response.status == 200) {
       MessageList messageList = MessageList.fromJson(response.value);
@@ -81,7 +81,7 @@ class ChatBloc {
     CloudinaryResponse response;
 
     if (file != null) {
-      response = await chatService.sendToCloudinary(file);
+      response = await _chatService.sendToCloudinary(file);
     }
 
     SendMessage messageToSend =

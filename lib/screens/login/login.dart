@@ -13,19 +13,16 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  AuthBloc authBloc;
+  AuthBloc _authBloc = AuthBloc();
 
   final GlobalKey<FormBuilderState> _loginFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController emailController;
-  TextEditingController passwordController;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    authBloc = AuthBloc();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
   }
 
   @override
@@ -48,7 +45,7 @@ class LoginState extends State<Login> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: emailController,
+                  controller: _emailController,
                   attribute: "email",
                   decoration: InputDecoration(
                     hintText: "Email"
@@ -61,7 +58,7 @@ class LoginState extends State<Login> {
                 ),
                 SizedBox(height: space_between_input),
                 FormBuilderTextField(
-                  controller: passwordController,
+                  controller: _passwordController,
                   attribute: "password",
                   decoration: InputDecoration(hintText: "Password"),
                   obscureText: true,
@@ -83,8 +80,8 @@ class LoginState extends State<Login> {
                         }
 
                         if (_loginFormKey.currentState.saveAndValidate()) {
-                          var response = await this.authBloc.login(
-                              emailController.text, passwordController.text);
+                          var response = await this._authBloc.login(
+                              _emailController.text, _passwordController.text);
                           if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);

@@ -17,12 +17,12 @@ class EditChallenge extends StatefulWidget {
 }
 
 class EditChallengeState extends State<EditChallenge> {
-  EditChallengeBloc editChallengeBloc = EditChallengeBloc();
+  EditChallengeBloc _editChallengeBloc = EditChallengeBloc();
 
   final GlobalKey<FormBuilderState> _editFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController statementController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _statementController = TextEditingController();
 
   Map datas;
 
@@ -30,13 +30,15 @@ class EditChallengeState extends State<EditChallenge> {
   void initState() {
     super.initState();
     datas = widget.arguments;
-    titleController.text = datas["title"];
-    statementController.text = datas["statement"];
+    _titleController.text = datas["title"];
+    _statementController.text = datas["statement"];
   }
 
   @override
   void dispose() {
     super.dispose();
+    _titleController.dispose();
+    _statementController.dispose();
   }
 
   @override
@@ -56,7 +58,7 @@ class EditChallengeState extends State<EditChallenge> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: titleController,
+                  controller: _titleController,
                   attribute: "title",
                   decoration: InputDecoration(labelText: "Title"),
                   maxLines: 1,
@@ -71,7 +73,7 @@ class EditChallengeState extends State<EditChallenge> {
                 ),
                 SizedBox(height: space_between_input),
                 FormBuilderTextField(
-                  controller: statementController,
+                  controller: _statementController,
                   attribute: "statement",
                   decoration: InputDecoration(labelText: "Statement"),
                   maxLines: 1,
@@ -96,15 +98,15 @@ class EditChallengeState extends State<EditChallenge> {
                         }
 
                         if (_editFormKey.currentState.saveAndValidate()) {
-                          if (titleController.text != datas["title"] &&
-                              statementController.text != datas["statement"]) {
+                          if (_titleController.text != datas["title"] &&
+                              _statementController.text != datas["statement"]) {
                             Navigator.pop(context);
                           }
 
-                          var response = await this.editChallengeBloc.edit(
+                          var response = await this._editChallengeBloc.edit(
                               datas["id"],
-                              titleController.text,
-                              statementController.text);
+                              _titleController.text,
+                              _statementController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
@@ -125,7 +127,7 @@ class EditChallengeState extends State<EditChallenge> {
       IconButton(
           icon: Icon(Icons.delete),
           onPressed: () async {
-            var response = await this.editChallengeBloc.delete(id);
+            var response = await this._editChallengeBloc.delete(id);
 
             if (response.status == 200) {
               Navigator.pop(context);

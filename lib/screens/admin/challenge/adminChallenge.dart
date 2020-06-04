@@ -14,32 +14,33 @@ class AdminChallenge extends StatefulWidget {
 }
 
 class AdminChallengeState extends State<AdminChallenge> {
-  AdminChallengeBloc adminChallengeBloc = AdminChallengeBloc();
+  AdminChallengeBloc _adminChallengeBloc = AdminChallengeBloc();
 
-  DateTime finaldate;
-  String searchText;
+  DateTime _finaldate;
+  String _searchText;
 
   @override
   void initState() {
     super.initState();
-    this.adminChallengeBloc.search("", null);
+    this._adminChallengeBloc.search("", null);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _adminChallengeBloc.closeChallengesStream();
   }
 
   void callDatePicker() async {
     var order = await getDate();
     search();
     setState(() {
-      finaldate = order;
+      _finaldate = order;
     });
   }
 
   void search() {
-    this.adminChallengeBloc.search(searchText, finaldate);
+    this._adminChallengeBloc.search(_searchText, _finaldate);
   }
 
   Future<DateTime> getDate() {
@@ -67,7 +68,7 @@ class AdminChallengeState extends State<AdminChallenge> {
         ),
         sideMenu: MainSideMenu(),
         body: StreamBuilder(
-            stream: adminChallengeBloc.challenges,
+            stream: _adminChallengeBloc.challenges,
             builder: (BuildContext context,
                 AsyncSnapshot<List<Challenge>> snapshot) {
               if (snapshot.hasData) {
@@ -94,13 +95,13 @@ class AdminChallengeState extends State<AdminChallenge> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         InputIcon(
-            placeholder: searchText,
+            placeholder: _searchText,
             hintText: "Search...",
             iconsAction: <IconAction>[
               IconAction(
                   icon: Icon(Icons.search),
                   action: (String input) {
-                    searchText = input;
+                    _searchText = input;
                     search();
                   }),
             ]),
@@ -113,7 +114,7 @@ class AdminChallengeState extends State<AdminChallenge> {
                     callDatePicker();
                   },
                   icon: Icons.date_range),
-              text: finaldate == null ? "none" : finaldate.toString(),
+              text: _finaldate == null ? "none" : _finaldate.toString(),
             ),
           ],
         )

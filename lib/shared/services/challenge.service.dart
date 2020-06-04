@@ -1,11 +1,11 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
 
-var http = Http();
+var _http = Http();
 
 class ChallengeService {
   Future<ApiResponse> search(String search, DateTime date) async {
-    var res = await http.get("challenge/search", {
+    var res = await _http.get("challenge/search", {
       "searchText": search,
       "date": date,
     });
@@ -14,7 +14,7 @@ class ChallengeService {
   }
 
   Future<ApiResponse> add(String title, String statement) async {
-    var res = await http.post("challenge/add",
+    var res = await _http.post("challenge/add",
     data: {
       "title": title,
       "statement": statement,
@@ -24,7 +24,7 @@ class ChallengeService {
   }
 
   Future<ApiResponse> edit(int id, String title, String statement) async {
-    var res = await http.post("challenge/edit",
+    var res = await _http.post("challenge/edit",
     data: {
       "challengeId": id,
       "title": title,
@@ -35,25 +35,25 @@ class ChallengeService {
   }
 
   Future<ApiResponse> delete(int id) async {
-    var res = await http.put("challenge/delete/" + id.toString());
+    var res = await _http.put("challenge/delete/" + id.toString());
 
     return res;
   }
 
   Future<ApiResponse> validate(int id) async {
-    var res = await http.put("challenge/validate/" + id.toString());
+    var res = await _http.put("challenge/validate/" + id.toString());
 
     return res;
   }
 
   Future<ApiResponse> reject(int id) async {
-    var res = await http.put("challenge/reject/" + id.toString());
+    var res = await _http.put("challenge/reject/" + id.toString());
 
     return res;
   }
 
   Future<ApiResponse> undo(int id) async {
-    var res = await http.put("challenge/undo/" + id.toString());
+    var res = await _http.put("challenge/undo/" + id.toString());
 
     return res;
   }

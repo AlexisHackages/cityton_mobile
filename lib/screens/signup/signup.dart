@@ -21,10 +21,10 @@ class SignupState extends State<Signup> {
 
   final GlobalKey<FormBuilderState> _signupFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController verifyPasswordController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _verifyPasswordController = TextEditingController();
   File _profilePicture = File(DotEnv().env['DEFAULT_PROFILE_PICTURE']);
 
   Widget _avatarProfile;
@@ -32,6 +32,10 @@ class SignupState extends State<Signup> {
   @override
   void initState() {
     super.initState();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _verifyPasswordController.dispose();
   }
 
   @override
@@ -71,7 +75,7 @@ class SignupState extends State<Signup> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: usernameController,
+                  controller: _usernameController,
                   attribute: "username",
                   decoration: InputDecoration(
                     hintText: "Username",
@@ -86,7 +90,7 @@ class SignupState extends State<Signup> {
                 ),
                 SizedBox(height: space_between_input),
                 FormBuilderTextField(
-                  controller: emailController,
+                  controller: _emailController,
                   attribute: "email",
                   decoration: InputDecoration(hintText: "Email"),
                   maxLines: 1,
@@ -99,7 +103,7 @@ class SignupState extends State<Signup> {
                 ),
                 SizedBox(height: space_between_input),
                 FormBuilderTextField(
-                  controller: passwordController,
+                  controller: _passwordController,
                   attribute: "password",
                   decoration: InputDecoration(hintText: "Password"),
                   obscureText: true,
@@ -113,7 +117,7 @@ class SignupState extends State<Signup> {
                 ),
                 SizedBox(height: space_between_input),
                 FormBuilderTextField(
-                  controller: verifyPasswordController,
+                  controller: _verifyPasswordController,
                   attribute: "verifyPassword",
                   decoration: InputDecoration(hintText: "Verify password"),
                   obscureText: true,
@@ -124,8 +128,8 @@ class SignupState extends State<Signup> {
                     FormBuilderValidators.minLength(3,
                         errorText: "At least 3 characters"),
                     (val) {
-                      if (passwordController.text !=
-                          verifyPasswordController.text)
+                      if (_passwordController.text !=
+                          _verifyPasswordController.text)
                         return "Passwords are not the same";
                     },
                   ],
@@ -137,9 +141,9 @@ class SignupState extends State<Signup> {
                       onPressed: () async {
                         if (_signupFormKey.currentState.saveAndValidate()) {
                           var response = await this._authBloc.signup(
-                              usernameController.text,
-                              emailController.text,
-                              passwordController.text,
+                              _usernameController.text,
+                              _emailController.text,
+                              _passwordController.text,
                               _profilePicture);
                           if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',

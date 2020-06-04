@@ -12,8 +12,8 @@ class MainSideMenu extends StatefulWidget {
 }
 
 class MainSideMenuState extends State<MainSideMenu> {
-  AuthBloc authBloc = AuthBloc();
-  MainSideMenuBloc mainSideMenuBloc = MainSideMenuBloc();
+  AuthBloc _authBloc = AuthBloc();
+  MainSideMenuBloc _mainSideMenuBloc = MainSideMenuBloc();
 
   Future<User> _currentUser;
 
@@ -25,12 +25,14 @@ class MainSideMenuState extends State<MainSideMenu> {
   }
 
   Future<User> _initCurrentUser() async {
-    return await authBloc.getCurrentUser();
+    return await _authBloc.getCurrentUser();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _authBloc.closeTokenStream();
+    _mainSideMenuBloc.closeThreads();
   }
 
   @override
@@ -100,7 +102,7 @@ class MainSideMenuState extends State<MainSideMenu> {
             textAlign: TextAlign.center,
           ),
           onTap: () => {
-            authBloc.logout(),
+            _authBloc.logout(),
             Navigator.pushNamedAndRemoveUntil(
                 context, '/door', (Route<dynamic> route) => false)
           },
@@ -112,11 +114,11 @@ class MainSideMenuState extends State<MainSideMenu> {
   }
 
   Widget _buildThreadList(int userId) {
-    mainSideMenuBloc.getThreads(userId);
+    _mainSideMenuBloc.getThreads(userId);
 
     return ExpansionTile(title: Text("Threads"), children: <Widget>[
       StreamBuilder(
-        stream: mainSideMenuBloc.threads,
+        stream: _mainSideMenuBloc.threads,
         builder: (BuildContext context, AsyncSnapshot<List<Thread>> snapshot) {
           if (snapshot.hasData && snapshot.data.length > 0) {
             final threads = snapshot.data;

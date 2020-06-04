@@ -3,7 +3,7 @@ import 'package:cityton_mobile/shared/services/user.service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserManagementBloc {
-  final UserService userService = UserService();
+  final UserService _userService = UserService();
 
   final _userProfilesFetcher =
       BehaviorSubject<List<UserProfile>>.seeded(List<UserProfile>());
@@ -16,7 +16,7 @@ class UserManagementBloc {
   Future<void> search(String searchText, int selectedRole) async {
     String sanitizedSearchText = searchText.trim();
 
-    var response = await userService.search(sanitizedSearchText, selectedRole == -1 ? null : selectedRole);
+    var response = await _userService.search(sanitizedSearchText, selectedRole == -1 ? null : selectedRole);
     
     UserProfileList userProfileList = UserProfileList.fromJson(response.value);
 

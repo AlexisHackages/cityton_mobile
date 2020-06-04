@@ -12,12 +12,12 @@ class AddChallenge extends StatefulWidget {
 }
 
 class AddChallengeState extends State<AddChallenge> {
-  AddChallengeBloc addChallengeBloc = AddChallengeBloc();
+  AddChallengeBloc _addChallengeBloc = AddChallengeBloc();
 
   final GlobalKey<FormBuilderState> _addFormKey =
       GlobalKey<FormBuilderState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController statementController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _statementController = TextEditingController();
 
   @override
   void initState() {
@@ -27,6 +27,8 @@ class AddChallengeState extends State<AddChallenge> {
   @override
   void dispose() {
     super.dispose();
+    _titleController.dispose();
+    _statementController.dispose();
   }
 
   @override
@@ -45,7 +47,7 @@ class AddChallengeState extends State<AddChallenge> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: titleController,
+                  controller: _titleController,
                   attribute: "title",
                   decoration: InputDecoration(hintText: "Title"),
                   maxLines: 1,
@@ -59,7 +61,7 @@ class AddChallengeState extends State<AddChallenge> {
                   ],
                 ),
                 FormBuilderTextField(
-                  controller: statementController,
+                  controller: _statementController,
                   attribute: "statement",
                   decoration: InputDecoration(hintText: "Statement"),
                   maxLines: 1,
@@ -84,8 +86,8 @@ class AddChallengeState extends State<AddChallenge> {
                         }
 
                         if (_addFormKey.currentState.saveAndValidate()) {
-                          var response = await this.addChallengeBloc.add(
-                              titleController.text, statementController.text);
+                          var response = await this._addChallengeBloc.add(
+                              _titleController.text, _statementController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
