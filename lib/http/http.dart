@@ -21,10 +21,6 @@ class Http {
   Http._internal() {
     _options = BaseOptions(
       baseUrl: DotEnv().env['API_URL'],
-      // headers: {
-      //   'content-type': 'application/json',
-      //   'accept': "application/json",
-      // },
       followRedirects: false,
       validateStatus: (status) {
         return status < 500;

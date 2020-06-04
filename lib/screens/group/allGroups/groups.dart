@@ -10,7 +10,6 @@ import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-
 import 'groups.bloc.dart';
 
 class Groups extends StatefulWidget {

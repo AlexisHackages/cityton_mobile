@@ -9,7 +9,6 @@ import 'package:cityton_mobile/models/groupProgression.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.bloc.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
-import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

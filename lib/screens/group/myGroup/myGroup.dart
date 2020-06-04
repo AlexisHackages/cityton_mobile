@@ -155,7 +155,7 @@ class MyGroupState extends State<MyGroup> {
                 text: _groupName,
                 trailing: IconButtonCustom(
                     onAction: () {
-                      Get.dialog(_buildEditName(group));
+                      Get.toNamed('/myGroup/edit', arguments: {"groupId": _groupId, "groupName": _groupName});
                     },
                     icon: Icons.mode_edit))),
         Label(label: "Creator", component: Text(_creatorName)),

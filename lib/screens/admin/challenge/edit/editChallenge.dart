@@ -1,7 +1,7 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
+import 'package:cityton_mobile/screens/admin/challenge/edit/editChallenge.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
@@ -17,7 +17,7 @@ class EditChallenge extends StatefulWidget {
 }
 
 class EditChallengeState extends State<EditChallenge> {
-  AdminChallengeBloc adminChallengeBloc = AdminChallengeBloc();
+  EditChallengeBloc editChallengeBloc = EditChallengeBloc();
 
   final GlobalKey<FormBuilderState> _editFormKey =
       GlobalKey<FormBuilderState>();
@@ -101,7 +101,7 @@ class EditChallengeState extends State<EditChallenge> {
                             Navigator.pop(context);
                           }
 
-                          var response = await this.adminChallengeBloc.edit(
+                          var response = await this.editChallengeBloc.edit(
                               datas["id"],
                               titleController.text,
                               statementController.text);
@@ -125,7 +125,7 @@ class EditChallengeState extends State<EditChallenge> {
       IconButton(
           icon: Icon(Icons.delete),
           onPressed: () async {
-            var response = await this.adminChallengeBloc.delete(id);
+            var response = await this.editChallengeBloc.delete(id);
 
             if (response.status == 200) {
               Navigator.pop(context);

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/services/auth.service.dart';
 import 'package:cityton_mobile/shared/services/user.service.dart';
@@ -24,7 +23,6 @@ class AuthBloc {
   }
 
   Future<ApiResponse> login(String email, String password) async {
-    // await storage.deleteAll();
     String sanitizedEmail = email.trim();
     String sanitizedPassword = password.trim();
 

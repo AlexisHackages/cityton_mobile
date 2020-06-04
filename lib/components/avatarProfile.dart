@@ -8,9 +8,6 @@ class AvatarProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("!!!!! AVATAR !!!!!");
-    print(picturePath);
-    print("!!!!! END AVATAR !!!!!");
     return Stack(
       overflow: Overflow.visible,
       children: <Widget>[

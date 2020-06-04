@@ -2,7 +2,7 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
-import 'package:cityton_mobile/screens/profile/profile.bloc.dart';
+import 'package:cityton_mobile/screens/profile/subScreens/changePassword.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -12,7 +12,7 @@ class ChangePassword extends StatefulWidget {
 }
 
 class ChangePasswordState extends State<ChangePassword> {
-  ProfileBloc profileBloc = ProfileBloc();
+  ChangePasswordBloc changePasswordBloc = ChangePasswordBloc();
 
   final GlobalKey<FormBuilderState> _changePasswordFormKey =
       GlobalKey<FormBuilderState>();
@@ -91,7 +91,7 @@ class ChangePasswordState extends State<ChangePassword> {
                         if (_changePasswordFormKey.currentState
                             .saveAndValidate()) {
                           var response = await this
-                              .profileBloc
+                              .changePasswordBloc
                               .changePassword(oldPasswordController.text,
                                   newPasswordController.text);
                           if (response.status == 200) {

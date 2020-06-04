@@ -26,31 +26,4 @@ class AdminChallengeBloc {
 
     _challengesFetcher.sink.add(challenges);
   }
-
-  Future<ApiResponse> add(String title, String statement) async {
-
-    String sanitizedtitle = title.trim();
-    String sanitizedstatement = statement.trim();
-
-    var response = await challengeService.add(sanitizedtitle, sanitizedstatement);
-
-    return response;
-  }
-  
-  Future<ApiResponse> edit(int id, String title, String statement) async {
-
-    String sanitizedtitle = title.trim();
-    String sanitizedstatement = statement.trim();
-
-    var response = await challengeService.edit(id, sanitizedtitle, sanitizedstatement);
-
-    return response;
-  }
-  
-  Future<ApiResponse> delete(int id) async {
-
-    var response = await challengeService.delete(id);
-
-    return response;
-  }
 }

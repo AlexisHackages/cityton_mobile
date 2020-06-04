@@ -3,7 +3,7 @@ import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/iconText.dart';
 import 'package:cityton_mobile/models/userProfile.dart';
-import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
+import 'package:cityton_mobile/screens/admin/user/userInfo/UserInfo.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
@@ -19,7 +19,7 @@ class UserInfo extends StatefulWidget {
 }
 
 class UserInfoState extends State<UserInfo> {
-  UserManagementBloc userManagementBloc = UserManagementBloc();
+  UserInfoBloc userInfoBloc = UserInfoBloc();
 
   @override
   void initState() {
@@ -115,7 +115,7 @@ class UserInfoState extends State<UserInfo> {
       IconButton(
           icon: Icon(Icons.delete),
           onPressed: () async {
-            var response = await this.userManagementBloc.delete(id);
+            var response = await this.userInfoBloc.delete(id);
 
             if (response.status == 200) {
               Navigator.pop(context);

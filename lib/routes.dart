@@ -9,6 +9,7 @@ import 'package:cityton_mobile/screens/chat/progression/progression.dart';
 import 'package:cityton_mobile/screens/group/allGroups/details/groupDetails.dart';
 import 'package:cityton_mobile/screens/group/allGroups/groups.dart';
 import 'package:cityton_mobile/screens/group/create/createGroup.dart';
+import 'package:cityton_mobile/screens/group/myGroup/editGroup/editGroup.dart';
 import 'package:cityton_mobile/screens/group/myGroup/myGroup.dart';
 import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/screens/login/login.dart';
@@ -31,7 +32,8 @@ final routes = <String, WidgetBuilder>{
   '/groups':                  (BuildContext context) => Groups(),
   '/groups/details':          (BuildContext context) => GroupDetails(arguments: ModalRoute.of(context).settings.arguments),
   '/group/create':            (BuildContext context) => CreateGroup(),
-  '/myGroups':                (BuildContext context) => MyGroup(arguments: ModalRoute.of(context).settings.arguments),
+  '/myGroup':                 (BuildContext context) => MyGroup(arguments: ModalRoute.of(context).settings.arguments),
+  '/myGroup/edit':            (BuildContext context) => EditGroup(arguments: ModalRoute.of(context).settings.arguments),
   '/admin/challenge':         (BuildContext context) => AdminChallenge(),
   '/admin/challenge/add':     (BuildContext context) => AddChallenge(),
   '/admin/challenge/edit':    (BuildContext context) => EditChallenge(arguments: ModalRoute.of(context).settings.arguments),

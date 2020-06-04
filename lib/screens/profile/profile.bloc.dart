@@ -14,13 +14,6 @@ class ProfileBloc {
     return User.fromJson(jsonDecode(encodedCurrentUser));
   }
 
-  Future<ApiResponse> changePassword(
-      String oldPassword, String newPassword) async {
-    var response = await userService.changePassword(
-        oldPassword.trim(), newPassword.trim());
-    return response;
-  }
-
   Future<ApiResponse> getProfile(int userId) async {
     var response = await userService.getProfile(userId);
     return response;

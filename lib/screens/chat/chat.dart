@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
@@ -14,7 +13,6 @@ import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'chat.bloc.dart';
 
 class Chat extends StatefulWidget {
@@ -35,9 +33,6 @@ class ChatState extends State<Chat> {
   File _filePicked;
 
   Widget _popupFileSelected = Container();
-
-  String test =
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
   void initState() {
     super.initState();

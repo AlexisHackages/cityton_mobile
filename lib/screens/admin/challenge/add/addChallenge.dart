@@ -1,7 +1,7 @@
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
-import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
+import 'package:cityton_mobile/screens/admin/challenge/add/addChallenge.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -12,7 +12,7 @@ class AddChallenge extends StatefulWidget {
 }
 
 class AddChallengeState extends State<AddChallenge> {
-  AdminChallengeBloc adminChallengeBloc = AdminChallengeBloc();
+  AddChallengeBloc addChallengeBloc = AddChallengeBloc();
 
   final GlobalKey<FormBuilderState> _addFormKey =
       GlobalKey<FormBuilderState>();
@@ -84,7 +84,7 @@ class AddChallengeState extends State<AddChallenge> {
                         }
 
                         if (_addFormKey.currentState.saveAndValidate()) {
-                          var response = await this.adminChallengeBloc.add(
+                          var response = await this.addChallengeBloc.add(
                               titleController.text, statementController.text);
                           if (response.status == 200) {
                             Navigator.pop(context);

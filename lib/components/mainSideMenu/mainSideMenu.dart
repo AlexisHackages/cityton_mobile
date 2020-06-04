@@ -157,7 +157,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         ? ListTile(
             title: Text("My group"),
             onTap: () {
-              Navigator.pushNamed(context, '/myGroups',
+              Navigator.pushNamed(context, '/myGroup',
                   arguments: {"groupId": currentUser.groupId});
             },
           )

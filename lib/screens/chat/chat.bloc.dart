@@ -1,16 +1,12 @@
 import 'dart:io';
-import 'package:cityton_mobile/constants/mimeExtensionMap.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/SendMessage.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:cityton_mobile/shared/services/chat.service.dart';
-import 'package:dio/dio.dart';
-import 'package:mime/mime.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:signalr_client/signalr_client.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatBloc {
   final ChatService chatService = ChatService();
