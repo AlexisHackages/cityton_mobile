@@ -41,6 +41,7 @@ class ChangePasswordState extends State<ChangePassword> {
         ),
         sideMenu: null,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FormBuilder(
               key: _changePasswordFormKey,
@@ -100,7 +101,8 @@ class ChangePasswordState extends State<ChangePassword> {
                           if (response.status == 200) {
                             Navigator.pop(context);
                           } else {
-                            DisplaySnackbar.createError(message: response.value);
+                            DisplaySnackbar.createError(
+                                message: response.value);
                           }
                         }
                       }),

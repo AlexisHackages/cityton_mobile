@@ -62,6 +62,8 @@ class MainSideMenuState extends State<MainSideMenu> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.white,
                   backgroundImage: NetworkImage(snapshot.data.picture),
                 ),
                 SizedBox(
