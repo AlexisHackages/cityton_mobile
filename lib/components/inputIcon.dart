@@ -24,6 +24,11 @@ class InputIconState extends State<InputIcon> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
     inputController.dispose();
   }
 
