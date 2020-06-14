@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:get/get.dart';
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
   final HeaderLeading leadingState;
@@ -54,7 +55,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Widget _buildBack(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: () => Navigator.pop(context),
+      onPressed: () => Get.back(),
     );
   }
 }

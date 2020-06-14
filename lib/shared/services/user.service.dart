@@ -57,4 +57,10 @@ class UserService {
     });
     return res;
   }
+
+  Future<ApiResponse> getAllStaffMember() async {
+    var res = await _http.get("user/getAllStaffMember");
+
+    return res;
+  }
 }

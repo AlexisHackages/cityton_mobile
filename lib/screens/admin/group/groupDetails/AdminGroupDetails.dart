@@ -4,10 +4,14 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/label.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/group.dart';
+import 'package:cityton_mobile/models/groupMinimal.dart';
+import 'package:cityton_mobile/models/userMinimal.dart';
 import 'package:cityton_mobile/screens/admin/group/groupDetails/AdminGroupDetails.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:get/get.dart';
+import 'package:select_dialog/select_dialog.dart';
 
 class AdminGroupDetails extends StatefulWidget {
   final Map arguments;
@@ -24,6 +28,10 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
   Map _datas;
   int _groupId;
   String _groupName;
+  UserMinimal _selectedUser;
+  int _selectedUserId;
+  Group _groupInfo;
+  List<UserMinimal> _staffMembers;
 
   @override
   void initState() {
@@ -39,9 +47,60 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
     super.dispose();
   }
 
+  refreshGroupInfo() {
+    _adminGroupDetailsBloc.getGroupInfo(_groupId);
+  }
+
+  openDialog(BuildContext context) {
+    Get.defaultDialog(
+        backgroundColor: Colors.blueGrey[700],
+        content: StatefulBuilder(builder: (context, _setState) {
+          return Container(
+              height: MediaQuery.of(context).size.height * (50 / 100),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ..._staffMembers
+                          .map(
+                            (user) => RadioListTile<int>(
+                              title: Text(user.username),
+                              value: user.id,
+                              groupValue: _selectedUserId,
+                              onChanged: (int userId) {
+                                _setState(() {
+                                  _selectedUser = _staffMembers.firstWhere(
+                                      (element) => element.id == userId);
+                                  _selectedUserId = _selectedUser.id;
+                                });
+                              },
+                            ),
+                          )
+                          .toList()
+                    ],
+                  )));
+        }),
+        onConfirm: () async {
+          var response = await _adminGroupDetailsBloc.attributeSupervisor(
+              _groupId, _selectedUserId);
+          if (response.status == 200) {
+            refreshGroupInfo();
+            DisplaySnackbar.createConfirmation(
+                message: "Supervisor succesfuly attributed");
+            Get.back();
+          } else {
+            DisplaySnackbar.createError(message: response.value);
+          }
+        },
+        onCancel: () {
+          Get.back();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    _adminGroupDetailsBloc.getGroupInfo(_groupId);
+    refreshGroupInfo();
 
     return FramePage(
         header: Header(
@@ -51,67 +110,106 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
         ),
         sideMenu: null,
         body: FutureBuilder<ApiResponse>(
-            future: _adminGroupDetailsBloc.getGroupInfo(_groupId),
-            builder:
-                (BuildContext context, AsyncSnapshot<ApiResponse> snapshot) {
-              if (snapshot.hasData) {
-                final data = snapshot.data;
-                if (data.status == 200) {
-                  Group group = Group.fromJson(data.value);
-                  return _buildGroupDetails(group);
-                } else {
-                  DisplaySnackbar.createError(message: data.value);
-                  return Container();
-                }
-              } else {
-                return CircularProgressIndicator();
-              }
+            future: _adminGroupDetailsBloc.getAllStaffMember(),
+            builder: (BuildContext context,
+                AsyncSnapshot<ApiResponse> snapshotFutureBuilder) {
+              return StreamBuilder(
+                  stream: _adminGroupDetailsBloc.groupInfo,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<Group> snapshotStream) {
+                    if (snapshotFutureBuilder.hasData &&
+                        snapshotFutureBuilder.data != null &&
+                        snapshotStream.hasData &&
+                        snapshotStream.data != null) {
+                      if (snapshotFutureBuilder.data.status == 200) {
+                        _groupInfo = snapshotStream.data;
+                        _staffMembers = UserMinimalList.fromJson(
+                                snapshotFutureBuilder.data.value)
+                            .users;
+                        return _buildGroupDetails(context);
+                      } else {
+                        DisplaySnackbar.createError(
+                            message: snapshotFutureBuilder.data.value);
+                        return Container();
+                      }
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  });
             }));
   }
 
-  Widget _buildGroupDetails(Group group) {
-    Widget members = group.members.length > 0
+  Widget _buildGroupDetails(BuildContext context) {
+    _selectedUser = _groupInfo.supervisor;
+    _selectedUserId = _selectedUser?.id;
+
+    Widget members = _groupInfo.members.length > 0
         ? ListView.builder(
             shrinkWrap: true,
-            itemCount: group.members.length,
+            itemCount: _groupInfo.members.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 title: Text(
-                  group.members[index].user.username,
+                  _groupInfo.members[index].user.username,
                   textAlign: TextAlign.center,
                 ),
               );
             })
         : Text("No members except the creator");
 
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <
-        Widget>[
-      Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.blueGrey[700]),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Group details",
-                  style:
-                      TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: space_around_divider),
-              Divider(thickness: 1.0),
-              SizedBox(height: space_around_divider),
-              Label(label: "Name", component: Text(group.name)),
-              SizedBox(height: space_between_text),
-              Label(label: "Creator", component: Text(group.creator.username)),
-              SizedBox(height: space_between_text),
-              Label(
-                  label: group.hasReachMaxSize
-                      ? "Members (group full)"
-                      : "Members",
-                  component: members),
-            ],
-          ))
-    ]);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blueGrey[700]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Group details",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: space_around_divider),
+                  Divider(thickness: 1.0),
+                  SizedBox(height: space_around_divider),
+                  Label(label: "Name", component: Text(_groupInfo.name)),
+                  SizedBox(height: space_between_text),
+                  Label(
+                      label: "Creator",
+                      component: Text(_groupInfo.creator.username)),
+                  SizedBox(height: space_between_text),
+                  Label(
+                      label: _groupInfo.hasReachMaxSize
+                          ? "Members (group full)"
+                          : "Members",
+                      component: members),
+                  SizedBox(height: space_around_divider),
+                  Divider(thickness: 1.0),
+                  SizedBox(height: space_around_divider),
+                  Label(
+                      label: "Supervisor",
+                      component: _groupInfo.supervisor == null
+                          ? Column(children: <Widget>[
+                              Text("No supervisor attributed"),
+                              RaisedButton(
+                                  child: Text("Select one"),
+                                  onPressed: () {
+                                    openDialog(context);
+                                  })
+                            ])
+                          : Column(children: <Widget>[
+                              Text(_groupInfo.supervisor.username),
+                              RaisedButton(
+                                  child: Text("Change"),
+                                  onPressed: () {
+                                    openDialog(context);
+                                  })
+                            ])),
+                ],
+              ))
+        ]);
   }
 
   List<IconButton> _buildHeaderIconsAction(int groupId) {

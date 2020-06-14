@@ -11,8 +11,8 @@ class GroupService {
   }
 
   Future<ApiResponse> search(String searchText, int selectedFilter) async {
-    var res =
-        await _http.get("group/searchGroup", {"groupName": searchText, "selectedFilter": selectedFilter});
+    var res = await _http.get("group/searchGroup",
+        {"groupName": searchText, "selectedFilter": selectedFilter});
 
     return res;
   }
@@ -54,18 +54,21 @@ class GroupService {
   }
 
   Future<ApiResponse> editName(String name, int id) async {
-    var res = await _http
-        .put("group/editName/" + id.toString(), queryParameters: {"groupName": name});
+    var res = await _http.put("group/editName/" + id.toString(), data: name);
 
     return res;
   }
 
   Future<ApiResponse> createRequest(int groupId) async {
-    var res = await _http
-        .post("group/createRequest/",
-        data: {
-          "GroupId": groupId
-        });
+    var res =
+        await _http.post("group/createRequest/", data: {"GroupId": groupId});
+
+    return res;
+  }
+
+  Future<ApiResponse> attributeSupervisor(
+      int groupId, int selectedUserId) async {
+    var res = await _http.put("group/attributeSupervisor/" + groupId.toString(), data: selectedUserId);
 
     return res;
   }

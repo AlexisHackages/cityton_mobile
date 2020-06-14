@@ -1,16 +1,20 @@
+import 'package:cityton_mobile/models/userMinimal.dart';
+
 class GroupMinimal {
   final int id;
   final String name;
   final bool hasReachMaxSize;
+  final UserMinimal supervisor;
 
 
-  GroupMinimal({this.id, this.name, this.hasReachMaxSize});
+  GroupMinimal({this.id, this.name, this.hasReachMaxSize, this.supervisor});
 
   factory GroupMinimal.fromJson(Map<String, dynamic> json) {
     return GroupMinimal(
       id: json['id'] as int,
       name: json['name'] as String,
       hasReachMaxSize: json['hasReachMaxSize'] as bool,
+      supervisor: json['supervisor'] == null ? null : UserMinimal.fromJson(json['supervisor'])
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:cityton_mobile/screens/admin/group/groupManagement.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:get/get.dart';
 
 class GroupManagement extends StatefulWidget {
   @override
@@ -35,6 +36,17 @@ class GroupManagementState extends State<GroupManagement> {
 
   void search() {
     this._groupManagementBloc.search(_searchText, _selectedFilter);
+  }
+
+  void deleteGroup(int groupId) async {
+    var response = await _groupManagementBloc.delete(groupId);
+
+    if (response.status == 200) {
+      DisplaySnackbar.createConfirmation(message: "Group succesfuly deleted");
+      Get.back();
+    } else {
+      DisplaySnackbar.createConfirmation(message: response.value);
+    }
   }
 
   @override
@@ -74,14 +86,17 @@ class GroupManagementState extends State<GroupManagement> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        InputIcon(placeholder: _searchText, hintText: "Search...", iconsAction: <IconAction>[
-          IconAction(
-              icon: Icon(Icons.search),
-              action: (String input) {
-                _searchText = input;
-                search();
-              }),
-        ]),
+        InputIcon(
+            placeholder: _searchText,
+            hintText: "Search...",
+            iconsAction: <IconAction>[
+              IconAction(
+                  icon: Icon(Icons.search),
+                  action: (String input) {
+                    _searchText = input;
+                    search();
+                  }),
+            ]),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(children: <Widget>[
@@ -153,19 +168,11 @@ class GroupManagementState extends State<GroupManagement> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                group.supervisor == null ? Icon(Icons.warning, color: Colors.redAccent) : Container(),
                 IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () async {
-                      var response =
-                          await _groupManagementBloc.delete(group.id);
-
-                      if (response.status == 200) {
-                        DisplaySnackbar.createConfirmation(
-                            message: "Group succesfuly deleted");
-                      } else {
-                        DisplaySnackbar.createConfirmation(
-                            message: response.value);
-                      }
+                      deleteGroup(group.id);
                     }),
                 warningIcons
               ],
