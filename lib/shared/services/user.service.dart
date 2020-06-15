@@ -63,4 +63,10 @@ class UserService {
 
     return res;
   }
+
+  Future<ApiResponse> changeRole(int userId, int selectedRole) async {
+    var res = await _http.put("user/changeRole/" + userId.toString(), data: selectedRole);
+
+    return res;
+  }
 }

@@ -152,7 +152,7 @@ class MyGroupState extends State<MyGroup> {
         Label(
             label: "Name",
             component: IconText.iconClickable(
-                text: _groupName,
+                content: Text(_groupName),
                 trailing: IconButtonCustom(
                     onAction: () {
                       Get.toNamed('/myGroup/edit', arguments: {
@@ -202,7 +202,7 @@ class MyGroupState extends State<MyGroup> {
     return Column(
       children: <Widget>[
         Label(
-            label: "Name", component: IconText.iconClickable(text: _groupName)),
+            label: "Name", component: IconText.iconClickable(content: Text(_groupName))),
         Label(label: "Creator", component: Text(_creatorName)),
         Label(
             label: "Members",

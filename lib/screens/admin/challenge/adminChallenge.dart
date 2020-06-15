@@ -109,13 +109,14 @@ class AdminChallengeState extends State<AdminChallenge> {
           children: <Widget>[
             Text("Start date: "),
             IconText.iconClickable(
-              trailing: IconButtonCustom(
-                  onAction: () {
-                    callDatePicker();
-                  },
-                  icon: Icons.date_range),
-              text: _finaldate == null ? "none" : _finaldate.toString(),
-            ),
+                trailing: IconButtonCustom(
+                    onAction: () {
+                      callDatePicker();
+                    },
+                    icon: Icons.date_range),
+                content: Text(
+                  _finaldate == null ? "none" : _finaldate.toString(),
+                )),
           ],
         )
       ],

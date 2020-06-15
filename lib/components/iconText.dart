@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconText {
   static Widget iconClickable(
-      {@required String text,
+      {@required Widget content,
       IconButtonCustom leading,
       IconButtonCustom trailing}) {
     if (leading != null && trailing != null) {
@@ -11,7 +11,7 @@ class IconText {
           onPressed: () => leading.onAction,
           icon: Icon(leading.icon),
         ),
-        Text(text),
+        content,
         IconButton(
           onPressed: () => trailing.onAction,
           icon: Icon(trailing.icon),
@@ -23,30 +23,30 @@ class IconText {
           onPressed: () => leading.onAction,
           icon: Icon(leading.icon),
         ),
-        Text(text),
+        content,
       ]);
     } else if (trailing != null) {
       return Row(children: <Widget>[
-        Text(text),
+        content,
         IconButton(
           onPressed: trailing.onAction,
           icon: Icon(trailing.icon),
         ),
       ]);
     } else {
-      return Row(children: <Widget>[Text(text)]);
+      return Row(children: <Widget>[content]);
     }
   }
 
   static Widget iconNotClickable(
-      {@required String text, IconData leading, IconData trailing}) {
+      {@required Widget content, IconData leading, IconData trailing}) {
     if (leading != null && trailing != null) {
       return Row(children: <Widget>[
         IconButton(
           onPressed: () => null,
           icon: Icon(leading),
         ),
-        Text(text),
+        content,
         IconButton(
           onPressed: () => null,
           icon: Icon(trailing),
@@ -58,18 +58,18 @@ class IconText {
           onPressed: () => null,
           icon: Icon(leading),
         ),
-        Text(text),
+        content,
       ]);
     } else if (trailing != null) {
       return Row(children: <Widget>[
-        Text(text),
+        content,
         IconButton(
           onPressed: () => null,
           icon: Icon(trailing),
         ),
       ]);
     } else {
-      return Row(children: <Widget>[Text(text)]);
+      return Row(children: <Widget>[content]);
     }
   }
 }

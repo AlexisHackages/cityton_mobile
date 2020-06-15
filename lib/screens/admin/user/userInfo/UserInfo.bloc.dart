@@ -10,4 +10,11 @@ class UserInfoBloc {
 
     return response;
   }
+
+  Future<ApiResponse> changeRole(int userId, int selectedRole) async {
+
+    var response = await _userService.changeRole(userId, selectedRole);
+
+    return response;
+  }
 }

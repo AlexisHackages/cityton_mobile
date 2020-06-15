@@ -122,13 +122,13 @@ class ProfileState extends State<Profile> {
           _avatarProfile,
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.perm_identity, text: userProfile.username),
+              leading: Icons.perm_identity, content: Text(userProfile.username)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.supervisor_account, text: groupName),
+              leading: Icons.supervisor_account, content: Text(groupName)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.mail_outline, text: userProfile.email),
+              leading: Icons.mail_outline, content: Text(userProfile.email)),
         ],
       );
     } else {
@@ -138,12 +138,12 @@ class ProfileState extends State<Profile> {
           _avatarProfile,
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.perm_identity, text: userProfile.username),
+              leading: Icons.perm_identity, content: Text(userProfile.username)),
           SizedBox(height: space_between_input),
-          IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
+          IconText.iconNotClickable(leading: Icons.warning, content: Text(role[1])),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.mail_outline, text: userProfile.email),
+              leading: Icons.mail_outline, content: Text(userProfile.email)),
           SizedBox(height: space_between_input),
         ],
       );

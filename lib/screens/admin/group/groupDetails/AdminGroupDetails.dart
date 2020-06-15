@@ -4,14 +4,12 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/components/label.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/group.dart';
-import 'package:cityton_mobile/models/groupMinimal.dart';
 import 'package:cityton_mobile/models/userMinimal.dart';
 import 'package:cityton_mobile/screens/admin/group/groupDetails/AdminGroupDetails.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:get/get.dart';
-import 'package:select_dialog/select_dialog.dart';
 
 class AdminGroupDetails extends StatefulWidget {
   final Map arguments;

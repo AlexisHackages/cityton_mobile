@@ -19,11 +19,17 @@ class UserInfo extends StatefulWidget {
 }
 
 class UserInfoState extends State<UserInfo> {
-  UserInfoBloc userInfoBloc = UserInfoBloc();
+  UserInfoBloc _userInfoBloc = UserInfoBloc();
+
+  UserProfile _userProfile;
+  int _selectedRole;
 
   @override
   void initState() {
     super.initState();
+    Map datas = widget.arguments;
+    _userProfile = datas["userProfile"];
+    _selectedRole = _userProfile.role.index;
   }
 
   @override
@@ -31,91 +37,136 @@ class UserInfoState extends State<UserInfo> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Map datas = widget.arguments;
-    UserProfile user = datas["userProfile"];
+  changeRole() async {
+    if (_userProfile.role.index != _selectedRole) {
+      var response =
+          await _userInfoBloc.changeRole(_userProfile.id, _selectedRole);
 
-    if (datas != null) {
-      return FramePage(
-          header: Header(
-            title: "Details " + user.username,
-            leadingState: HeaderLeading.DEAD_END,
-            iconsAction:
-                _buildHeaderIconsAction(context, datas["userProfile"].id),
-          ),
-          sideMenu: null,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildUserInfos(user),
-              SizedBox(height: space_between_input),
-              InkWell(
-                child: Text("Change password ?"),
-                onTap: () {
-                  Navigator.pushNamed(context, '/changePassword');
-                },
-              ),
-            ],
-          ));
-    } else {
-      return FramePage(
-          header: Header(
-            title: "Details " + user.username,
-            leadingState: HeaderLeading.DEAD_END,
-          ),
-          sideMenu: null,
-          body: CircularProgressIndicator());
+      if (response.status == 200) {
+        DisplaySnackbar.createConfirmation(
+            message: "Role has been successfuly changed");
+      } else {
+        DisplaySnackbar.createError(message: response.value);
+      }
     }
   }
 
-  Widget _buildUserInfos(UserProfile userProfile) {
-    if (userProfile.role == Role.Member) {
-      String groupName = userProfile.groupName != null
-          ? userProfile.groupName
+  @override
+  Widget build(BuildContext context) {
+    return FramePage(
+        header: Header(
+          title: "Details " + _userProfile.username,
+          leadingState: HeaderLeading.DEAD_END,
+          iconsAction:
+              _buildHeaderIconsAction(context),
+        ),
+        sideMenu: null,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildUserInfos(),
+            SizedBox(height: space_between_input),
+            InkWell(
+              child: Text("Change password ?"),
+              onTap: () {
+                Navigator.pushNamed(context, '/changePassword');
+              },
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildUserInfos() {
+    if (_userProfile.role == Role.Member) {
+      String groupName = _userProfile.groupName != null
+          ? _userProfile.groupName
           : "Is not yet in a group";
       return Column(
         children: <Widget>[
           CircleAvatar(
             radius: 50,
             backgroundColor: Colors.white,
-            backgroundImage: NetworkImage(userProfile.picture),
+            backgroundImage: NetworkImage(_userProfile.picture),
           ),
           IconText.iconNotClickable(
-              leading: Icons.perm_identity, text: userProfile.username),
+              leading: Icons.perm_identity,
+              content: Text(_userProfile.username)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.supervisor_account, text: groupName),
+              leading: Icons.supervisor_account, content: Text(groupName)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.mail_outline, text: userProfile.email),
+              leading: Icons.mail_outline, content: Text(_userProfile.email)),
         ],
       );
     } else {
-      List<String> role = userProfile.role.toString().split('.');
-      return Column(
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(userProfile.picture),
-          ),
-          IconText.iconNotClickable(
-              leading: Icons.perm_identity, text: userProfile.username),
-          SizedBox(height: space_between_input),
-          IconText.iconNotClickable(leading: Icons.warning, text: role[1]),
-          SizedBox(height: space_between_input),
-          IconText.iconNotClickable(
-              leading: Icons.mail_outline, text: userProfile.email),
-        ],
-      );
+      List<String> role = _userProfile.role.toString().split('.');
+      return Column(children: <Widget>[
+        CircleAvatar(
+          backgroundImage: NetworkImage(_userProfile.picture),
+        ),
+        IconText.iconNotClickable(
+            leading: Icons.perm_identity, content: Text(_userProfile.username)),
+        SizedBox(height: space_between_input),
+        IconText.iconNotClickable(
+            leading: Icons.warning, content: Text(role[1])),
+        SizedBox(height: space_between_input),
+        IconText.iconNotClickable(
+            leading: Icons.mail_outline, content: Text(_userProfile.email)),
+        SizedBox(height: space_between_input),
+        IconText.iconNotClickable(
+            leading: Icons.people,
+            content: Row(
+              children: <Widget>[
+                Row(children: <Widget>[
+                  ChoiceChip(
+                    label: Text('Member'),
+                    selected: _selectedRole == Role.Member.index,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedRole = Role.Member.index;
+                        print("Member => " + _selectedRole.toString());
+                      });
+                      changeRole();
+                    },
+                  ),
+                  SizedBox(width: 25.0),
+                  ChoiceChip(
+                    label: Text('Checker'),
+                    selected: _selectedRole == Role.Checker.index,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedRole = Role.Checker.index;
+                        print("Member => " + _selectedRole.toString());
+                      });
+                      changeRole();
+                    },
+                  ),
+                  SizedBox(width: 25.0),
+                  ChoiceChip(
+                    label: Text('Admin'),
+                    selected: _selectedRole == Role.Admin.index,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedRole = Role.Admin.index;
+                        print("Member => " + _selectedRole.toString());
+                      });
+                      changeRole();
+                    },
+                  )
+                ]),
+              ],
+            ))
+      ]);
     }
   }
 
-  List<IconButton> _buildHeaderIconsAction(BuildContext context, int id) {
+  List<IconButton> _buildHeaderIconsAction(BuildContext context) {
     return <IconButton>[
       IconButton(
           icon: Icon(Icons.delete),
           onPressed: () async {
-            var response = await this.userInfoBloc.delete(id);
+            var response = await this._userInfoBloc.delete(_userProfile.id);
 
             if (response.status == 200) {
               Navigator.pop(context);
