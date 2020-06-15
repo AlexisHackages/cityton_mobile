@@ -19,7 +19,6 @@ class EditGroup extends StatefulWidget {
 class EditGroupState extends State<EditGroup> {
   EditGroupBloc editGroupBloc = EditGroupBloc();
 
-  Map _datas;
   int _groupId;
   String _groupName = "...";
 
@@ -27,9 +26,9 @@ class EditGroupState extends State<EditGroup> {
   void initState() {
     super.initState();
 
-    _datas = widget.arguments;
-    _groupId = _datas["groupId"];
-    _groupName = _datas["groupName"];
+    Map datas = widget.arguments;
+    _groupId = datas["groupId"];
+    _groupName = datas["groupName"];
   }
 
   @override

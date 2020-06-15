@@ -24,14 +24,19 @@ class EditChallengeState extends State<EditChallenge> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _statementController = TextEditingController();
 
-  Map datas;
+  int _challengeId;
+  String _challengeTitle;
+  String _challengeStatement;
 
   @override
   void initState() {
     super.initState();
-    datas = widget.arguments;
-    _titleController.text = datas["title"];
-    _statementController.text = datas["statement"];
+    Map datas = widget.arguments;
+    _challengeId = datas["id"];
+    _challengeTitle = datas["title"];
+    _challengeStatement = datas["statement"];
+    _titleController.text = _challengeTitle;
+    _statementController.text = _challengeStatement;
   }
 
   @override
@@ -47,7 +52,7 @@ class EditChallengeState extends State<EditChallenge> {
         header: Header(
           title: "Edit a challenge",
           leadingState: HeaderLeading.DEAD_END,
-          iconsAction: _buildHeaderIconsAction(context, datas["id"]),
+          iconsAction: _buildHeaderIconsAction(context, _challengeId),
         ),
         sideMenu: null,
         body: Column(
@@ -98,13 +103,13 @@ class EditChallengeState extends State<EditChallenge> {
                         }
 
                         if (_editFormKey.currentState.saveAndValidate()) {
-                          if (_titleController.text != datas["title"] &&
-                              _statementController.text != datas["statement"]) {
+                          if (_titleController.text != _challengeTitle &&
+                              _statementController.text != _challengeStatement) {
                             Navigator.pop(context);
                           }
 
                           var response = await this._editChallengeBloc.edit(
-                              datas["id"],
+                              _challengeId,
                               _titleController.text,
                               _statementController.text);
                           if (response.status == 200) {

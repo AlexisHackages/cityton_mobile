@@ -23,7 +23,6 @@ class AdminGroupDetails extends StatefulWidget {
 class AdminGroupDetailsState extends State<AdminGroupDetails> {
   AdminGroupDetailsBloc _adminGroupDetailsBloc = AdminGroupDetailsBloc();
 
-  Map _datas;
   int _groupId;
   String _groupName;
   UserMinimal _selectedUser;
@@ -35,9 +34,9 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
   void initState() {
     super.initState();
 
-    _datas = widget.arguments;
-    _groupId = _datas["groupId"];
-    _groupName = _datas["groupName"];
+    Map datas = widget.arguments;
+    _groupId = datas["groupId"];
+    _groupName = datas["groupName"];
   }
 
   @override

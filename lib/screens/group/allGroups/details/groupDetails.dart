@@ -24,7 +24,6 @@ class GroupDetailsState extends State<GroupDetails> {
   GroupDetailsBloc _groupDetailsBloc = GroupDetailsBloc();
   AuthBloc _authBloc = AuthBloc();
 
-  Map _datas;
   int _groupId;
   String _groupName;
 
@@ -34,9 +33,9 @@ class GroupDetailsState extends State<GroupDetails> {
   void initState() {
     super.initState();
 
-    _datas = widget.arguments;
-    _groupId = _datas["groupId"];
-    _groupName = _datas["groupName"];
+    Map datas = widget.arguments;
+    _groupId = datas["groupId"];
+    _groupName = datas["groupName"];
     _currentUser = _initCurrentUser();
   }
 

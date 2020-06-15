@@ -25,10 +25,14 @@ class ProfileState extends State<Profile> {
   ProfileBloc _profileBloc = ProfileBloc();
 
   Widget _avatarProfile;
+  int _userId;
 
   @override
   void initState() {
     super.initState();
+
+    Map datas = widget.arguments;
+    _userId = datas["userId"];
   }
 
   @override
@@ -55,8 +59,7 @@ class ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    Map datas = widget.arguments;
-    if (datas != null && datas["userId"] != null) {
+    if (_userId != null) {
       return FramePage(
           header: Header(
             title: "Profile",
@@ -66,7 +69,7 @@ class ProfileState extends State<Profile> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _buildUserInfos(datas["userId"]),
+              _buildUserInfos(_userId),
               SizedBox(height: space_between_input),
               InkWell(
                 child: Text("Change password ?"),

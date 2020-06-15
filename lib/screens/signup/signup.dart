@@ -32,15 +32,15 @@ class SignupState extends State<Signup> {
   @override
   void initState() {
     super.initState();
-    _usernameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _verifyPasswordController.dispose();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _verifyPasswordController.dispose();
   }
 
   void openGallery() async {

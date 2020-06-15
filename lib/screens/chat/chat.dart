@@ -29,9 +29,14 @@ class ChatState extends State<Chat> {
   File _filePicked;
 
   Widget _popupFileSelected = Container();
+  Thread _thread;
 
   void initState() {
     super.initState();
+
+    Map datas = widget.arguments;
+    _thread = datas["thread"];
+
   }
 
   void openGallery() async {
@@ -64,17 +69,15 @@ class ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    Map datas = widget.arguments;
-    Thread thread = datas["thread"];
 
     return FramePage(
       header: Header(
-        title: thread.name,
+        title: _thread.name,
         leadingState: HeaderLeading.MENU,
-        iconsAction: _buildHeaderIconsAction(context, thread.discussionId),
+        iconsAction: _buildHeaderIconsAction(context, _thread.discussionId),
       ),
       sideMenu: MainSideMenu(),
-      body: _buildChat(thread.discussionId),
+      body: _buildChat(_thread.discussionId),
     );
   }
 

@@ -25,14 +25,15 @@ class ProgressionState extends State<Progression> {
   AuthBloc _authBloc = AuthBloc();
   ProgressionBloc _progressionBloc = ProgressionBloc();
 
-  Map _datas;
   Future<User> _currentUser;
   Future<GroupProgression> groupProgression;
+  int _threadId;
 
   @override
   void initState() {
     super.initState();
-    _datas = widget.arguments;
+    Map datas = widget.arguments;
+    _threadId = datas["threadId"];
 
     _currentUser = _authBloc.getCurrentUser();
   }
@@ -45,7 +46,7 @@ class ProgressionState extends State<Progression> {
 
   refreshProgression() async {
     ApiResponse response =
-        await _progressionBloc.getProgression(_datas["threadId"]);
+        await _progressionBloc.getProgression(_threadId);
 
     if (response.status != 200) {
       DisplaySnackbar.createError(message: response.value);
@@ -54,7 +55,7 @@ class ProgressionState extends State<Progression> {
 
   validate(int challengeId) async {
     ApiResponse response =
-        await _progressionBloc.validate(challengeId, _datas["threadId"]);
+        await _progressionBloc.validate(challengeId, _threadId);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge validated");
@@ -65,7 +66,7 @@ class ProgressionState extends State<Progression> {
 
   reject(int challengeId) async {
     ApiResponse response =
-        await _progressionBloc.reject(challengeId, _datas["threadId"]);
+        await _progressionBloc.reject(challengeId, _threadId);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge rejected");
@@ -76,7 +77,7 @@ class ProgressionState extends State<Progression> {
 
   undo(int challengeId) async {
     ApiResponse response =
-        await _progressionBloc.undo(challengeId, _datas["threadId"]);
+        await _progressionBloc.undo(challengeId, _threadId);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo");

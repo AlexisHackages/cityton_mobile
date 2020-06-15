@@ -26,7 +26,6 @@ class MyGroupState extends State<MyGroup> {
   AuthBloc _authBloc = AuthBloc();
 
   Future<User> _currentUser;
-  Map _datas;
   int _groupId;
   String _groupName = "...";
   String _creatorName = "...";
@@ -35,8 +34,8 @@ class MyGroupState extends State<MyGroup> {
   void initState() {
     super.initState();
 
-    _datas = widget.arguments;
-    _groupId = _datas["groupId"];
+    Map datas = widget.arguments;
+    _groupId = datas["groupId"];
 
     _currentUser = _initCurrentUser();
   }
