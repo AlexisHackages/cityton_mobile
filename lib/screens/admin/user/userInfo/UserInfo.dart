@@ -125,7 +125,6 @@ class UserInfoState extends State<UserInfo> {
                     onSelected: (bool selected) {
                       setState(() {
                         _selectedRole = Role.Member.index;
-                        print("Member => " + _selectedRole.toString());
                       });
                       changeRole();
                     },
@@ -137,7 +136,6 @@ class UserInfoState extends State<UserInfo> {
                     onSelected: (bool selected) {
                       setState(() {
                         _selectedRole = Role.Checker.index;
-                        print("Member => " + _selectedRole.toString());
                       });
                       changeRole();
                     },
@@ -149,7 +147,6 @@ class UserInfoState extends State<UserInfo> {
                     onSelected: (bool selected) {
                       setState(() {
                         _selectedRole = Role.Admin.index;
-                        print("Member => " + _selectedRole.toString());
                       });
                       changeRole();
                     },
