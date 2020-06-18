@@ -32,6 +32,8 @@ class SignupState extends State<Signup> {
   @override
   void initState() {
     super.initState();
+    _avatarProfile = AvatarProfile(
+        picturePath: _profilePicture.path, onPressed: openGallery);
   }
 
   @override
@@ -55,8 +57,6 @@ class SignupState extends State<Signup> {
   }
 
   Widget build(BuildContext context) {
-    _avatarProfile = AvatarProfile(
-        picturePath: _profilePicture.path, onPressed: openGallery);
     return FramePage(
         header: Header(
           title: "Signup",
@@ -144,7 +144,7 @@ class SignupState extends State<Signup> {
                               _usernameController.text,
                               _emailController.text,
                               _passwordController.text,
-                              _profilePicture);
+                              _profilePicture.path == DotEnv().env['DEFAULT_PROFILE_PICTURE'] ? null : _profilePicture);
                           if (response.status == 200) {
                             Navigator.pushNamedAndRemoveUntil(context, '/home',
                                 (Route<dynamic> route) => false);

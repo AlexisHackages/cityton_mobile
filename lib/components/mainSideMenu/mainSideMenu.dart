@@ -15,13 +15,11 @@ class MainSideMenuState extends State<MainSideMenu> {
   AuthBloc _authBloc = AuthBloc();
   MainSideMenuBloc _mainSideMenuBloc = MainSideMenuBloc();
 
-  Future<User> _currentUser;
+  User _currentUser;
 
   @override
   void initState() {
     super.initState();
-
-    _currentUser = _initCurrentUser();
   }
 
   Future<User> _initCurrentUser() async {
@@ -39,23 +37,28 @@ class MainSideMenuState extends State<MainSideMenu> {
   Widget build(BuildContext context) {
     return Drawer(
         child: FutureBuilder<User>(
-            future: _currentUser,
+            future: _initCurrentUser(),
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-              return ListView(children: [
-                _buildDrawHeader(snapshot),
-                ..._buildDrawBody(snapshot),
+              if (snapshot.hasData && snapshot.data != null) {
+                _currentUser = snapshot.data;
+                return ListView(children: [
+                _buildDrawHeader(),
+                ..._buildDrawBody(),
               ]);
+              } else {
+                return CircularProgressIndicator();
+              }
+              
             }));
   }
 
-  Widget _buildDrawHeader(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
+  Widget _buildDrawHeader() {
       return DrawerHeader(
           child: Padding(
         padding: EdgeInsets.all(25.0),
         child: InkWell(
           onTap: () => Navigator.popAndPushNamed(context, '/profile',
-              arguments: {"userId": snapshot.data.id}),
+              arguments: {"userId": _currentUser.id}),
           child: Container(
             height: MediaQuery.of(context).size.height / 4,
             child: Row(
@@ -64,26 +67,21 @@ class MainSideMenuState extends State<MainSideMenu> {
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(snapshot.data.picture),
+                  backgroundImage: NetworkImage(_currentUser.picture),
                 ),
                 SizedBox(
                   width: 25,
                 ),
-                Text(snapshot.data.username),
+                Text(_currentUser.username),
               ],
             ),
           ),
         ),
       ));
-    } else {
-      return CircularProgressIndicator();
-    }
   }
 
-  List<Widget> _buildDrawBody(AsyncSnapshot snapshot) {
-    if (snapshot.hasData) {
-      User currentUser = snapshot.data;
-      Widget admin = Role.values[currentUser.role] == Role.Admin
+  List<Widget> _buildDrawBody() {
+      Widget admin = Role.values[_currentUser.role] == Role.Admin
           ? _buildAdminMenu()
           : Container();
 
@@ -95,8 +93,8 @@ class MainSideMenuState extends State<MainSideMenu> {
           ),
           onTap: () => Navigator.pushNamed(context, '/home'),
         ),
-        _buildThreadList(currentUser.id),
-        _buildGroup(currentUser),
+        _buildThreadList(),
+        _buildGroup(),
         admin,
         ListTile(
           title: Text(
@@ -110,13 +108,10 @@ class MainSideMenuState extends State<MainSideMenu> {
           },
         ),
       ];
-    } else {
-      return <Widget>[CircularProgressIndicator()];
-    }
   }
 
-  Widget _buildThreadList(int userId) {
-    _mainSideMenuBloc.getThreads(userId);
+  Widget _buildThreadList() {
+    _mainSideMenuBloc.getThreads(_currentUser.id);
 
     return ExpansionTile(title: Text("Threads"), children: <Widget>[
       StreamBuilder(
@@ -146,9 +141,9 @@ class MainSideMenuState extends State<MainSideMenu> {
     ]);
   }
 
-  Widget _buildGroup(User currentUser) {
+  Widget _buildGroup() {
     Widget createAGroup =
-        currentUser.groupId == 0 && Role.values[currentUser.role] == Role.Member
+        _currentUser.groupId == 0 && Role.values[_currentUser.role] == Role.Member
             ? ListTile(
                 title: Text("Create a group"),
                 onTap: () {
@@ -157,16 +152,16 @@ class MainSideMenuState extends State<MainSideMenu> {
               )
             : Container();
 
-    Widget myGroup = currentUser.groupId > 0
+    Widget myGroup = _currentUser.groupId != null && _currentUser.groupId > 0
         ? ListTile(
             title: Text("My group"),
             onTap: () {
               Navigator.pushNamed(context, '/myGroup',
-                  arguments: {"groupId": currentUser.groupId});
+                  arguments: {"groupId": _currentUser.groupId});
             },
           )
         : Container();
-
+        
     return ExpansionTile(
       title: Text("Group"),
       children: <Widget>[
