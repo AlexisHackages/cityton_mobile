@@ -116,7 +116,10 @@ class ChatState extends State<Chat> {
           final List<Message> messages = snapshot.data;
 
           if (messages.length == 0) {
-            return Text("No messages found");
+            return Column(children: <Widget>[
+                      Text("No messages found"),
+                      SizedBox(height: 25.0)
+                    ]);
           } else {
             return ListView.builder(
                 controller: _scrollController,
