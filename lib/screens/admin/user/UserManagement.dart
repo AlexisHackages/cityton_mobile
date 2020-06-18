@@ -129,22 +129,26 @@ class UserManagementState extends State<UserManagement> {
   }
 
   Widget _buildUserList(List<UserProfile> userProfiles) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: userProfiles.length,
-      itemBuilder: (BuildContext context, int index) {
-        final item = userProfiles[index];
+    if (userProfiles.length == 0) {
+      return Text("No users found");
+    } else {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: userProfiles.length,
+        itemBuilder: (BuildContext context, int index) {
+          final userProfile = userProfiles[index];
 
-        return ListTile(
-          title: Text(item.username),
-          onTap: () => Navigator.popAndPushNamed(
-              context, '/admin/user/userInfo',
-              arguments: {
-                "userProfile": item,
-              }),
-        );
-      },
-    );
+          return ListTile(
+            title: Text(userProfile.username),
+            onTap: () => Navigator.popAndPushNamed(
+                context, '/admin/user/userInfo',
+                arguments: {
+                  "userProfile": userProfile,
+                }),
+          );
+        },
+      );
+    }
   }
 }

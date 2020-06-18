@@ -45,8 +45,7 @@ class ProgressionState extends State<Progression> {
   }
 
   refreshProgression() async {
-    ApiResponse response =
-        await _progressionBloc.getProgression(_threadId);
+    ApiResponse response = await _progressionBloc.getProgression(_threadId);
 
     if (response.status != 200) {
       DisplaySnackbar.createError(message: response.value);
@@ -76,8 +75,7 @@ class ProgressionState extends State<Progression> {
   }
 
   undo(int challengeId) async {
-    ApiResponse response =
-        await _progressionBloc.undo(challengeId, _threadId);
+    ApiResponse response = await _progressionBloc.undo(challengeId, _threadId);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Challenge successfuly undo");
@@ -109,15 +107,17 @@ class ProgressionState extends State<Progression> {
   Widget _buildDrawHeader(AsyncSnapshot snapshot) {
     if (snapshot.hasData && snapshot.data.groupId != null) {
       GroupProgression groupProgression = snapshot.data;
-      return Container(padding: EdgeInsets.all(30.0), child: Column(children: <Widget>[
-        Text(groupProgression.progression.toInt().toString() +
-            "% achievements earned"),
-        LinearProgressIndicator(
-          value: groupProgression.progression / 100.0,
-          backgroundColor: Colors.blueGrey[700],
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      ]));
+      return Container(
+          padding: EdgeInsets.all(30.0),
+          child: Column(children: <Widget>[
+            Text(groupProgression.progression.toInt().toString() +
+                "% achievements earned"),
+            LinearProgressIndicator(
+              value: groupProgression.progression / 100.0,
+              backgroundColor: Colors.blueGrey[700],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ]));
     } else {
       return CircularProgressIndicator();
     }
@@ -139,35 +139,45 @@ class ProgressionState extends State<Progression> {
 
   Widget _buildCategory(
       List<ChallengeMinimal> challenges, StatusChallenge status) {
-    return FutureBuilder<User>(
-        future: _currentUser,
-        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-          if (snapshot.hasData) {
-            return ExpansionTile(title: Text(status.value, style: TextStyle(fontWeight: FontWeight.bold),), children: <Widget>[
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: challenges.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text(
-                        challenges[index].title,
-                        textAlign: TextAlign.center,
-                      ),
-                      subtitle: Text(challenges[index].statement,
-                          textAlign: TextAlign.center),
-                      trailing: Role.values[snapshot.data.role] == Role.Member
-                          ? null
-                          : Column(
-                              children:
-                                  _buildButtons(status, challenges[index].id),
+    if (challenges.length == 0) {
+      return Text("NO challenges found in " + status.value);
+    } else {
+      return FutureBuilder<User>(
+          future: _currentUser,
+          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+            if (snapshot.hasData) {
+              return ExpansionTile(
+                  title: Text(
+                    status.value,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  children: <Widget>[
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: challenges.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Text(
+                              challenges[index].title,
+                              textAlign: TextAlign.center,
                             ),
-                    );
-                  })
-            ]);
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+                            subtitle: Text(challenges[index].statement,
+                                textAlign: TextAlign.center),
+                            trailing:
+                                Role.values[snapshot.data.role] == Role.Member
+                                    ? null
+                                    : Column(
+                                        children: _buildButtons(
+                                            status, challenges[index].id),
+                                      ),
+                          );
+                        })
+                  ]);
+            } else {
+              return CircularProgressIndicator();
+            }
+          });
+    }
   }
 
   List<Widget> _buildButtons(StatusChallenge status, int challengeId) {

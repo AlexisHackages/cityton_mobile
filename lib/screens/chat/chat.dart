@@ -36,7 +36,6 @@ class ChatState extends State<Chat> {
 
     Map datas = widget.arguments;
     _thread = datas["thread"];
-
   }
 
   void openGallery() async {
@@ -69,7 +68,6 @@ class ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-
     return FramePage(
       header: Header(
         title: _thread.name,
@@ -117,30 +115,34 @@ class ChatState extends State<Chat> {
 
           final List<Message> messages = snapshot.data;
 
-          return ListView.builder(
-              controller: _scrollController,
-              shrinkWrap: true,
-              itemCount: messages.length,
-              itemBuilder: (BuildContext context, int index) {
-                _scrollToBottom();
-                if (index == 0) {
-                  return Column(children: <Widget>[
-                    ..._buildBubbleFrame(messages[index], false),
-                    SizedBox(height: 25.0)
-                  ]);
-                } else {
-                  return messages[index].author.id ==
-                          messages[index - 1].author.id
-                      ? Column(children: <Widget>[
-                          ..._buildBubbleFrame(messages[index], true),
-                          SizedBox(height: 25.0)
-                        ])
-                      : Column(children: <Widget>[
-                          ..._buildBubbleFrame(messages[index], false),
-                          SizedBox(height: 25.0)
-                        ]);
-                }
-              });
+          if (messages.length == 0) {
+            return Text("No messages found");
+          } else {
+            return ListView.builder(
+                controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: messages.length,
+                itemBuilder: (BuildContext context, int index) {
+                  _scrollToBottom();
+                  if (index == 0) {
+                    return Column(children: <Widget>[
+                      ..._buildBubbleFrame(messages[index], false),
+                      SizedBox(height: 25.0)
+                    ]);
+                  } else {
+                    return messages[index].author.id ==
+                            messages[index - 1].author.id
+                        ? Column(children: <Widget>[
+                            ..._buildBubbleFrame(messages[index], true),
+                            SizedBox(height: 25.0)
+                          ])
+                        : Column(children: <Widget>[
+                            ..._buildBubbleFrame(messages[index], false),
+                            SizedBox(height: 25.0)
+                          ]);
+                  }
+                });
+          }
         });
   }
 
@@ -247,16 +249,19 @@ class ChatState extends State<Chat> {
       return <Widget>[
         Row(children: <Widget>[
           SizedBox(width: 60.0),
-          Flexible(child: InkWell(
-        onLongPress: () => _buildModalBottomSheet(message.content, message.id),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-          message.media?.url != null
-              ? Image.network(message.media.url, width: 50.0, height: 50.0)
-              : Container(),
-          Text(message.content)
-        ])))
+          Flexible(
+              child: InkWell(
+                  onLongPress: () =>
+                      _buildModalBottomSheet(message.content, message.id),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        message.media?.url != null
+                            ? Image.network(message.media.url,
+                                width: 50.0, height: 50.0)
+                            : Container(),
+                        Text(message.content)
+                      ])))
         ])
       ];
     }

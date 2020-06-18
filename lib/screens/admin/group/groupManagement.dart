@@ -150,34 +150,40 @@ class GroupManagementState extends State<GroupManagement> {
   }
 
   Widget _buildGroupList(List<GroupMinimal> groupsList) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: groupsList.length,
-      itemBuilder: (BuildContext context, int index) {
-        final group = groupsList[index];
+    if (groupsList.length == 0) {
+      return Text("No groups found");
+    } else {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: groupsList.length,
+        itemBuilder: (BuildContext context, int index) {
+          final group = groupsList[index];
 
-        Widget warningIcons =
-            group.hasReachMaxSize ? Icon(Icons.warning) : Container();
+          Widget warningIcons =
+              group.hasReachMaxSize ? Icon(Icons.warning) : Container();
 
-        return ListTile(
-            title: Text(group.name),
-            onTap: () => Navigator.popAndPushNamed(
-                context, '/admin/group/details',
-                arguments: {"groupId": group.id, "groupName": group.name}),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                group.supervisor == null ? Icon(Icons.warning, color: Colors.redAccent) : Container(),
-                IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () async {
-                      deleteGroup(group.id);
-                    }),
-                warningIcons
-              ],
-            ));
-      },
-    );
+          return ListTile(
+              title: Text(group.name),
+              onTap: () => Navigator.popAndPushNamed(
+                  context, '/admin/group/details',
+                  arguments: {"groupId": group.id, "groupName": group.name}),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  group.supervisor == null
+                      ? Icon(Icons.warning, color: Colors.redAccent)
+                      : Container(),
+                  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () async {
+                        deleteGroup(group.id);
+                      }),
+                  warningIcons
+                ],
+              ));
+        },
+      );
+    }
   }
 }

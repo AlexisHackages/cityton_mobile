@@ -124,25 +124,29 @@ class AdminChallengeState extends State<AdminChallenge> {
   }
 
   Widget _buildChallengeList(List<Challenge> challenges) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: challenges.length,
-      itemBuilder: (BuildContext context, int index) {
-        final item = challenges[index];
+    if (challenges.length == 0) {
+      return Text("No challenges found");
+    } else {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: challenges.length,
+        itemBuilder: (BuildContext context, int index) {
+          final item = challenges[index];
 
-        return ListTile(
-          title: Text(item.title),
-          subtitle: Text(item.statement),
-          onTap: () => Navigator.popAndPushNamed(
-              context, '/admin/challenge/edit', arguments: {
-            "id": item.id,
-            "title": item.title,
-            "statement": item.statement
-          }),
-        );
-      },
-    );
+          return ListTile(
+            title: Text(item.title),
+            subtitle: Text(item.statement),
+            onTap: () => Navigator.popAndPushNamed(
+                context, '/admin/challenge/edit', arguments: {
+              "id": item.id,
+              "title": item.title,
+              "statement": item.statement
+            }),
+          );
+        },
+      );
+    }
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
