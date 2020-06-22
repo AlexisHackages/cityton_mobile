@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/http/http.dart';
 
@@ -54,7 +55,7 @@ class GroupService {
   }
 
   Future<ApiResponse> editName(String name, int id) async {
-    var res = await _http.put("group/editName/" + id.toString(), data: name);
+    var res = await _http.put("group/editName/" + id.toString(), data: jsonEncode(name));
 
     return res;
   }
