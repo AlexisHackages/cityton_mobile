@@ -64,14 +64,7 @@ class UserInfoState extends State<UserInfo> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _buildUserInfos(),
-            SizedBox(height: space_between_input),
-            InkWell(
-              child: Text("Change password ?"),
-              onTap: () {
-                Navigator.pushNamed(context, '/changePassword');
-              },
-            ),
+            _buildUserInfos()
           ],
         ));
   }
