@@ -7,17 +7,19 @@ class Group {
   final UserMinimal creator;
   final List<RequestGroupMinimal> members;
   final List<RequestGroupMinimal> requestsAdhesion;
+  final bool hasReachMinSize;
   final bool hasReachMaxSize;
   final UserMinimal supervisor;
 
   Group(
-      {this.id, this.name, this.creator, this.members, this.requestsAdhesion, this.hasReachMaxSize, this.supervisor});
+      {this.id, this.name, this.creator, this.members, this.requestsAdhesion, this.hasReachMinSize, this.hasReachMaxSize, this.supervisor});
 
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
       id: json['id'] as int,
       name: json['name'] as String,
       creator: UserMinimal.fromJson(json['creator']),
+      hasReachMinSize: json['hasReachMinSize'] as bool,
       hasReachMaxSize: json['hasReachMaxSize'] as bool,
       members: json['members'] == null
           ? RequestGroupMinimalList().users

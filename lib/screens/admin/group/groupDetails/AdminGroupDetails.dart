@@ -152,7 +152,8 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
                 ),
               );
             })
-        : Text("No members except the creator");
+        : Text("No members except the creator",
+            style: TextStyle(color: Colors.red));
 
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,7 +182,13 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
                       label: _groupInfo.hasReachMaxSize
                           ? "Members (group full)"
                           : "Members",
-                      component: members),
+                      component: Column(children: <Widget>[
+                        !_groupInfo.hasReachMinSize
+                            ? Text("minimal size requirement unfilled",
+                                style: TextStyle(color: Colors.red))
+                            : Container(),
+                        members
+                      ])),
                   SizedBox(height: space_around_divider),
                   Divider(thickness: 1.0),
                   SizedBox(height: space_around_divider),
@@ -189,7 +196,8 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
                       label: "Supervisor",
                       component: _groupInfo.supervisor == null
                           ? Column(children: <Widget>[
-                              Text("No supervisor attributed"),
+                              Text("No supervisor attributed",
+                                  style: TextStyle(color: Colors.red)),
                               RaisedButton(
                                   child: Text("Select one"),
                                   onPressed: () {

@@ -171,7 +171,7 @@ class GroupManagementState extends State<GroupManagement> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  group.supervisor == null
+                  group.supervisor == null || !group.hasReachMinSize
                       ? Icon(Icons.warning, color: Colors.redAccent)
                       : Container(),
                   IconButton(
