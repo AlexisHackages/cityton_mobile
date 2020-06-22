@@ -44,6 +44,10 @@ class MyGroupState extends State<MyGroup> {
     return await _authBloc.getCurrentUser();
   }
 
+  _getGroupInfo() {
+    _myGroupBloc.getGroupInfo(_groupId);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -52,7 +56,7 @@ class MyGroupState extends State<MyGroup> {
 
   @override
   Widget build(BuildContext context) {
-    _myGroupBloc.getGroupInfo(_groupId);
+    _getGroupInfo();
 
     return FramePage(
         header: Header(
@@ -157,7 +161,7 @@ class MyGroupState extends State<MyGroup> {
                       Get.toNamed('/myGroup/edit', arguments: {
                         "groupId": _groupId,
                         "groupName": _groupName
-                      });
+                      }).then((value) => value ? _getGroupInfo() : null);
                     },
                     icon: Icons.mode_edit))),
         Label(label: "Creator", component: Text(_creatorName)),
@@ -201,7 +205,8 @@ class MyGroupState extends State<MyGroup> {
     return Column(
       children: <Widget>[
         Label(
-            label: "Name", component: IconText.iconClickable(content: Text(_groupName))),
+            label: "Name",
+            component: IconText.iconClickable(content: Text(_groupName))),
         Label(label: "Creator", component: Text(_creatorName)),
         Label(
             label: "Members",

@@ -19,6 +19,10 @@ class EditGroup extends StatefulWidget {
 class EditGroupState extends State<EditGroup> {
   EditGroupBloc editGroupBloc = EditGroupBloc();
 
+    final GlobalKey<FormBuilderState> _editNameFormKey =
+        GlobalKey<FormBuilderState>();
+    TextEditingController _groupNameController = TextEditingController();
+
   int _groupId;
   String _groupName = "...";
 
@@ -29,6 +33,7 @@ class EditGroupState extends State<EditGroup> {
     Map datas = widget.arguments;
     _groupId = datas["groupId"];
     _groupName = datas["groupName"];
+    _groupNameController.text = _groupName;
   }
 
   @override
@@ -38,10 +43,6 @@ class EditGroupState extends State<EditGroup> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormBuilderState> _editNameFormKey =
-        GlobalKey<FormBuilderState>();
-    TextEditingController groupNameController = TextEditingController();
-    groupNameController.text = _groupName;
 
     return FramePage(
         header: Header(
@@ -57,13 +58,15 @@ class EditGroupState extends State<EditGroup> {
               readOnly: false,
               child: Column(children: <Widget>[
                 FormBuilderTextField(
-                  controller: groupNameController,
+                  controller: _groupNameController,
                   attribute: "name",
                   decoration: InputDecoration(hintText: "Name"),
                   maxLines: 1,
                   validators: [
                     FormBuilderValidators.required(
-                        errorText: "This field is required")
+                        errorText: "This field is required"),
+                    FormBuilderValidators.minLength(3),
+                    FormBuilderValidators.maxLength(50)
                   ],
                 ),
                 Container(
@@ -76,13 +79,14 @@ class EditGroupState extends State<EditGroup> {
                         if (!currentFocus.hasPrimaryFocus) {
                           currentFocus.unfocus();
                         }
-
+                        
                         if (_editNameFormKey.currentState.saveAndValidate()) {
                           var response = await this
                               .editGroupBloc
-                              .editName(groupNameController.text, _groupId);
+                              .editName(_groupNameController.text, _groupId);
                           if (response.status == 200) {
-                            Get.back();
+                            DisplaySnackbar.createConfirmation(message: "Name has successfully been modified");
+                            Get.back(result: true);
                           } else {
                             DisplaySnackbar.createError(
                                 message: response.value);
