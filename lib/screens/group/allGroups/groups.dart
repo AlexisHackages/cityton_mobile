@@ -79,69 +79,52 @@ class GroupsState extends State<Groups> {
   }
 
   Widget _buildFilter() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        InputIcon(placeholder: _searchText, iconsAction: <IconAction>[
-          IconAction(
-              icon: Icon(Icons.search),
-              action: (String input) {
-                _searchText = input;
+    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      InputIcon(placeholder: _searchText, iconsAction: <IconAction>[
+        IconAction(
+            icon: Icon(Icons.search),
+            action: (String input) {
+              _searchText = input;
+              search();
+            })
+      ]),
+      SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: <Widget>[
+            ChoiceChip(
+              label: Text('All'),
+              selected: _selectedFilter == FilterGroupSize.All.index,
+              onSelected: (bool selected) {
+                setState(() {
+                  _selectedFilter = FilterGroupSize.All.index;
+                });
                 search();
-              })
-        ]),
-        SizedBox(
-          height: 44.0,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('All'),
-                  selected: _selectedFilter == FilterGroupSize.All.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.All.index;
-                    });
-                    search();
-                  },
-                ),
-              ),
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('Full'),
-                  selected: _selectedFilter == FilterGroupSize.Full.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.Full.index;
-                    });
-                    search();
-                  },
-                ),
-              ),
-              Container(
-                width: 160.0,
-                child: ChoiceChip(
-                  selectedColor: Color(0xff6200ee),
-                  label: Text('Not Full'),
-                  selected: _selectedFilter == FilterGroupSize.NotFull.index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _selectedFilter = FilterGroupSize.NotFull.index;
-                    });
-                    search();
-                  },
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
+              },
+            ),
+            SizedBox(width: 25.0),
+            ChoiceChip(
+              label: Text('Full'),
+              selected: _selectedFilter == FilterGroupSize.Full.index,
+              onSelected: (bool selected) {
+                setState(() {
+                  _selectedFilter = FilterGroupSize.Full.index;
+                });
+                search();
+              },
+            ),
+            SizedBox(width: 25.0),
+            ChoiceChip(
+              label: Text('Not Full'),
+              selected: _selectedFilter == FilterGroupSize.NotFull.index,
+              onSelected: (bool selected) {
+                setState(() {
+                  _selectedFilter = FilterGroupSize.NotFull.index;
+                });
+                search();
+              },
+            )
+          ]))
+    ]);
   }
 
   Widget _buildGroupList(List<GroupMinimal> groupsList) {
@@ -177,7 +160,8 @@ class GroupsState extends State<Groups> {
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
-    if (_currentUser != null && Role.values[_currentUser.role] == Role.Member &&
+    if (_currentUser != null &&
+        Role.values[_currentUser.role] == Role.Member &&
         _currentUser.groupId < 1) {
       return <IconButton>[
         IconButton(
