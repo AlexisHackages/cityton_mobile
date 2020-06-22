@@ -226,6 +226,7 @@ class ChatState extends State<Chat> {
           CircleAvatar(
             radius: 25.0,
             backgroundImage: NetworkImage(message.author.profilePicture),
+            backgroundColor: Colors.white,
           ),
           SizedBox(width: 10.0),
           Text(message.author.username)
