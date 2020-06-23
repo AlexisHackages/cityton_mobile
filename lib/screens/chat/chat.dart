@@ -46,7 +46,8 @@ class ChatState extends State<Chat> {
     PickedFile pickedFile;
 
     if (_isCamera) {
-      pickedFile = await _picker.getVideo(source: ImageSource.camera, maxDuration: const Duration(seconds: 10));
+      pickedFile = await _picker.getVideo(
+          source: ImageSource.camera, maxDuration: const Duration(seconds: 10));
       _filePicked = File(pickedFile.path);
     } else if (!_isCamera) {
       pickedFile = await _picker.getImage(source: ImageSource.gallery);
@@ -219,10 +220,11 @@ class ChatState extends State<Chat> {
   List<IconButton> _buildHeaderIconsAction(BuildContext context, int threadId) {
     return <IconButton>[
       IconButton(
-        icon: Icon(Icons.flag),
-        onPressed: () => Navigator.popAndPushNamed(context, '/chat/progression',
-            arguments: {"threadId": threadId}),
-      )
+          icon: Icon(Icons.flag),
+          onPressed: () {
+            Navigator.pushNamed(context, '/chat/progression',
+                arguments: {"threadId": threadId});
+          })
     ];
   }
 
