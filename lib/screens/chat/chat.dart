@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/inputIcon.dart';
 import 'package:cityton_mobile/components/mainSideMenu/mainSideMenu.dart';
@@ -11,7 +10,10 @@ import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:video_player/video_player.dart';
 import 'chat.bloc.dart';
+import 'package:cityton_mobile/constants/mimeExtensionMap.dart';
+import 'dart:io';
 
 class Chat extends StatefulWidget {
   final Map arguments;
@@ -27,6 +29,8 @@ class ChatState extends State<Chat> {
 
   TextEditingController _sendController = TextEditingController();
   File _filePicked;
+  final ImagePicker _picker = ImagePicker();
+  bool _isCamera = false;
 
   Widget _popupFileSelected = Container();
   Thread _thread;
@@ -38,20 +42,18 @@ class ChatState extends State<Chat> {
     _thread = datas["thread"];
   }
 
-  void openGallery() async {
-    File media = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (media != null) {
-      _filePicked = media;
-      setState(() {
-        _popupFileSelected = _buildFileSelected();
-      });
-    }
-  }
+  void _pickMedia() async {
+    PickedFile pickedFile;
 
-  void openCamera() async {
-    File media = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (media != null) {
-      _filePicked = media;
+    if (_isCamera) {
+      pickedFile = await _picker.getVideo(source: ImageSource.camera, maxDuration: const Duration(seconds: 10));
+      _filePicked = File(pickedFile.path);
+    } else if (!_isCamera) {
+      pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    }
+
+    if (pickedFile != null) {
+      _filePicked = File(pickedFile.path);
       setState(() {
         _popupFileSelected = _buildFileSelected();
       });
@@ -117,9 +119,9 @@ class ChatState extends State<Chat> {
 
           if (messages.length == 0) {
             return Column(children: <Widget>[
-                      Text("No messages found"),
-                      SizedBox(height: 25.0)
-                    ]);
+              Text("No messages found"),
+              SizedBox(height: 25.0)
+            ]);
           } else {
             return ListView.builder(
                 controller: _scrollController,
@@ -163,14 +165,16 @@ class ChatState extends State<Chat> {
                   customController: _sendController,
                   iconsAction: <IconAction>[
                     IconAction(
-                        icon: Icon(Icons.attach_file),
+                        icon: Icon(Icons.wallpaper),
                         action: (String input) {
-                          openGallery();
+                          _isCamera = false;
+                          _pickMedia();
                         }),
                     IconAction(
                         icon: Icon(Icons.camera_alt),
                         action: (String input) {
-                          openCamera();
+                          _isCamera = true;
+                          _pickMedia();
                         }),
                     IconAction(
                         icon: Icon(Icons.send),
@@ -179,6 +183,9 @@ class ChatState extends State<Chat> {
                               input, threadId, _filePicked);
                           _sendController.clear();
                           _filePicked = null;
+                          setState(() {
+                            _popupFileSelected = Container();
+                          });
                         })
                   ])))
     ]));
@@ -241,8 +248,7 @@ class ChatState extends State<Chat> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       message.media?.url != null
-                          ? Image.network(message.media.url,
-                              width: 50.0, height: 50.0)
+                          ? _displayMedia(message.media.url)
                           : Container(),
                       Text(message.content)
                     ],
@@ -261,8 +267,7 @@ class ChatState extends State<Chat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         message.media?.url != null
-                            ? Image.network(message.media.url,
-                                width: 50.0, height: 50.0)
+                            ? _displayMedia(message.media.url)
                             : Container(),
                         Text(message.content)
                       ])))
@@ -276,7 +281,7 @@ class ChatState extends State<Chat> {
         width: 200.0,
         height: 50.0,
         child: Row(children: <Widget>[
-          Text("Picture selected"),
+          Text("File selected"),
           IconButton(
             onPressed: () {
               _filePicked = null;
@@ -287,5 +292,26 @@ class ChatState extends State<Chat> {
             icon: Icon(Icons.close),
           )
         ]));
+  }
+
+  Widget _displayMedia(String path) {
+    if (mimeExtensionImageAllowed
+        .any((mime) => RegExp("." + mime).hasMatch(path))) {
+      return _displayImage(path);
+    } else if (mimeExtensionVideoAllowed
+        .any((mime) => RegExp("." + mime).hasMatch(path))) {
+      // return _displayVideo(path);
+      return Container();
+    } else {
+      return Text("Error", style: TextStyle(color: Colors.red));
+    }
+  }
+
+  // Widget _displayVideo(String path) {
+  //   return VideoPlayerController.network(path);
+  // }
+
+  Widget _displayImage(String path) {
+    return Image.network(path, width: 50.0, height: 50.0);
   }
 }

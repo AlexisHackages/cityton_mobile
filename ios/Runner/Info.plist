@@ -47,5 +47,10 @@
 	<string>Required by Apple</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Required by Apple</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
