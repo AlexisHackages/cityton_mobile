@@ -4,10 +4,19 @@ import 'package:cityton_mobile/http/http.dart';
 var _http = Http();
 
 class ChallengeService {
-  Future<ApiResponse> search(String search, DateTime date) async {
-    var res = await _http.get("challenge/search", {
+  Future<ApiResponse> searchAdmin(String search, DateTime date) async {
+    var res = await _http.get("challenge/searchAdmin", {
       "searchText": search,
       "date": date,
+    });
+
+    return res;
+  }
+
+  Future<ApiResponse> searchProgression(String search, int threadId) async {
+    var res = await _http.get("challenge/searchProgression", {
+      "searchText": search,
+      "threadId": threadId,
     });
 
     return res;
@@ -54,6 +63,15 @@ class ChallengeService {
 
   Future<ApiResponse> undo(int id) async {
     var res = await _http.put("challenge/undo/" + id.toString());
+
+    return res;
+  }
+
+  Future<ApiResponse> attributeToGroup(int threadId, List<int> selectedChallenges) async {
+    var res = await _http.post("challenge/attributeToGroup/", data: {
+      "threadId": threadId,
+      'challengeIds': selectedChallenges
+    });
 
     return res;
   }

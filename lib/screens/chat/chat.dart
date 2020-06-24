@@ -9,6 +9,7 @@ import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/models/message.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:video_player/video_player.dart';
 import 'chat.bloc.dart';
@@ -75,26 +76,26 @@ class ChatState extends State<Chat> {
       header: Header(
         title: _thread.name,
         leadingState: HeaderLeading.MENU,
-        iconsAction: _buildHeaderIconsAction(context, _thread.discussionId),
+        iconsAction: _buildHeaderIconsAction(),
       ),
       sideMenu: MainSideMenu(),
-      body: _buildChat(_thread.discussionId),
+      body: _buildChat(),
     );
   }
 
-  Widget _buildChat(int threadId) {
+  Widget _buildChat() {
     return Container(
       child: Column(
         children: <Widget>[
-          Flexible(flex: 1, child: _buildMessages(threadId)),
-          _buildInputText(threadId),
+          Flexible(flex: 1, child: _buildMessages()),
+          _buildInputText(),
         ],
       ),
       alignment: Alignment.center,
     );
   }
 
-  Widget _buildMessages(int threadId) {
+  Widget _buildMessages() {
     ScrollController _scrollController = ScrollController();
 
     _scrollToBottom() {
@@ -107,7 +108,7 @@ class ChatState extends State<Chat> {
       });
     }
 
-    _chatBloc.getMessages(threadId);
+    _chatBloc.getMessages(_thread.discussionId);
 
     return StreamBuilder(
         stream: _chatBloc.messages,
@@ -152,7 +153,7 @@ class ChatState extends State<Chat> {
         });
   }
 
-  Widget _buildInputText(int threadId) {
+  Widget _buildInputText() {
     return SingleChildScrollView(
         child: Column(children: <Widget>[
       _popupFileSelected,
@@ -181,7 +182,7 @@ class ChatState extends State<Chat> {
                         icon: Icon(Icons.send),
                         action: (String input) {
                           _chatBloc.sendChatMessage(
-                              input, threadId, _filePicked);
+                              input, _thread.discussionId, _filePicked);
                           _sendController.clear();
                           _filePicked = null;
                           setState(() {
@@ -217,13 +218,13 @@ class ChatState extends State<Chat> {
             ));
   }
 
-  List<IconButton> _buildHeaderIconsAction(BuildContext context, int threadId) {
+  List<IconButton> _buildHeaderIconsAction() {
     return <IconButton>[
       IconButton(
           icon: Icon(Icons.flag),
           onPressed: () {
-            Navigator.pushNamed(context, '/chat/progression',
-                arguments: {"threadId": threadId});
+            Get.toNamed('/chat/progression',
+                arguments: {"threadId": _thread.discussionId});
           })
     ];
   }

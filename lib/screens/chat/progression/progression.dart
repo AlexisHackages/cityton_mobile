@@ -9,8 +9,10 @@ import 'package:cityton_mobile/models/groupProgression.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/chat/progression/progression.bloc.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class Progression extends StatefulWidget {
   final Map arguments;
@@ -44,7 +46,7 @@ class ProgressionState extends State<Progression> {
     _progressionBloc.closeGroupProgression();
   }
 
-  refreshProgression() async {
+  _refreshProgression() async {
     ApiResponse response = await _progressionBloc.getProgression(_threadId);
 
     if (response.status != 200) {
@@ -86,11 +88,12 @@ class ProgressionState extends State<Progression> {
 
   @override
   Widget build(BuildContext context) {
-    refreshProgression();
+    _refreshProgression();
     return FramePage(
         header: Header(
           title: "Details",
           leadingState: HeaderLeading.DEAD_END,
+          iconsAction: _buildHeaderIconsAction(),
         ),
         sideMenu: null,
         body: StreamBuilder(
@@ -102,6 +105,18 @@ class ProgressionState extends State<Progression> {
                 ..._buildDrawBody(snapshot),
               ]);
             }));
+  }
+
+  List<IconButton> _buildHeaderIconsAction() {
+    return <IconButton>[
+      IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            Get.toNamed('/chat/progression/attributeChallenge',
+                arguments: {"threadId": _threadId})
+                .then((value) => value == null ? null : value ? _refreshProgression() : null);
+          })
+    ];
   }
 
   Widget _buildDrawHeader(AsyncSnapshot snapshot) {
@@ -139,45 +154,46 @@ class ProgressionState extends State<Progression> {
 
   Widget _buildCategory(
       List<ChallengeMinimal> challenges, StatusChallenge status) {
-    if (challenges.length == 0) {
-      return Text("NO challenges found in " + status.value);
-    } else {
-      return FutureBuilder<User>(
-          future: _currentUser,
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (snapshot.hasData) {
-              return ExpansionTile(
-                  title: Text(
-                    status.value,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  children: <Widget>[
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: challenges.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(
-                              challenges[index].title,
-                              textAlign: TextAlign.center,
-                            ),
-                            subtitle: Text(challenges[index].statement,
-                                textAlign: TextAlign.center),
-                            trailing:
-                                Role.values[snapshot.data.role] == Role.Member
+    return FutureBuilder<User>(
+        future: _currentUser,
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (snapshot.hasData) {
+            return ExpansionTile(
+                title: Text(
+                  status.value,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                children: challenges.length == 0
+                    ? <Widget>[
+                        Text("No challenges found"),
+                        SizedBox(height: space_between_input),
+                      ]
+                    : <Widget>[
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: challenges.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text(
+                                  challenges[index].title,
+                                  textAlign: TextAlign.center,
+                                ),
+                                subtitle: Text(challenges[index].statement,
+                                    textAlign: TextAlign.center),
+                                trailing: Role.values[snapshot.data.role] ==
+                                        Role.Member
                                     ? null
                                     : Column(
                                         children: _buildButtons(
                                             status, challenges[index].id),
                                       ),
-                          );
-                        })
-                  ]);
-            } else {
-              return CircularProgressIndicator();
-            }
-          });
-    }
+                              );
+                            })
+                      ]);
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 
   List<Widget> _buildButtons(StatusChallenge status, int challengeId) {
