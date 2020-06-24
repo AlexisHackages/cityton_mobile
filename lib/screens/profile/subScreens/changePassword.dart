@@ -3,8 +3,10 @@ import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/screens/profile/subScreens/changePassword.bloc.dart';
+import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 
 class ChangePassword extends StatefulWidget {
   @override
@@ -57,6 +59,7 @@ class ChangePasswordState extends State<ChangePassword> {
                         errorText: "This field is required")
                   ],
                 ),
+                SizedBox(height: space_between_input),
                 FormBuilderTextField(
                   controller: _newPasswordController,
                   attribute: "newPassword",
@@ -69,6 +72,7 @@ class ChangePasswordState extends State<ChangePassword> {
                         errorText: "At least 3 characters"),
                   ],
                 ),
+                SizedBox(height: space_between_input),
                 FormBuilderTextField(
                   controller: _verifyNewPasswordController,
                   attribute: "verifyNewPassword",
@@ -99,7 +103,8 @@ class ChangePasswordState extends State<ChangePassword> {
                               .changePassword(_oldPasswordController.text,
                                   _newPasswordController.text);
                           if (response.status == 200) {
-                            Navigator.pop(context);
+                            DisplaySnackbar.createConfirmation(message: "Password changed");
+                            Get.back();
                           } else {
                             DisplaySnackbar.createError(
                                 message: response.value);
