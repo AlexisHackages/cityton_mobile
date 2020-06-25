@@ -21,3 +21,11 @@ Is combined with "cityton_backend"
 - Stripe
 - More usage of media (search, download)
 - Password change
+
+# Commands
+## run
+- export PATH="$PATH:/Users/alexis/flutter/bin"
+- flutter run
+
+## builder
+- flutter pub run  build_runner serve

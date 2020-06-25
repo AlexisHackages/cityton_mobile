@@ -1,5 +1,9 @@
 import 'package:cityton_mobile/models/userMinimal.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'groupMinimal.g.dart';
+
+@JsonSerializable()
 class GroupMinimal {
   final int id;
   final String name;
@@ -7,18 +11,12 @@ class GroupMinimal {
   final bool hasReachMaxSize;
   final UserMinimal supervisor;
 
+  GroupMinimal(this.id, this.name, this.hasReachMinSize, this.hasReachMaxSize,
+      this.supervisor);
 
-  GroupMinimal({this.id, this.name, this.hasReachMinSize, this.hasReachMaxSize, this.supervisor});
-
-  factory GroupMinimal.fromJson(Map<String, dynamic> json) {
-    return GroupMinimal(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      hasReachMinSize: json['hasReachMinSize'] as bool,
-      hasReachMaxSize: json['hasReachMaxSize'] as bool,
-      supervisor: json['supervisor'] == null ? null : UserMinimal.fromJson(json['supervisor'])
-    );
-  }
+  factory GroupMinimal.fromJson(Map<String, dynamic> json) =>
+      _$GroupMinimalFromJson(json);
+  Map<String, dynamic> toJson() => _$GroupMinimalToJson(this);
 }
 
 class GroupMinimalList {
@@ -27,12 +25,11 @@ class GroupMinimalList {
   GroupMinimalList({this.groups});
 
   factory GroupMinimalList.fromJson(List<dynamic> parsedJson) {
-
     List<GroupMinimal> groups = List<GroupMinimal>();
     groups = parsedJson.map((i) => GroupMinimal.fromJson(i)).toList();
 
     return GroupMinimalList(
-       groups: groups,
+      groups: groups,
     );
   }
 }

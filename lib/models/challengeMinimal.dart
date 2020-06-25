@@ -1,18 +1,18 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'challengeMinimal.g.dart';
+
+@JsonSerializable()
 class ChallengeMinimal {
   final int id;
   final String statement;
   final String title;
 
 
-  ChallengeMinimal({this.id, this.statement, this.title});
+  ChallengeMinimal(this.id, this.statement, this.title);
 
-  factory ChallengeMinimal.fromJson(Map<String, dynamic> json) {
-    return ChallengeMinimal(
-      id: json['id'] as int,
-      statement: json['statement'] as String,
-      title: json['title'],
-    );
-  }
+  factory ChallengeMinimal.fromJson(Map<String, dynamic> json) => _$ChallengeMinimalFromJson(json);
+  Map<String, dynamic> toJson() => _$ChallengeMinimalToJson(this);
 }
 
 class ChallengeMinimalList {

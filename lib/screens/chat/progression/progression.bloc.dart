@@ -9,7 +9,7 @@ class ProgressionBloc {
   final ChallengeService _challengeService = ChallengeService();
 
   final _groupProgressionFetcher =
-      BehaviorSubject<GroupProgression>.seeded(GroupProgression());
+      BehaviorSubject<GroupProgression>.seeded(null);
   Stream<GroupProgression> get groupProgression => _groupProgressionFetcher.stream;
 
   Future<ApiResponse> getProgression(int threadId) async {

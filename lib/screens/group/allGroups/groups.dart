@@ -10,6 +10,7 @@ import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
+import 'package:get/get.dart';
 import 'groups.bloc.dart';
 
 class Groups extends StatefulWidget {
@@ -31,8 +32,20 @@ class GroupsState extends State<Groups> {
     _initCurrentUser();
   }
 
-  Future<void> _initCurrentUser() async {
-    _currentUser = await _authBloc.getCurrentUser();
+  Future<User> _initCurrentUser() async {
+    return _currentUser = await _authBloc.getCurrentUser();
+  }
+
+  void _refreshCurrentUser() async {
+    var res = await _groupsBloc.refreshCurrentUser();
+    if (res.status == 200) {
+      setState(() {
+        _currentUser = User.fromJson(res.value);
+      });
+    } else {
+      DisplaySnackbar.createError(message: res.value);
+      Get.toNamed('/door');
+    }
   }
 
   void search() {
@@ -49,33 +62,44 @@ class GroupsState extends State<Groups> {
   Widget build(BuildContext context) {
     search();
 
-    return FramePage(
-        header: Header(
-          title: "All Groups",
-          leadingState: HeaderLeading.MENU,
-          iconsAction: _buildHeaderIconsAction(context),
-        ),
-        sideMenu: MainSideMenu(),
-        body: StreamBuilder(
-            stream: _groupsBloc.groups,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<GroupMinimal>> snapshot) {
-              if (snapshot.hasData) {
-                return Container(
-                  child: Column(
-                    children: <Widget>[
-                      Flexible(
-                        flex: 0,
-                        child: _buildFilter(),
-                      ),
-                      Flexible(flex: 1, child: _buildGroupList(snapshot.data)),
-                    ],
-                  ),
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            }));
+    return FutureBuilder<User>(
+        future: _initCurrentUser(),
+        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            _currentUser = snapshot.data;
+            return FramePage(
+                header: Header(
+                  title: "All Groups",
+                  leadingState: HeaderLeading.MENU,
+                  iconsAction: _buildHeaderIconsAction(context),
+                ),
+                sideMenu: MainSideMenu(),
+                body: StreamBuilder(
+                    stream: _groupsBloc.groups,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<GroupMinimal>> snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          child: Column(
+                            children: <Widget>[
+                              Flexible(
+                                flex: 0,
+                                child: _buildFilter(),
+                              ),
+                              Flexible(
+                                  flex: 1,
+                                  child: _buildGroupList(snapshot.data)),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }));
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 
   Widget _buildFilter() {
@@ -128,45 +152,48 @@ class GroupsState extends State<Groups> {
   }
 
   Widget _buildGroupList(List<GroupMinimal> groupsList) {
-    return ListView.builder(
+    return groupsList.length > 0 ? ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: groupsList.length,
       itemBuilder: (BuildContext context, int index) {
-        final item = groupsList[index];
+        final group = groupsList[index];
 
         Widget createRequest = Role.values[_currentUser.role] == Role.Member &&
-                _currentUser.groupId < 1
+                _currentUser.groupId < 1 &&
+                !_currentUser.groupIdsRequested.contains(group.id) &&
+                !group.hasReachMaxSize
             ? IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () async {
-                  var response = await _groupsBloc.createRequest(item.id);
+                  var response = await _groupsBloc.createRequest(group.id);
 
                   if (response.status == 200) {
+                    _refreshCurrentUser();
                     DisplaySnackbar.createConfirmation(message: "Request sent");
                   } else {
-                    DisplaySnackbar.createConfirmation(message: response.value);
+                    DisplaySnackbar.createError(message: response.value);
                   }
                 })
             : null;
 
         return ListTile(
-            title: Text(item.name),
-            onTap: () => Navigator.popAndPushNamed(context, '/groups/details',
-                arguments: {"groupId": item.id, "groupName": item.name}),
+            title: Text(group.name),
+            onTap: () => Get.toNamed('/groups/details',
+                arguments: {"groupId": group.id, "groupName": group.name}),
             trailing: createRequest);
       },
-    );
+    )
+    : Text("No results was found");
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {
-    if (_currentUser != null &&
-        Role.values[_currentUser.role] == Role.Member &&
+    if (Role.values[_currentUser.role] == Role.Member &&
         _currentUser.groupId < 1) {
       return <IconButton>[
         IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => Navigator.popAndPushNamed(context, '/group/create'),
+          onPressed: () => Get.toNamed('/group/create'),
         )
       ];
     } else {

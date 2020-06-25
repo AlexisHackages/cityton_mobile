@@ -12,23 +12,31 @@ class Group {
   final UserMinimal supervisor;
 
   Group(
-      {this.id, this.name, this.creator, this.members, this.requestsAdhesion, this.hasReachMinSize, this.hasReachMaxSize, this.supervisor});
+      {this.id,
+      this.name,
+      this.creator,
+      this.members,
+      this.requestsAdhesion,
+      this.hasReachMinSize,
+      this.hasReachMaxSize,
+      this.supervisor});
 
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      creator: UserMinimal.fromJson(json['creator']),
-      hasReachMinSize: json['hasReachMinSize'] as bool,
-      hasReachMaxSize: json['hasReachMaxSize'] as bool,
-      members: json['members'] == null
-          ? RequestGroupMinimalList().users
-          : RequestGroupMinimalList.fromJson(json['members']).users,
-      requestsAdhesion: json['requestsAdhesion'] == null
-          ? RequestGroupMinimalList().users
-          : RequestGroupMinimalList.fromJson(json['requestsAdhesion']).users,
-      supervisor: json['supervisor'] == null ? null : UserMinimal.fromJson(json['supervisor'])
-    );
+        id: json['id'] as int,
+        name: json['name'] as String,
+        creator: UserMinimal.fromJson(json['creator']),
+        hasReachMinSize: json['hasReachMinSize'] as bool,
+        hasReachMaxSize: json['hasReachMaxSize'] as bool,
+        members: json['members'] == null
+            ? RequestGroupMinimalList().users
+            : RequestGroupMinimalList.fromJson(json['members']).users,
+        requestsAdhesion: json['requestsAdhesion'] == null
+            ? RequestGroupMinimalList().users
+            : RequestGroupMinimalList.fromJson(json['requestsAdhesion']).users,
+        supervisor: json['supervisor'] == null
+            ? null
+            : UserMinimal.fromJson(json['supervisor']));
   }
 }
 

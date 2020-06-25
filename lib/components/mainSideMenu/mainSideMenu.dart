@@ -42,72 +42,71 @@ class MainSideMenuState extends State<MainSideMenu> {
               if (snapshot.hasData && snapshot.data != null) {
                 _currentUser = snapshot.data;
                 return ListView(children: [
-                _buildDrawHeader(),
-                ..._buildDrawBody(),
-              ]);
+                  _buildDrawHeader(),
+                  ..._buildDrawBody(),
+                ]);
               } else {
                 return CircularProgressIndicator();
               }
-              
             }));
   }
 
   Widget _buildDrawHeader() {
-      return DrawerHeader(
-          child: Padding(
-        padding: EdgeInsets.all(25.0),
-        child: InkWell(
-          onTap: () => Navigator.popAndPushNamed(context, '/profile',
-              arguments: {"userId": _currentUser.id}),
-          child: Container(
-            height: MediaQuery.of(context).size.height / 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(_currentUser.picture),
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                Text(_currentUser.username),
-              ],
-            ),
+    return DrawerHeader(
+        child: Padding(
+      padding: EdgeInsets.all(25.0),
+      child: InkWell(
+        onTap: () => Navigator.popAndPushNamed(context, '/profile',
+            arguments: {"userId": _currentUser.id}),
+        child: Container(
+          height: MediaQuery.of(context).size.height / 4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(_currentUser.picture),
+              ),
+              SizedBox(
+                width: 25,
+              ),
+              Text(_currentUser.username),
+            ],
           ),
         ),
-      ));
+      ),
+    ));
   }
 
   List<Widget> _buildDrawBody() {
-      Widget admin = Role.values[_currentUser.role] == Role.Admin
-          ? _buildAdminMenu()
-          : Container();
+    Widget admin = Role.values[_currentUser.role] == Role.Admin
+        ? _buildAdminMenu()
+        : Container();
 
-      return <Widget>[
-        ListTile(
-          title: Text(
-            "Home",
-            textAlign: TextAlign.center,
-          ),
-          onTap: () => Navigator.pushNamed(context, '/home'),
+    return <Widget>[
+      ListTile(
+        title: Text(
+          "Home",
+          textAlign: TextAlign.center,
         ),
-        _buildThreadList(),
-        _buildGroup(),
-        admin,
-        ListTile(
-          title: Text(
-            "Logout",
-            textAlign: TextAlign.center,
-          ),
-          onTap: () => {
-            _authBloc.logout(),
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/door', (Route<dynamic> route) => false)
-          },
+        onTap: () => Navigator.pushNamed(context, '/home'),
+      ),
+      _buildThreadList(),
+      _buildGroup(),
+      admin,
+      ListTile(
+        title: Text(
+          "Logout",
+          textAlign: TextAlign.center,
         ),
-      ];
+        onTap: () => {
+          _authBloc.logout(),
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/door', (Route<dynamic> route) => false)
+        },
+      ),
+    ];
   }
 
   Widget _buildThreadList() {
@@ -142,15 +141,15 @@ class MainSideMenuState extends State<MainSideMenu> {
   }
 
   Widget _buildGroup() {
-    Widget createAGroup =
-        _currentUser.groupId == 0 && Role.values[_currentUser.role] == Role.Member
-            ? ListTile(
-                title: Text("Create a group"),
-                onTap: () {
-                  Navigator.pushNamed(context, '/group/create');
-                },
-              )
-            : Container();
+    Widget createAGroup = _currentUser.groupId == 0 &&
+            Role.values[_currentUser.role] == Role.Member
+        ? ListTile(
+            title: Text("Create a group"),
+            onTap: () {
+              Navigator.pushNamed(context, '/group/create');
+            },
+          )
+        : Container();
 
     Widget myGroup = _currentUser.groupId != null && _currentUser.groupId > 0
         ? ListTile(
@@ -161,7 +160,7 @@ class MainSideMenuState extends State<MainSideMenu> {
             },
           )
         : Container();
-        
+
     return ExpansionTile(
       title: Text("Group"),
       children: <Widget>[

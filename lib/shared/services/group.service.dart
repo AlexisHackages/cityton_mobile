@@ -62,7 +62,7 @@ class GroupService {
 
   Future<ApiResponse> createRequest(int groupId) async {
     var res =
-        await _http.post("group/createRequest/", data: {"GroupId": groupId});
+        await _http.post("group/createRequest/", data: groupId);
 
     return res;
   }

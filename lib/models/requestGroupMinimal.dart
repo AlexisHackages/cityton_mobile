@@ -1,17 +1,18 @@
 import 'package:cityton_mobile/models/userMinimal.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'requestGroupMinimal.g.dart';
+
+@JsonSerializable()
 class RequestGroupMinimal {
   final int id;
   final UserMinimal user;
 
-  RequestGroupMinimal({this.id, this.user});
+  RequestGroupMinimal(this.id, this.user);
 
-  factory RequestGroupMinimal.fromJson(Map<String, dynamic> json) {
-    return RequestGroupMinimal(
-      id: json['id'] as int,
-      user: UserMinimal.fromJson(json['user'])
-    );
-  }
+  factory RequestGroupMinimal.fromJson(Map<String, dynamic> json) =>
+      _$RequestGroupMinimalFromJson(json);
+  Map<String, dynamic> toJson() => _$RequestGroupMinimalToJson(this);
 }
 
 class RequestGroupMinimalList {
@@ -20,12 +21,11 @@ class RequestGroupMinimalList {
   RequestGroupMinimalList({this.users});
 
   factory RequestGroupMinimalList.fromJson(List<dynamic> parsedJson) {
-
     List<RequestGroupMinimal> users = List<RequestGroupMinimal>();
     users = parsedJson.map((i) => RequestGroupMinimal.fromJson(i)).toList();
 
     return RequestGroupMinimalList(
-       users: users,
+      users: users,
     );
   }
 }
