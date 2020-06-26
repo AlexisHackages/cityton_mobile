@@ -39,17 +39,4 @@ class GroupsBloc {
 
     return response;
   }
-
-  Future<ApiResponse> refreshCurrentUser() async {
-    var response = await _userService.getCurrentUser();
-
-    if (response.status == 200) {
-      User currentUser = User.fromJson(response.value);
-      _authBloc.writeCurrentUser(currentUser);
-    } else {
-      _authBloc.deleteCurrentUser();
-    }
-
-    return response;
-  }
 }

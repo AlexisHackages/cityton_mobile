@@ -36,18 +36,6 @@ class GroupsState extends State<Groups> {
     return _currentUser = await _authBloc.getCurrentUser();
   }
 
-  void _refreshCurrentUser() async {
-    var res = await _groupsBloc.refreshCurrentUser();
-    if (res.status == 200) {
-      setState(() {
-        _currentUser = User.fromJson(res.value);
-      });
-    } else {
-      DisplaySnackbar.createError(message: res.value);
-      Get.toNamed('/door');
-    }
-  }
-
   void search() {
     _groupsBloc.search(_searchText, _selectedFilter);
   }
@@ -74,7 +62,7 @@ class GroupsState extends State<Groups> {
                   iconsAction: _buildHeaderIconsAction(context),
                 ),
                 sideMenu: MainSideMenu(),
-                body: StreamBuilder(
+                body: StreamBuilder<List<GroupMinimal>>(
                     stream: _groupsBloc.groups,
                     builder: (BuildContext context,
                         AsyncSnapshot<List<GroupMinimal>> snapshot) {
@@ -152,39 +140,49 @@ class GroupsState extends State<Groups> {
   }
 
   Widget _buildGroupList(List<GroupMinimal> groupsList) {
-    return groupsList.length > 0 ? ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: groupsList.length,
-      itemBuilder: (BuildContext context, int index) {
-        final group = groupsList[index];
+    return groupsList.length > 0
+        ? ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: groupsList.length,
+            itemBuilder: (BuildContext context, int index) {
+              final group = groupsList[index];
 
-        Widget createRequest = Role.values[_currentUser.role] == Role.Member &&
-                _currentUser.groupId < 1 &&
-                !_currentUser.groupIdsRequested.contains(group.id) &&
-                !group.hasReachMaxSize
-            ? IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () async {
-                  var response = await _groupsBloc.createRequest(group.id);
+              Widget createRequest = Role.values[_currentUser.role] ==
+                          Role.Member &&
+                      _currentUser.groupId < 1 &&
+                      !_currentUser.groupIdsRequested.contains(group.id) &&
+                      !group.hasReachMaxSize
+                  ? IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () async {
+                        var response =
+                            await _groupsBloc.createRequest(group.id);
 
-                  if (response.status == 200) {
-                    _refreshCurrentUser();
-                    DisplaySnackbar.createConfirmation(message: "Request sent");
-                  } else {
-                    DisplaySnackbar.createError(message: response.value);
-                  }
-                })
-            : null;
+                        if (response.status == 200) {
+                          _authBloc
+                              .refreshCurrentUser()
+                              .then((reponse) => setState(() {
+                                    _currentUser = response.value;
+                                  }));
+                          DisplaySnackbar.createConfirmation(
+                              message: "Request sent");
+                        } else {
+                          DisplaySnackbar.createError(message: response.value);
+                        }
+                      })
+                  : null;
 
-        return ListTile(
-            title: Text(group.name),
-            onTap: () => Get.toNamed('/groups/details',
-                arguments: {"groupId": group.id, "groupName": group.name}),
-            trailing: createRequest);
-      },
-    )
-    : Text("No results was found");
+              return ListTile(
+                  title: Text(group.name),
+                  onTap: () => Get.toNamed('/groups/details', arguments: {
+                        "groupId": group.id,
+                        "groupName": group.name
+                      }),
+                  trailing: createRequest);
+            },
+          )
+        : Text("No results was found");
   }
 
   List<IconButton> _buildHeaderIconsAction(BuildContext context) {

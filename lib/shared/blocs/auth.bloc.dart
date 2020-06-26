@@ -1,19 +1,18 @@
 import 'dart:io';
+import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/services/auth.service.dart';
+import 'package:cityton_mobile/shared/services/user.service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'dart:convert';
+
+import 'package:get/get.dart';
 
 class AuthBloc {
   final AuthService _authService = AuthService();
   final FlutterSecureStorage _storage = FlutterSecureStorage();
-
-  final _tokenFetcher = BehaviorSubject<String>.seeded(null);
-  Stream<String> get token => _tokenFetcher.stream;
-
-  AuthBloc();
+  final UserService _userService = UserService();
 
   Future<User> getCurrentUser() async {
     String encodedCurrentUser = await _storage.read(key: "currentUser");
@@ -59,21 +58,27 @@ class AuthBloc {
     return await _storage.read(key: "token");
   }
 
-  void closeTokenStream() {
-    _tokenFetcher.close();
-  }
-
   Future<void> writeCurrentUser(User currentUser) async {
     await _storage.write(key: "token", value: currentUser.token);
-
-    _tokenFetcher.sink.add(currentUser.token);
 
     await _storage.write(key: "currentUser", value: json.encode(currentUser));
   }
 
   Future<void> deleteCurrentUser() async {
-    await _tokenFetcher.drain();
     await _storage.delete(key: "token");
     await _storage.delete(key: "currentUser");
+  }
+
+  Future<ApiResponse> refreshCurrentUser() async {
+    var response = await _userService.getCurrentUser();
+    if (response.status == 200) {
+      User currentUser = User.fromJson(response.value);
+      await writeCurrentUser(currentUser);
+    } else {
+      await deleteCurrentUser();
+      DisplaySnackbar.createError(message: response.value);
+      Get.offAndToNamed('/door');
+    }
+    return response;
   }
 }

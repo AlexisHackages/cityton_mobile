@@ -22,14 +22,13 @@ class MainSideMenuState extends State<MainSideMenu> {
     super.initState();
   }
 
-  Future<User> _initCurrentUser() async {
-    return await _authBloc.getCurrentUser();
+  Future<User> _initCurrentUser() {
+    return _authBloc.getCurrentUser();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _authBloc.closeTokenStream();
     _mainSideMenuBloc.closeThreads();
   }
 
@@ -151,7 +150,8 @@ class MainSideMenuState extends State<MainSideMenu> {
           )
         : Container();
 
-    Widget myGroup = _currentUser.groupId != null && _currentUser.groupId > 0
+    Widget myGroup = 
+            Role.values[_currentUser.role] == Role.Member &&  _currentUser.groupId > 0
         ? ListTile(
             title: Text("My group"),
             onTap: () {

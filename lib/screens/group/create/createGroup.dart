@@ -2,6 +2,7 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/screens/group/create/createGroup.bloc.dart';
+import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -14,6 +15,7 @@ class CreateGroup extends StatefulWidget {
 
 class CreateGroupState extends State<CreateGroup> {
   CreateGroupBloc _createGroupBloc = CreateGroupBloc();
+  AuthBloc _authBloc = AuthBloc();
 
   final GlobalKey<FormBuilderState> _addFormKey = GlobalKey<FormBuilderState>();
   TextEditingController _nameController = TextEditingController();
@@ -27,14 +29,6 @@ class CreateGroupState extends State<CreateGroup> {
   void dispose() {
     super.dispose();
     _nameController.dispose();
-  }
-
-  void _refreshCurrentUser() async {
-    var res = await _createGroupBloc.refreshCurrentUser();
-    if (res.status != 200) {
-      DisplaySnackbar.createError(message: res.value);
-      Get.offAndToNamed('/door');
-    }
   }
 
   @override
@@ -82,10 +76,11 @@ class CreateGroupState extends State<CreateGroup> {
                               ._createGroupBloc
                               .add(_nameController.text);
                           if (response.status == 200) {
-                            _refreshCurrentUser();
-                            Get.offAndToNamed('/myGroup');
-                            DisplaySnackbar.createConfirmation(
-                                message: "Group created");
+                            _authBloc.refreshCurrentUser().then((_) {
+                              Get.offAndToNamed('/myGroup');
+                              DisplaySnackbar.createConfirmation(
+                                  message: "Group created");
+                            });
                           } else {
                             DisplaySnackbar.createError(
                                 message: response.value);

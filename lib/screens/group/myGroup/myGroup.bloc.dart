@@ -11,8 +11,7 @@ class MyGroupBloc {
   final UserService _userService = UserService();
   final AuthBloc _authBloc = AuthBloc();
 
-  final _groupDetailsFetcher =
-      BehaviorSubject<Group>.seeded(Group());
+  final _groupDetailsFetcher = BehaviorSubject<Group>.seeded(Group());
   Stream<Group> get groupDetails => _groupDetailsFetcher.stream;
 
   closeChallengeStream() {
@@ -20,9 +19,7 @@ class MyGroupBloc {
   }
 
   Future<ApiResponse> getGroupInfo(int groupId) async {
-
     final response = await _groupService.getGroupInfo(groupId);
-
     if (response.status == 200) {
       Group group = Group.fromJson(response.value);
       _groupDetailsFetcher.sink.add(group);
@@ -30,9 +27,8 @@ class MyGroupBloc {
 
     return response;
   }
-  
-  Future<ApiResponse> delete(int id) async {
 
+  Future<ApiResponse> delete(int id) async {
     var response = await _groupService.delete(id);
 
     if (response.status == 200) {
@@ -41,9 +37,14 @@ class MyGroupBloc {
 
     return response;
   }
-  
-  Future<ApiResponse> deleteMembership(int id, int groupId) async {
 
+  Future<ApiResponse> leaveGroup(int groupId) async {
+    var response = await _groupService.leaveGroup(groupId);
+
+    return response;
+  }
+
+  Future<ApiResponse> deleteMembership(int id, int groupId) async {
     var response = await _groupService.deleteMembership(id);
 
     if (response.status == 200) {
@@ -52,9 +53,8 @@ class MyGroupBloc {
 
     return response;
   }
-  
-  Future<ApiResponse> deleteRequest(int id, int groupId) async {
 
+  Future<ApiResponse> deleteRequest(int id, int groupId) async {
     var response = await _groupService.deleteRequest(id);
 
     if (response.status == 200) {
@@ -63,9 +63,8 @@ class MyGroupBloc {
 
     return response;
   }
-  
-  Future<ApiResponse> acceptRequest(int id, int groupId) async {
 
+  Future<ApiResponse> acceptRequest(int id, int groupId) async {
     var response = await _groupService.acceptRequest(id);
 
     if (response.status == 200) {
@@ -74,26 +73,12 @@ class MyGroupBloc {
 
     return response;
   }
-  
-  Future<ApiResponse> editName(String name, int groupId) async {
 
+  Future<ApiResponse> editName(String name, int groupId) async {
     var response = await _groupService.editName(name, groupId);
 
     if (response.status == 200) {
       this.getGroupInfo(groupId);
-    }
-
-    return response;
-  }
-
-  Future<ApiResponse> refreshCurrentUser() async {
-    var response = await _userService.getCurrentUser();
-
-    if (response.status == 200) {
-      User currentUser = User.fromJson(response.value);
-      _authBloc.writeCurrentUser(currentUser);
-    } else {
-      _authBloc.deleteCurrentUser();
     }
 
     return response;

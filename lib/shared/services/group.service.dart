@@ -36,6 +36,12 @@ class GroupService {
     return res;
   }
 
+  Future<ApiResponse> leaveGroup(int groupId) async {
+    var res = await _http.delete("group/leaveGroup/" + groupId.toString());
+
+    return res;
+  }
+
   Future<ApiResponse> deleteMembership(int id) async {
     var res = await _http.delete("group/deleteMembership/" + id.toString());
 

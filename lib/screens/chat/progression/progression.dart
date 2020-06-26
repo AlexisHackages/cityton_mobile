@@ -45,7 +45,7 @@ class ProgressionState extends State<Progression> {
   }
 
   Future<User> _initCurrentUser() async {
-    return await _authBloc.getCurrentUser();
+    return _authBloc.getCurrentUser();
   }
 
   _refreshProgression() async {

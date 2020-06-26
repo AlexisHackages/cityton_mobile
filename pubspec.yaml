@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   http: ^0.12.0
   rxdart: ^0.23.1
-  flutter_secure_storage: ^3.3.1+1
+  flutter_secure_storage: ^3.3.3
   dio: ^3.0.9
   flutter_stetho: ^0.5.2
   signalr_client: ^0.1.6

@@ -40,7 +40,7 @@ class GroupDetailsState extends State<GroupDetails> {
   }
 
   Future<User> _initCurrentUser() async {
-    return await _authBloc.getCurrentUser();
+    return _authBloc.getCurrentUser();
   }
 
   @override
