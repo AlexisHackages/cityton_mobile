@@ -30,7 +30,7 @@ class UserInfoState extends State<UserInfo> {
     super.initState();
     Map datas = widget.arguments;
     _userProfile = datas["userProfile"];
-    _selectedRole = _userProfile.role.index;
+    _selectedRole = _userProfile.role;
   }
 
   @override
@@ -39,7 +39,7 @@ class UserInfoState extends State<UserInfo> {
   }
 
   changeRole() async {
-    if (_userProfile.role.index != _selectedRole) {
+    if (_userProfile.role != _selectedRole) {
       var response =
           await _userInfoBloc.changeRole(_userProfile.id, _selectedRole);
 

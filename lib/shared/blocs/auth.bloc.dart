@@ -3,6 +3,7 @@ import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/shared/services/auth.service.dart';
 import 'package:cityton_mobile/shared/services/user.service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'dart:convert';
@@ -77,7 +78,7 @@ class AuthBloc {
     } else {
       await deleteCurrentUser();
       DisplaySnackbar.createError(message: response.value);
-      Get.offAndToNamed('/door');
+      Get.offNamedUntil('/door', (Route<dynamic> route) => false);
     }
     return response;
   }

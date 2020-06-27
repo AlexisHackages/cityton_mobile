@@ -9,7 +9,7 @@ class UserProfile {
   final String username;
   final String email;
   final String picture;
-  final Role role;
+  final int role;
   final String groupName;
 
   UserProfile(this.id, this.username, this.email, this.picture, this.role,

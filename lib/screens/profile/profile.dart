@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cityton_mobile/components/DisplaySnackbar.dart';
 import 'package:cityton_mobile/components/avatarProfile.dart';
 import 'package:cityton_mobile/components/framePage.dart';
@@ -27,6 +29,9 @@ class ProfileState extends State<Profile> {
 
   Widget _avatarProfile;
   int _userId;
+  UserProfile _userProfile;
+  final ImagePicker _picker = ImagePicker();
+  File _filePicked;
 
   @override
   void initState() {
@@ -42,14 +47,15 @@ class ProfileState extends State<Profile> {
   }
 
   void openGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      ApiResponse response = await _profileBloc.changePicture(image);
+    PickedFile pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    _filePicked = File(pickedFile.path);
+    if (_filePicked != null) {
+      ApiResponse response = await _profileBloc.changePicture(_filePicked);
 
       if (response.status == 200) {
         setState(() {
           _avatarProfile =
-              AvatarProfile(picturePath: image.path, onPressed: openGallery);
+              AvatarProfile(picturePath: _filePicked.path, onPressed: openGallery);
         });
         DisplaySnackbar.createConfirmation(message: "Profile picture updated");
       } else {
@@ -70,7 +76,7 @@ class ProfileState extends State<Profile> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _buildUserInfos(_userId),
+              _buildUserInfos(),
               SizedBox(height: space_between_input),
               InkWell(
                 child: Text("Change password ?"),
@@ -91,63 +97,58 @@ class ProfileState extends State<Profile> {
     }
   }
 
-  Widget _buildUserInfos(int userId) {
-    return FutureBuilder<ApiResponse>(
-        future: _profileBloc.getProfile(userId),
-        builder: (BuildContext context, AsyncSnapshot<ApiResponse> snapshot) {
-          if (snapshot.hasData) {
-            final data = snapshot.data;
-            if (data.status == 200) {
-              final userProfile = UserProfile.fromJson(data.value);
+  Widget _buildUserInfos() {
+    return FutureBuilder<UserProfile>(
+        future: _profileBloc.getProfile(_userId),
+        builder: (BuildContext context, AsyncSnapshot<UserProfile> snapshot) {
+          print("PROFILE => " + snapshot.hasData.toString());
+          if (snapshot.hasData && snapshot.data != null) {
+              _userProfile = snapshot.data;
               return Column(
                 children: <Widget>[
-                  _buildDetails(userProfile),
+                  _buildDetails(),
                 ],
               );
-            } else {
-              DisplaySnackbar.createError(message: data.value);
-              return Container();
-            }
           } else {
             return CircularProgressIndicator();
           }
         });
   }
 
-  Widget _buildDetails(UserProfile userProfile) {
+  Widget _buildDetails() {
     _avatarProfile =
-        AvatarProfile(picturePath: userProfile.picture, onPressed: openGallery);
-    if (userProfile.role == Role.Member) {
-      String groupName = userProfile.groupName != null
-          ? userProfile.groupName
+        AvatarProfile(picturePath: _userProfile.picture, onPressed: openGallery);
+    if (_userProfile.role == Role.Member) {
+      String groupName = _userProfile.groupName != null
+          ? _userProfile.groupName
           : "Is not yet in a group";
       return Column(
         children: <Widget>[
           _avatarProfile,
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.perm_identity, content: Text(userProfile.username)),
+              leading: Icons.perm_identity, content: Text(_userProfile.username)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
               leading: Icons.supervisor_account, content: Text(groupName)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.mail_outline, content: Text(userProfile.email)),
+              leading: Icons.mail_outline, content: Text(_userProfile.email)),
         ],
       );
     } else {
-      List<String> role = userProfile.role.toString().split('.');
+      String role = Role.values[_userProfile.role].toString().split(".")[1];
       return Column(
         children: <Widget>[
           _avatarProfile,
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.perm_identity, content: Text(userProfile.username)),
+              leading: Icons.perm_identity, content: Text(_userProfile.username)),
           SizedBox(height: space_between_input),
-          IconText.iconNotClickable(leading: Icons.warning, content: Text(role[1])),
+          IconText.iconNotClickable(leading: Icons.warning, content: Text(role)),
           SizedBox(height: space_between_input),
           IconText.iconNotClickable(
-              leading: Icons.mail_outline, content: Text(userProfile.email)),
+              leading: Icons.mail_outline, content: Text(_userProfile.email)),
           SizedBox(height: space_between_input),
         ],
       );
