@@ -10,6 +10,7 @@ import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/enums.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
@@ -74,7 +75,7 @@ class ProfileState extends State<Profile> {
               InkWell(
                 child: Text("Change password ?"),
                 onTap: () {
-                  Navigator.pushNamed(context, '/changePassword');
+                  Get.toNamed('/changePassword');
                 },
               ),
             ],

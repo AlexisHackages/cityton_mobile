@@ -6,6 +6,7 @@ import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 
 class EditChallenge extends StatefulWidget {
   final Map arguments;
@@ -105,7 +106,7 @@ class EditChallengeState extends State<EditChallenge> {
                         if (_editFormKey.currentState.saveAndValidate()) {
                           if (_titleController.text != _challengeTitle &&
                               _statementController.text != _challengeStatement) {
-                            Navigator.pop(context);
+                            Get.back();
                           }
 
                           var response = await this._editChallengeBloc.edit(
@@ -113,7 +114,7 @@ class EditChallengeState extends State<EditChallenge> {
                               _titleController.text,
                               _statementController.text);
                           if (response.status == 200) {
-                            Navigator.pop(context);
+                            Get.back();
                           } else {
                             DisplaySnackbar.createError(
                                 message: response.value);
@@ -135,7 +136,7 @@ class EditChallengeState extends State<EditChallenge> {
             var response = await this._editChallengeBloc.delete(id);
 
             if (response.status == 200) {
-              Navigator.pop(context);
+              Get.back();
             } else {
               DisplaySnackbar.createError(message: response.value);
             }

@@ -202,7 +202,7 @@ class ChatState extends State<Chat> {
                     title: Text("Copy"),
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: content));
-                      Navigator.pop(context);
+                      Get.back();
                       DisplaySnackbar.createConfirmation(
                           message: "Copied in clipboard");
                     }),
@@ -210,7 +210,7 @@ class ChatState extends State<Chat> {
                     title: Text("Remove"),
                     onTap: () {
                       _chatBloc.removeMessage(messageId);
-                      Navigator.pop(context);
+                      Get.back();
                       DisplaySnackbar.createConfirmation(
                           message: "Message succesfully Removed");
                     }),

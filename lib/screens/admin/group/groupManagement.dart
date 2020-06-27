@@ -165,8 +165,7 @@ class GroupManagementState extends State<GroupManagement> {
 
           return ListTile(
               title: Text(group.name),
-              onTap: () => Navigator.popAndPushNamed(
-                  context, '/admin/group/details',
+              onTap: () => Get.offAndToNamed('/admin/group/details',
                   arguments: {"groupId": group.id, "groupName": group.name}),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,

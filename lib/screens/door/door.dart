@@ -2,6 +2,7 @@ import 'package:cityton_mobile/components/framePage.dart';
 import 'package:cityton_mobile/components/header.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Door extends StatefulWidget {
   @override
@@ -34,13 +35,13 @@ class DoorState extends State<Door> {
         children: <Widget>[
           Text("Cityton"),
           RaisedButton(
-            onPressed: () => Navigator.pushNamed(context, '/login'),
+            onPressed: () => Get.toNamed('/login'),
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(18.0),),
             child: Text("Login"),
           ),
           RaisedButton(
-            onPressed: () => Navigator.pushNamed(context, '/signup'),
+            onPressed: () => Get.toNamed('/signup'),
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(18.0),),
             child: Text("Signup"),

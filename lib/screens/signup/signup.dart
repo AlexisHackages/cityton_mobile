@@ -9,6 +9,7 @@ import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Signup extends StatefulWidget {
@@ -146,7 +147,7 @@ class SignupState extends State<Signup> {
                               _passwordController.text,
                               _profilePicture.path == DotEnv().env['DEFAULT_PROFILE_PICTURE'] ? null : _profilePicture);
                           if (response.status == 200) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/home',
+                            Get.offNamedUntil('/home',
                                 (Route<dynamic> route) => false);
                           } else {
                             DisplaySnackbar.createError(
@@ -160,7 +161,7 @@ class SignupState extends State<Signup> {
             InkWell(
               child: Text("To login"),
               onTap: () {
-                Navigator.popAndPushNamed(context, '/login');
+                Get.offAndToNamed('/login');
               },
             ),
           ],

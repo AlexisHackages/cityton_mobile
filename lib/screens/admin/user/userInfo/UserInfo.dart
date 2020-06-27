@@ -8,6 +8,7 @@ import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:cityton_mobile/models/enums.dart';
+import 'package:get/get.dart';
 
 class UserInfo extends StatefulWidget {
   final Map arguments;
@@ -159,7 +160,7 @@ class UserInfoState extends State<UserInfo> {
             var response = await this._userInfoBloc.delete(_userProfile.id);
 
             if (response.status == 200) {
-              Navigator.pop(context);
+              Get.back();
             } else {
               DisplaySnackbar.createError(message: response.value);
             }

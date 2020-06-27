@@ -7,6 +7,7 @@ import 'package:cityton_mobile/models/challenge.dart';
 import 'package:cityton_mobile/screens/admin/challenge/adminChallenge.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:get/get.dart';
 
 class AdminChallenge extends StatefulWidget {
   @override
@@ -137,8 +138,7 @@ class AdminChallengeState extends State<AdminChallenge> {
           return ListTile(
             title: Text(item.title),
             subtitle: Text(item.statement),
-            onTap: () => Navigator.popAndPushNamed(
-                context, '/admin/challenge/edit', arguments: {
+            onTap: () => Get.offAndToNamed('/admin/challenge/edit', arguments: {
               "id": item.id,
               "title": item.title,
               "statement": item.statement
@@ -153,8 +153,7 @@ class AdminChallengeState extends State<AdminChallenge> {
     return <IconButton>[
       IconButton(
           icon: Icon(Icons.add_circle_outline),
-          onPressed: () =>
-              Navigator.pushNamed(context, '/admin/challenge/add')),
+          onPressed: () => Get.toNamed('/admin/challenge/add')),
     ];
   }
 }

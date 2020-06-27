@@ -5,6 +5,7 @@ import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class MainSideMenu extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         child: Padding(
       padding: EdgeInsets.all(25.0),
       child: InkWell(
-        onTap: () => Navigator.popAndPushNamed(context, '/profile',
+        onTap: () => Get.offAndToNamed('/profile',
             arguments: {"userId": _currentUser.id}),
         child: Container(
           height: MediaQuery.of(context).size.height / 4,
@@ -89,7 +90,7 @@ class MainSideMenuState extends State<MainSideMenu> {
           "Home",
           textAlign: TextAlign.center,
         ),
-        onTap: () => Navigator.pushNamed(context, '/home'),
+        onTap: () => Get.toNamed('/home'),
       ),
       _buildThreadList(),
       _buildGroup(),
@@ -101,8 +102,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         ),
         onTap: () => {
           _authBloc.logout(),
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/door', (Route<dynamic> route) => false)
+          Get.offNamedUntil('/door', (Route<dynamic> route) => false)
         },
       ),
     ];
@@ -127,7 +127,7 @@ class MainSideMenuState extends State<MainSideMenu> {
                         textAlign: TextAlign.center,
                       ),
                       onTap: () => {
-                            Navigator.pushNamed(context, "/chat",
+                            Get.toNamed("/chat",
                                 arguments: {"thread": threads[index]}),
                           });
                 });
@@ -145,7 +145,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         ? ListTile(
             title: Text("Create a group"),
             onTap: () {
-              Navigator.pushNamed(context, '/group/create');
+              Get.toNamed('/group/create');
             },
           )
         : Container();
@@ -155,7 +155,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         ? ListTile(
             title: Text("My group"),
             onTap: () {
-              Navigator.pushNamed(context, '/myGroup',
+              Get.toNamed('/myGroup',
                   arguments: {"groupId": _currentUser.groupId});
             },
           )
@@ -167,7 +167,7 @@ class MainSideMenuState extends State<MainSideMenu> {
         ListTile(
           title: Text("Groups"),
           onTap: () {
-            Navigator.pushNamed(context, '/groups');
+            Get.toNamed('/groups');
           },
         ),
         createAGroup,
@@ -183,19 +183,19 @@ class MainSideMenuState extends State<MainSideMenu> {
         ListTile(
           title: Text("Groups"),
           onTap: () {
-            Navigator.pushNamed(context, '/admin/group');
+            Get.toNamed('/admin/group');
           },
         ),
         ListTile(
           title: Text("Users"),
           onTap: () {
-            Navigator.pushNamed(context, '/admin/user');
+            Get.toNamed('/admin/user');
           },
         ),
         ListTile(
           title: Text("Challenges"),
           onTap: () {
-            Navigator.pushNamed(context, '/admin/challenge');
+            Get.toNamed('/admin/challenge');
           },
         ),
       ],

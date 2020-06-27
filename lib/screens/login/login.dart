@@ -6,6 +6,7 @@ import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -83,7 +84,7 @@ class LoginState extends State<Login> {
                           var response = await this._authBloc.login(
                               _emailController.text, _passwordController.text);
                           if (response.status == 200) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/home',
+                            Get.offNamedUntil('/home',
                                 (Route<dynamic> route) => false);
                           } else {
                             DisplaySnackbar.createError(
@@ -97,7 +98,7 @@ class LoginState extends State<Login> {
             InkWell(
               child: Text("To signup"),
               onTap: () {
-                Navigator.popAndPushNamed(context, '/signup');
+                Get.offAndToNamed('/signup');
               },
             ),
           ],

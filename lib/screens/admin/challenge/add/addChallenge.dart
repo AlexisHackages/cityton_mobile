@@ -5,6 +5,7 @@ import 'package:cityton_mobile/screens/admin/challenge/add/addChallenge.bloc.dar
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 
 class AddChallenge extends StatefulWidget {
   @override
@@ -89,7 +90,7 @@ class AddChallengeState extends State<AddChallenge> {
                           var response = await this._addChallengeBloc.add(
                               _titleController.text, _statementController.text);
                           if (response.status == 200) {
-                            Navigator.pop(context);
+                            Get.back();
                           } else {
                             DisplaySnackbar.createError(message: response.value);
                           }

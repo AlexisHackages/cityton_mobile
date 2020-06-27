@@ -7,6 +7,7 @@ import 'package:cityton_mobile/models/userProfile.dart';
 import 'package:cityton_mobile/screens/admin/user/UserManagement.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cityton_mobile/constants/header.constants.dart';
+import 'package:get/get.dart';
 
 class UserManagement extends StatefulWidget {
   @override
@@ -141,8 +142,7 @@ class UserManagementState extends State<UserManagement> {
 
           return ListTile(
             title: Text(userProfile.username),
-            onTap: () => Navigator.popAndPushNamed(
-                context, '/admin/user/userInfo',
+            onTap: () => Get.offAndToNamed('/admin/user/userInfo',
                 arguments: {
                   "userProfile": userProfile,
                 }),
