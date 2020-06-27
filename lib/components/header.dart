@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 class Header extends StatelessWidget implements PreferredSizeWidget {
   final HeaderLeading leadingState;
   final String title;
+  final bool resultOnBack;
   final List<IconButton> iconsAction;
 
   const Header(
       {Key key,
       @required this.leadingState,
+      this.resultOnBack,
       @required this.title,
       this.iconsAction})
       : super(key: key);
@@ -55,7 +57,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Widget _buildBack(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: () => Get.back(),
+      onPressed: () => resultOnBack == null ? Get.back() : Get.back(result: resultOnBack),
     );
   }
 }

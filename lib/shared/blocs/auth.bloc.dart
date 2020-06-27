@@ -70,16 +70,17 @@ class AuthBloc {
     await _storage.delete(key: "currentUser");
   }
 
-  Future<ApiResponse> refreshCurrentUser() async {
+  Future<User> refreshCurrentUser() async {
     var response = await _userService.getCurrentUser();
     if (response.status == 200) {
       User currentUser = User.fromJson(response.value);
       await writeCurrentUser(currentUser);
+      return currentUser;
     } else {
       await deleteCurrentUser();
       DisplaySnackbar.createError(message: response.value);
       Get.offNamedUntil('/door', (Route<dynamic> route) => false);
     }
-    return response;
+    return null;
   }
 }

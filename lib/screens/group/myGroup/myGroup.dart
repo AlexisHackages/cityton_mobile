@@ -6,7 +6,6 @@ import 'package:cityton_mobile/components/label.dart';
 import 'package:cityton_mobile/models/group.dart';
 import 'package:cityton_mobile/models/user.dart';
 import 'package:cityton_mobile/screens/group/myGroup/myGroup.bloc.dart';
-import 'package:cityton_mobile/screens/home/home.dart';
 import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:cityton_mobile/theme/constant.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class MyGroupState extends State<MyGroup> {
     return _authBloc.getCurrentUser();
   }
 
-  _getGroupInfo() {
+  void _getGroupInfo() {
     _myGroupBloc.getGroupInfo(_currentUser.groupId);
   }
 
@@ -138,9 +137,10 @@ class MyGroupState extends State<MyGroup> {
                   : IconButton(
                       icon: Icon(Icons.done),
                       onPressed: () async {
-                        await _myGroupBloc.acceptRequest(
-                            _group.requestsAdhesion[index].id, _group.id);
-                        _getGroupInfo();
+                        await _myGroupBloc
+                            .acceptRequest(
+                                _group.requestsAdhesion[index].id, _group.id)
+                            .then((_) => _getGroupInfo());
                       });
               return ListTile(
                   title: Text(

@@ -38,14 +38,15 @@ class GroupManagementState extends State<GroupManagement> {
     this._groupManagementBloc.search(_searchText, _selectedFilter);
   }
 
-  void deleteGroup(int groupId) async {
+  Future<void> deleteGroup(int groupId) async {
     var response = await _groupManagementBloc.delete(groupId);
 
     if (response.status == 200) {
       DisplaySnackbar.createConfirmation(message: "Group succesfuly deleted");
-      Get.back();
+      return;
     } else {
       DisplaySnackbar.createConfirmation(message: response.value);
+      return;
     }
   }
 
@@ -160,13 +161,13 @@ class GroupManagementState extends State<GroupManagement> {
         itemBuilder: (BuildContext context, int index) {
           final group = groupsList[index];
 
-          Widget warningIcons =
-              group.hasReachMaxSize ? Icon(Icons.warning) : Container();
-
           return ListTile(
               title: Text(group.name),
-              onTap: () => Get.offAndToNamed('/admin/group/details',
-                  arguments: {"groupId": group.id, "groupName": group.name}),
+              onTap: () => Get.toNamed('/admin/group/details',
+                  arguments: {"groupId": group.id, "groupName": group.name})
+                      .then((value) => value == null
+                          ? null
+                          : value ? search() : null),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -176,9 +177,8 @@ class GroupManagementState extends State<GroupManagement> {
                   IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () async {
-                        deleteGroup(group.id);
-                      }),
-                  warningIcons
+                        deleteGroup(group.id).then((_) => search());
+                      })
                 ],
               ));
         },

@@ -103,6 +103,7 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
         header: Header(
           title: _groupName,
           leadingState: HeaderLeading.DEAD_END,
+          resultOnBack: true,
           iconsAction: _buildHeaderIconsAction(_groupId),
         ),
         sideMenu: null,
@@ -155,66 +156,68 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
         : Text("No members except the creator",
             style: TextStyle(color: Colors.red));
 
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blueGrey[700]),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("Group details",
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: space_around_divider),
-                  Divider(thickness: 1.0),
-                  SizedBox(height: space_around_divider),
-                  Label(label: "Name", component: Text(_groupInfo.name)),
-                  SizedBox(height: space_between_text),
-                  Label(
-                      label: "Creator",
-                      component: Text(_groupInfo.creator.username)),
-                  SizedBox(height: space_between_text),
-                  Label(
-                      label: _groupInfo.hasReachMaxSize
-                          ? "Members (group full)"
-                          : "Members",
-                      component: Column(children: <Widget>[
-                        !_groupInfo.hasReachMinSize
-                            ? Text("minimal size requirement unfilled",
-                                style: TextStyle(color: Colors.red))
-                            : Container(),
-                        members
-                      ])),
-                  SizedBox(height: space_around_divider),
-                  Divider(thickness: 1.0),
-                  SizedBox(height: space_around_divider),
-                  Label(
-                      label: "Supervisor",
-                      component: _groupInfo.supervisor == null
-                          ? Column(children: <Widget>[
-                              Text("No supervisor attributed",
-                                  style: TextStyle(color: Colors.red)),
-                              RaisedButton(
-                                  child: Text("Select one"),
-                                  onPressed: () {
-                                    openDialog(context);
-                                  })
-                            ])
-                          : Column(children: <Widget>[
-                              Text(_groupInfo.supervisor.username),
-                              RaisedButton(
-                                  child: Text("Change"),
-                                  onPressed: () {
-                                    openDialog(context);
-                                  })
-                            ])),
-                ],
-              ))
-        ]);
+    return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blueGrey[700]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Group details",
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold)),
+                      SizedBox(height: space_around_divider),
+                      Divider(thickness: 1.0),
+                      SizedBox(height: space_around_divider),
+                      Label(label: "Name", component: Text(_groupInfo.name)),
+                      SizedBox(height: space_between_text),
+                      Label(
+                          label: "Creator",
+                          component: Text(_groupInfo.creator.username)),
+                      SizedBox(height: space_between_text),
+                      Label(
+                          label: _groupInfo.hasReachMaxSize
+                              ? "Members (group full)"
+                              : "Members",
+                          component: Column(children: <Widget>[
+                            !_groupInfo.hasReachMinSize
+                                ? Text("minimal size requirement unfilled",
+                                    style: TextStyle(color: Colors.red))
+                                : Container(),
+                            members
+                          ])),
+                      SizedBox(height: space_around_divider),
+                      Divider(thickness: 1.0),
+                      SizedBox(height: space_around_divider),
+                      Label(
+                          label: "Supervisor",
+                          component: _groupInfo.supervisor == null
+                              ? Column(children: <Widget>[
+                                  Text("No supervisor attributed",
+                                      style: TextStyle(color: Colors.red)),
+                                  RaisedButton(
+                                      child: Text("Select one"),
+                                      onPressed: () {
+                                        openDialog(context);
+                                      })
+                                ])
+                              : Column(children: <Widget>[
+                                  Text(_groupInfo.supervisor.username),
+                                  RaisedButton(
+                                      child: Text("Change"),
+                                      onPressed: () {
+                                        openDialog(context);
+                                      })
+                                ])),
+                    ],
+                  ))
+            ]));
   }
 
   List<IconButton> _buildHeaderIconsAction(int groupId) {
@@ -227,6 +230,7 @@ class AdminGroupDetailsState extends State<AdminGroupDetails> {
             if (response.status == 200) {
               DisplaySnackbar.createConfirmation(
                   message: "Group succesfuly deleted");
+                  Get.back(result: true);
             } else {
               DisplaySnackbar.createError(message: response.value);
             }

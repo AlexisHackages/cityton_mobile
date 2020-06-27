@@ -162,8 +162,8 @@ class GroupsState extends State<Groups> {
                         if (response.status == 200) {
                           _authBloc
                               .refreshCurrentUser()
-                              .then((reponse) => setState(() {
-                                    _currentUser = response.value;
+                              .then((currentUser) => setState(() {
+                                    _currentUser = currentUser;
                                   }));
                           DisplaySnackbar.createConfirmation(
                               message: "Request sent");

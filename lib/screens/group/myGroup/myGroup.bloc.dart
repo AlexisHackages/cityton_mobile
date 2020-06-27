@@ -1,17 +1,12 @@
 import 'package:cityton_mobile/http/ApiResponse.dart';
 import 'package:cityton_mobile/models/group.dart';
-import 'package:cityton_mobile/shared/blocs/auth.bloc.dart';
 import 'package:cityton_mobile/shared/services/group.service.dart';
-import 'package:cityton_mobile/shared/services/user.service.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:cityton_mobile/models/user.dart';
 
 class MyGroupBloc {
   final GroupService _groupService = GroupService();
-  final UserService _userService = UserService();
-  final AuthBloc _authBloc = AuthBloc();
 
-  final _groupDetailsFetcher = BehaviorSubject<Group>.seeded(Group());
+  final _groupDetailsFetcher = BehaviorSubject<Group>.seeded(null);
   Stream<Group> get groupDetails => _groupDetailsFetcher.stream;
 
   closeChallengeStream() {
