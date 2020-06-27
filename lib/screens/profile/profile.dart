@@ -101,7 +101,6 @@ class ProfileState extends State<Profile> {
     return FutureBuilder<UserProfile>(
         future: _profileBloc.getProfile(_userId),
         builder: (BuildContext context, AsyncSnapshot<UserProfile> snapshot) {
-          print("PROFILE => " + snapshot.hasData.toString());
           if (snapshot.hasData && snapshot.data != null) {
               _userProfile = snapshot.data;
               return Column(

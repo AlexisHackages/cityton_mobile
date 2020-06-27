@@ -26,10 +26,6 @@ class ProfileBloc {
       Get.offNamedUntil('/door', (Route<dynamic> route) => false);
       return null;
     }
-    print("========");
-    print(response.value);
-    print(UserProfile.fromJson(response.value));
-    print("========");
     return UserProfile.fromJson(response.value);
   }
 
