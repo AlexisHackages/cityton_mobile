@@ -253,7 +253,9 @@ class ChatState extends State<Chat> {
                       message.media?.url != null
                           ? _displayMedia(message.media.url)
                           : Container(),
-                      Text(message.content)
+                      message.content == null
+                          ? Container()
+                          : Text(message.content)
                     ],
                   )))
         ])
@@ -272,7 +274,9 @@ class ChatState extends State<Chat> {
                         message.media?.url != null
                             ? _displayMedia(message.media.url)
                             : Container(),
-                        Text(message.content)
+                        message.content == null
+                            ? Container()
+                            : Text(message.content)
                       ])))
         ])
       ];
