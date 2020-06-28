@@ -14,8 +14,8 @@ class UserManagementBloc {
   }
 
   Future<void> search(String searchText, int selectedRole) async {
-    String sanitizedSearchText = searchText.trim();
-
+    String sanitizedSearchText = searchText?.trim();
+print(selectedRole);
     var response = await _userService.search(sanitizedSearchText, selectedRole == -1 ? null : selectedRole);
     
     UserProfileList userProfileList = UserProfileList.fromJson(response.value);

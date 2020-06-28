@@ -32,7 +32,7 @@ class UserManagementState extends State<UserManagement> {
     _userManagementBloc.closeUserProfilesStream();
   }
 
-  void search() {
+  void  search() {
     this._userManagementBloc.search(_searchText, _selectedRole);
   }
 
@@ -145,7 +145,7 @@ class UserManagementState extends State<UserManagement> {
             onTap: () => Get.offAndToNamed('/admin/user/userInfo',
                 arguments: {
                   "userProfile": userProfile,
-                }),
+                }).then((_) => search()),
           );
         },
       );
