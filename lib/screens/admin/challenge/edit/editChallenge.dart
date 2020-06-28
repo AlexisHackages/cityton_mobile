@@ -114,7 +114,7 @@ class EditChallengeState extends State<EditChallenge> {
                               _titleController.text,
                               _statementController.text);
                           if (response.status == 200) {
-                            Get.back();
+                            Get.back(result: true);
                           } else {
                             DisplaySnackbar.createError(
                                 message: response.value);
@@ -136,7 +136,7 @@ class EditChallengeState extends State<EditChallenge> {
             var response = await this._editChallengeBloc.delete(id);
 
             if (response.status == 200) {
-              Get.back();
+              Get.back(result: true);
             } else {
               DisplaySnackbar.createError(message: response.value);
             }

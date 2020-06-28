@@ -90,7 +90,7 @@ class AddChallengeState extends State<AddChallenge> {
                           var response = await this._addChallengeBloc.add(
                               _titleController.text, _statementController.text);
                           if (response.status == 200) {
-                            Get.back();
+                            Get.back(result: true);
                           } else {
                             DisplaySnackbar.createError(message: response.value);
                           }

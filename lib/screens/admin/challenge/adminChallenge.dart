@@ -142,7 +142,7 @@ class AdminChallengeState extends State<AdminChallenge> {
               "id": item.id,
               "title": item.title,
               "statement": item.statement
-            }),
+            }).then((_) => search()),
           );
         },
       );
@@ -153,7 +153,7 @@ class AdminChallengeState extends State<AdminChallenge> {
     return <IconButton>[
       IconButton(
           icon: Icon(Icons.add_circle_outline),
-          onPressed: () => Get.toNamed('/admin/challenge/add')),
+          onPressed: () => Get.toNamed('/admin/challenge/add').then((_) => search())),
     ];
   }
 }
